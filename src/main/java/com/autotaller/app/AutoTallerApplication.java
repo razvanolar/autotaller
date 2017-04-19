@@ -1,8 +1,7 @@
 package com.autotaller.app;
 
 import com.autotaller.app.components.loading_view.LoadingView;
-import com.autotaller.app.events.app_view.ShowAppViewEvent;
-import com.autotaller.app.events.app_view.ShowAppViewEventHandler;
+import com.autotaller.app.events.app_view.*;
 import com.autotaller.app.events.login_view.ShowLoginScreenEvent;
 import com.autotaller.app.events.login_view.ShowLoginScreenEventHandler;
 import com.autotaller.app.events.test_connection.TestConnectionEvent;
@@ -13,13 +12,15 @@ import com.autotaller.app.events.view_stack.AddViewToStackEventHandler;
 import com.autotaller.app.events.view_stack.BackToPreviousViewEvent;
 import com.autotaller.app.events.view_stack.BackToPreviousViewEventHandler;
 import com.autotaller.app.utils.Component;
-import com.autotaller.app.utils.ComponentTypes;
+import com.autotaller.app.utils.ComponentType;
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.factories.ComponentFactory;
 import com.autotaller.app.utils.resources.StyleProvider;
+import com.jfoenix.controls.JFXDialog;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -33,11 +34,13 @@ public class AutoTallerApplication extends Application {
 
   private Stage primaryStage;
   private Scene primaryScene;
+  private StackPane stackContainer;
   private BorderPane primaryContainer;
 
   private Stack<View> viewStack;
 
   private String defaultThemePath;
+  private JFXDialog activeDialog;
 
   @Override
   public void init() throws Exception {
@@ -48,7 +51,8 @@ public class AutoTallerApplication extends Application {
     loadingScreenScene.getStylesheets().add(defaultThemePath);
 
     primaryContainer = new BorderPane();
-    primaryScene = new Scene(primaryContainer, 700, 400);
+    stackContainer = new StackPane(primaryContainer);
+    primaryScene = new Scene(stackContainer, 700, 400);
     primaryScene.getStylesheets().add(defaultThemePath);
 
     // create and bind the app controller
@@ -106,10 +110,21 @@ public class AutoTallerApplication extends Application {
         primaryContainer.setCenter(viewStack.peek().asNode());
       }
     });
+
+    EventBus.addHandler(ShowDialogEvent.TYPE, (ShowDialogEventHandler) event -> {
+      activeDialog = event.getDialog();
+      activeDialog.setDialogContainer(stackContainer);
+      activeDialog.show();
+    });
+
+    EventBus.addHandler(HideDialogEvent.TYPE, (HideDialogEventHandler) event -> {
+      if (activeDialog != null)
+        activeDialog.close();
+    });
   }
 
   private void initAndShowLoginScreen() {
-    Component component = ComponentFactory.createComponent(ComponentTypes.LOGIN_VIEW);
+    Component component = ComponentFactory.createComponent(ComponentType.LOGIN_VIEW);
     if (component != null) {
       viewStack.clear();
       viewStack.add(component.getView());
@@ -125,7 +140,7 @@ public class AutoTallerApplication extends Application {
     viewStack.clear();
     viewStack.add(appView);
     primaryContainer.setCenter(appView.asNode());
-    Component menuBar = ComponentFactory.createComponent(ComponentTypes.APP_MENU_BAR);
+    Component menuBar = ComponentFactory.createComponent(ComponentType.APP_MENU_BAR);
     if (menuBar != null)
       primaryContainer.setTop(menuBar.getView().asNode());
   }

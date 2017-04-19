@@ -40,7 +40,7 @@ public class LoginController implements Controller<LoginController.ILoginView> {
     });
 
     view.getSignUpLabel().setOnMouseClicked(event -> {
-      Component component = ComponentFactory.createComponent(ComponentTypes.SIGN_UP_VIEW);
+      Component component = ComponentFactory.createComponent(ComponentType.SIGN_UP_VIEW);
       if (component != null)
         EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
     });

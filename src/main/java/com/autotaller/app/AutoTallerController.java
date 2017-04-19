@@ -1,7 +1,7 @@
 package com.autotaller.app;
 
-import com.autotaller.app.events.app_view.LoadCarMakesEvent;
-import com.autotaller.app.events.app_view.LoadCarMakesEventHandler;
+import com.autotaller.app.events.app_view.admin_view.GetCarMakesEvent;
+import com.autotaller.app.events.app_view.admin_view.GetCarMakesEventHandler;
 import com.autotaller.app.events.app_view.ShowAppViewEvent;
 import com.autotaller.app.events.login_view.*;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
@@ -10,9 +10,10 @@ import com.autotaller.app.events.test_connection.TestConnectionEvent;
 import com.autotaller.app.events.test_connection.TestConnectionEventHandler;
 import com.autotaller.app.events.test_connection.TestConnectionFailedEvent;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
+import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.Component;
-import com.autotaller.app.utils.ComponentTypes;
+import com.autotaller.app.utils.ComponentType;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.factories.ComponentFactory;
@@ -23,6 +24,7 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by razvanolar on 11.04.2017
@@ -102,7 +104,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
 
   private void initAppViewHandlers() {
     autoTallerView.getAdminMenu().setOnMouseClicked(event -> {
-      Component component = ComponentFactory.createComponent(ComponentTypes.ADMIN_VIEW);
+      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_VIEW);
       if (component != null) {
         EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
       }
@@ -110,13 +112,16 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
 
     autoTallerView.getExitMenu().setOnMouseClicked(event -> EventBus.fireEvent(new ShowLoginScreenEvent()));
 
-    EventBus.addHandler(LoadCarMakesEvent.TYPE, (LoadCarMakesEventHandler) event -> {
+    EventBus.addHandler(GetCarMakesEvent.TYPE, (GetCarMakesEventHandler) event -> {
       try {
         EventBus.fireEvent(new MaskViewEvent("Incarcare Masini"));
         Thread thread = new Thread(() -> {
           try {
-            event.getCallback().call(repository.getAllCarMakes());
-            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+            List<CarMakeModel> allCarMakes = repository.getAllCarMakes();
+            Platform.runLater(() -> {
+              event.getCallback().call(allCarMakes);
+              EventBus.fireEvent(new UnmaskViewEvent());
+            });
           } catch (Exception ex) {
             //TODO show error dialog
             ex.printStackTrace();

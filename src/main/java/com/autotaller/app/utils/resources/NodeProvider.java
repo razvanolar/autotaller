@@ -75,7 +75,9 @@ public class NodeProvider {
     VBox vBox = new VBox();
     Text textLabel = new Text(text);
     textLabel.setFont(new Font(15));
-    vBox.getChildren().addAll(textLabel, new ImageView(icon));
+    vBox.getChildren().add(textLabel);
+    if (icon != null)
+      vBox.getChildren().add(new ImageView(icon));
 
     vBox.setAlignment(Pos.CENTER);
     vBox.getStyleClass().add(StyleProvider.APP_MENU_BOX_CLASS);

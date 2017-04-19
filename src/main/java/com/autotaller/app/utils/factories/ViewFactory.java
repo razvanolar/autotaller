@@ -2,9 +2,11 @@ package com.autotaller.app.utils.factories;
 
 import com.autotaller.app.components.app_view.AutoTallerMenuBarView;
 import com.autotaller.app.components.app_view.admin_view.AdminView;
+import com.autotaller.app.components.app_view.admin_view.admin_car_make_view.AddCarMakeDialogView;
+import com.autotaller.app.components.app_view.admin_view.admin_car_make_view.AdminCarMakeView;
 import com.autotaller.app.components.login_view.login.LoginView;
 import com.autotaller.app.components.login_view.sign_up.SignUpView;
-import com.autotaller.app.utils.ComponentTypes;
+import com.autotaller.app.utils.ComponentType;
 import com.autotaller.app.utils.View;
 
 /**
@@ -12,7 +14,7 @@ import com.autotaller.app.utils.View;
  */
 public class ViewFactory {
 
-  public View createView(ComponentTypes type) {
+  public View createView(ComponentType type) {
     switch (type) {
       case LOGIN_VIEW:
         return new LoginView();
@@ -22,6 +24,10 @@ public class ViewFactory {
         return new AutoTallerMenuBarView();
       case ADMIN_VIEW:
         return new AdminView();
+      case ADMIN_CAR_MAKE_VIEW:
+        return new AdminCarMakeView();
+      case ADD_CAR_MAKE_VIEW:
+        return new AddCarMakeDialogView();
     }
     return null;
   }

@@ -14,7 +14,7 @@ public class IterableView {
   protected BorderPane mainContainer;
   protected ToolBar toolBar;
   private Button backButton;
-  private Button homeButton;
+  private Button exitButton;
 
   public IterableView() {
     init();
@@ -23,8 +23,8 @@ public class IterableView {
 
   private void init() {
     backButton = new Button("Back");
-    homeButton = new Button("Home");
-    toolBar = new ToolBar(backButton, homeButton);
+    exitButton = new Button("Exit");
+    toolBar = new ToolBar(backButton, exitButton);
     mainContainer = new BorderPane();
 
     mainContainer.setTop(toolBar);
