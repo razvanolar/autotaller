@@ -3,6 +3,7 @@ package com.autotaller.app;
 import com.autotaller.app.events.app_view.admin_view.GetCarMakesEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarMakesEventHandler;
 import com.autotaller.app.events.app_view.ShowAppViewEvent;
+import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
 import com.autotaller.app.events.login_view.*;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
@@ -107,6 +108,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_VIEW);
       if (component != null) {
         EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
       }
     });
 

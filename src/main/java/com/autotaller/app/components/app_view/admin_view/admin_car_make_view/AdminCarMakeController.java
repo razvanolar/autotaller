@@ -23,6 +23,7 @@ public class AdminCarMakeController implements Controller<AdminCarMakeController
     ToggleButton getFilterCarMakeButton();
     void showFilterCarMakePane();
     void hideAdditionalPanel();
+    void clearNodes();
   }
 
   @Override
@@ -39,6 +40,7 @@ public class AdminCarMakeController implements Controller<AdminCarMakeController
     });
 
     EventBus.addHandler(AdminLoadCarMakesEvent.TYPE, (AdminLoadCarMakesEventHandler) event -> {
+      view.clearNodes();
       for (CarMakeModel car : event.getCarMakeModels()) {
         view.addNode(car);
       }

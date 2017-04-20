@@ -47,7 +47,7 @@ public class CarMakesService extends GenericService {
     PreparedStatement statement = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String insertStatement = "INSERT INTO car_makes cm (cm.name) VALUES (?)";
+      String insertStatement = "INSERT INTO car_makes (`name`) VALUES (?)";
       statement = connection.prepareStatement(insertStatement);
       statement.setString(1, name);
       statement.executeUpdate();

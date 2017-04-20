@@ -27,6 +27,7 @@ public class AdminCarMakeView implements AdminCarMakeController.ICarsAdminView {
   private int CELL_HEIGHT = 40;
 
   private double lastDividerPosition = 0.3;
+  private ScrollPane scrollPane;
 
   public AdminCarMakeView() {
     init();
@@ -37,7 +38,7 @@ public class AdminCarMakeView implements AdminCarMakeController.ICarsAdminView {
     masonryPane.setCellWidth(CELL_WIDTH);
     masonryPane.setCellHeight(CELL_HEIGHT);
 
-    ScrollPane scrollPane = new ScrollPane(masonryPane);
+    scrollPane = new ScrollPane(masonryPane);
     scrollPane.setFitToHeight(true);
     scrollPane.setFitToWidth(true);
 
@@ -87,6 +88,14 @@ public class AdminCarMakeView implements AdminCarMakeController.ICarsAdminView {
       lastDividerPosition = dividerPositions[0];
     if (splitPane.getItems().contains(filterCarMakePane))
       splitPane.getItems().remove(filterCarMakePane);
+  }
+
+  @Override
+  public void clearNodes() {
+    masonryPane = new JFXMasonryPane();
+    masonryPane.setCellWidth(CELL_WIDTH);
+    masonryPane.setCellHeight(CELL_HEIGHT);
+    scrollPane.setContent(masonryPane);
   }
 
   @Override

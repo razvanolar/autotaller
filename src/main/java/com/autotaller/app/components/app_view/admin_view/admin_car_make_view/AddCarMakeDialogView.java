@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 /**
@@ -25,6 +26,10 @@ public class AddCarMakeDialogView implements AddCarMakeDialogController.IAddCarM
     gridPane.setAlignment(Pos.CENTER);
     gridPane.add(carMakeNameField, 0, 0);
     gridPane.setPadding(new Insets(15, 0, 10 ,0));
+  }
+
+  public TextField getCarMakeNameField() {
+    return carMakeNameField;
   }
 
   @Override
