@@ -9,5 +9,6 @@ public enum ComponentType {
   APP_MENU_BAR,
   ADMIN_VIEW,
   ADMIN_CAR_MAKE_VIEW,
-  ADD_CAR_MAKE_VIEW
+  ADD_CAR_MAKE_VIEW,
+  ADD_CAR_MODEL_VIEW
 }

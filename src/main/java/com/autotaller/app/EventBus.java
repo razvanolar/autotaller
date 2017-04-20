@@ -29,6 +29,12 @@ public class EventBus {
     }
   }
 
+  public static void addHandler(EventType eventType, EventHandler eventHandler, boolean overwrite) {
+    if (overwrite)
+      removeHandlersByType(eventType);
+    addHandler(eventType, eventHandler);
+  }
+
   public static void removeHandlersByType(EventType eventType) {
     if (eventType != null && eventHandlersMap.containsKey(eventType)) {
       eventHandlersMap.remove(eventType);

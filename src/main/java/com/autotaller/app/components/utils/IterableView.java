@@ -2,6 +2,7 @@ package com.autotaller.app.components.utils;
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.events.view_stack.BackToPreviousViewEvent;
+import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
@@ -24,7 +25,8 @@ public class IterableView {
   private void init() {
     backButton = new Button("Back");
     exitButton = new Button("Exit");
-    toolBar = new ToolBar(backButton, exitButton);
+    toolBar = NodeProvider.createToolBar();
+    toolBar.getItems().addAll(backButton, exitButton);
     mainContainer = new BorderPane();
 
     mainContainer.setTop(toolBar);

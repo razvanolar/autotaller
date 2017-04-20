@@ -44,6 +44,6 @@ public class AdminCarMakeController implements Controller<AdminCarMakeController
       for (CarMakeModel car : event.getCarMakeModels()) {
         view.addNode(car);
       }
-    });
+    }, true);
   }
 }

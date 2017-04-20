@@ -35,8 +35,6 @@ public class AdminCarMakeView implements AdminCarMakeController.ICarsAdminView {
 
   private void init() {
     masonryPane = new JFXMasonryPane();
-    masonryPane.setCellWidth(CELL_WIDTH);
-    masonryPane.setCellHeight(CELL_HEIGHT);
 
     scrollPane = new ScrollPane(masonryPane);
     scrollPane.setFitToHeight(true);
@@ -49,7 +47,9 @@ public class AdminCarMakeView implements AdminCarMakeController.ICarsAdminView {
     Group addCarMakeGroup = new Group(addCarMakeButton);
     Group filterCarMakeGroup = new Group(filterCarMakeButton);
 
-    ToolBar toolBar = new ToolBar(addCarMakeGroup, filterCarMakeGroup);
+
+    ToolBar toolBar = NodeProvider.createToolBar();
+    toolBar.getItems().addAll(addCarMakeGroup, filterCarMakeGroup);
     toolBar.setOrientation(Orientation.VERTICAL);
 
     splitPane = new SplitPane(scrollPane);
@@ -65,7 +65,7 @@ public class AdminCarMakeView implements AdminCarMakeController.ICarsAdminView {
 
   @Override
   public void addNode(CarMakeModel model) {
-    masonryPane.getChildren().add(NodeProvider.createAppMenu(model.getName(), null, CELL_WIDTH, CELL_HEIGHT));
+    masonryPane.getChildren().add(NodeProvider.createCarMakeMenu(model.getName(), null, CELL_WIDTH, CELL_HEIGHT));
   }
 
   public Button getAddCarMakeButton() {
@@ -95,6 +95,7 @@ public class AdminCarMakeView implements AdminCarMakeController.ICarsAdminView {
     masonryPane = new JFXMasonryPane();
     masonryPane.setCellWidth(CELL_WIDTH);
     masonryPane.setCellHeight(CELL_HEIGHT);
+//    masonryPane.setLimitColumn(5);
     scrollPane.setContent(masonryPane);
   }
 

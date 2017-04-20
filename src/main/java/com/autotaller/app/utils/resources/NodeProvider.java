@@ -1,10 +1,14 @@
 package com.autotaller.app.utils.resources;
 
+import com.autotaller.app.model.CarTypeModel;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -61,6 +65,12 @@ public class NodeProvider {
     return textLabel;
   }
 
+  public static ToolBar createToolBar() {
+    ToolBar toolBar = new ToolBar();
+    toolBar.getStyleClass().add(StyleProvider.BUTTONS_CONTAINER_CLASS);
+    return toolBar;
+  }
+
   public static HBox createCenteredNode(Node node) {
     HBox hBox = new HBox(node);
     hBox.setAlignment(Pos.CENTER);
@@ -68,10 +78,10 @@ public class NodeProvider {
   }
 
   public static Node createAppMenu(String text, Image icon) {
-    return createAppMenu(text, icon, 150, 200);
+    return createAppMenu(text, icon, 150, 200, StyleProvider.APP_MENU_BOX_CLASS);
   }
 
-  public static Node createAppMenu(String text, Image icon, int width, int height) {
+  private static Node createAppMenu(String text, Image icon, int width, int height, String style) {
     VBox vBox = new VBox();
     Text textLabel = new Text(text);
     textLabel.setFont(new Font(15));
@@ -80,9 +90,30 @@ public class NodeProvider {
       vBox.getChildren().add(new ImageView(icon));
 
     vBox.setAlignment(Pos.CENTER);
-    vBox.getStyleClass().add(StyleProvider.APP_MENU_BOX_CLASS);
+    vBox.getStyleClass().add(style);
     vBox.setPrefWidth(width);
     vBox.setPrefHeight(height);
     return vBox;
+  }
+
+  public static Node createCarMakeMenu(String text, Image icon, int width, int height) {
+    return createAppMenu(text, icon, width, height, StyleProvider.DEFAULT_BUTTON_CLASS);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static TableView<CarTypeModel> createCarModelTable() {
+    TableView<CarTypeModel> table = new TableView<>();
+    TableColumn<CarTypeModel, String> nameColumn = new TableColumn<>("Nume Model");
+    TableColumn<CarTypeModel, String> fromColumn = new TableColumn<>("De la");
+    TableColumn<CarTypeModel, String> toColumn = new TableColumn<>("Pana la");
+    TableColumn<CarTypeModel, String> makeColumn = new TableColumn<>("Marca");
+
+    nameColumn.prefWidthProperty().bind(table.widthProperty().multiply(.33));
+    fromColumn.prefWidthProperty().bind(table.widthProperty().multiply(.17));
+    toColumn.prefWidthProperty().bind(table.widthProperty().multiply(.17));
+    makeColumn.prefWidthProperty().bind(table.widthProperty().multiply(.33));
+
+    table.getColumns().addAll(nameColumn, fromColumn, toColumn, makeColumn);
+    return table;
   }
 }

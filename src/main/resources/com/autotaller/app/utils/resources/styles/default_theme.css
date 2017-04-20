@@ -1,4 +1,25 @@
 
+/* clean toolbar buttons */
+.clearButtonsContainer .button, .clearButtonsContainer .toggle-button {
+    -fx-background-color: transparent;
+}
+
+.clearButtonsContainer .button:hover, .clearButtonsContainer .toggle-button:hover {
+    -fx-background-color: darkgrey;
+    -fx-background-radius: 0;
+}
+
+.clearButtonsContainer .button:armed {
+    -fx-background-color: darkcyan;
+    -fx-background-radius: 0;
+}
+
+.clearButtonsContainer .toggle-button:selected {
+    -fx-background-color: lightgray;
+    -fx-background-radius: 0;
+}
+
+
 .loadingText {
     -fx-font-size: 18px;
     -fx-font-weight: bold;

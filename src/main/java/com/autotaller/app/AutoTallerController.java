@@ -1,9 +1,7 @@
 package com.autotaller.app;
 
-import com.autotaller.app.events.app_view.admin_view.GetCarMakesEvent;
-import com.autotaller.app.events.app_view.admin_view.GetCarMakesEventHandler;
+import com.autotaller.app.events.app_view.admin_view.*;
 import com.autotaller.app.events.app_view.ShowAppViewEvent;
-import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
 import com.autotaller.app.events.login_view.*;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
@@ -131,6 +129,18 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           }
         });
         thread.start();
+      } catch (Exception e) {
+        //TODO show error dialog
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
+
+    EventBus.addHandler(GetCarModelsEvent.TYPE, (GetCarModelsEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Incarcare Modele"));
+        event.getCallback().call(null);
+        EventBus.fireEvent(new UnmaskViewEvent());
       } catch (Exception e) {
         //TODO show error dialog
         e.printStackTrace();
