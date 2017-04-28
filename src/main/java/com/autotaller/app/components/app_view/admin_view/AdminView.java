@@ -27,8 +27,8 @@ public class AdminView extends IterableView implements AdminController.IAdminVie
     ScrollPane scrollPane = new ScrollPane(vBox) {public void requestFocus() {}};
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-    mainContainer.setCenter(scrollPane);
-    vBox.prefWidthProperty().bind(mainContainer.widthProperty());
+    borderPane.setCenter(scrollPane);
+    vBox.prefWidthProperty().bind(borderPane.widthProperty());
   }
 
   @Override

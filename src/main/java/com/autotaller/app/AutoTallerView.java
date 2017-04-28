@@ -1,10 +1,5 @@
 package com.autotaller.app;
 
-import com.autotaller.app.components.utils.MaskableView;
-import com.autotaller.app.events.mask_view.MaskViewEvent;
-import com.autotaller.app.events.mask_view.MaskViewEventHandler;
-import com.autotaller.app.events.mask_view.UnmaskViewEvent;
-import com.autotaller.app.events.mask_view.UnmaskViewEventHandler;
 import com.autotaller.app.utils.resources.ImageProvider;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.geometry.Pos;
@@ -15,7 +10,7 @@ import javafx.scene.layout.GridPane;
 /**
  * Created by razvanolar on 14.04.2017
  */
-public class AutoTallerView extends MaskableView implements AutoTallerController.IAutoTallerView {
+public class AutoTallerView implements AutoTallerController.IAutoTallerView {
 
   private BorderPane mainContainer;
   private Node adminMenu;
@@ -24,7 +19,6 @@ public class AutoTallerView extends MaskableView implements AutoTallerController
   public AutoTallerView() {
     super();
     init();
-    addHandlers();
   }
 
   private void init() {
@@ -48,18 +42,6 @@ public class AutoTallerView extends MaskableView implements AutoTallerController
     gridPane.add(exitMenu, 2, 1);
 
     mainContainer = new BorderPane(gridPane);
-
-    stackPane.getChildren().add(mainContainer);
-  }
-
-  private void addHandlers() {
-    EventBus.addHandler(MaskViewEvent.TYPE, (MaskViewEventHandler) event -> {
-      maskView(event.getMessage());
-    }, true);
-
-    EventBus.addHandler(UnmaskViewEvent.TYPE, (UnmaskViewEventHandler) event -> {
-      unmaskView();
-    }, true);
   }
 
   public Node getAdminMenu() {
@@ -72,6 +54,6 @@ public class AutoTallerView extends MaskableView implements AutoTallerController
 
   @Override
   public Node asNode() {
-    return stackPane;
+    return mainContainer;
   }
 }

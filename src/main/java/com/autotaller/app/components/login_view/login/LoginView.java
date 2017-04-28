@@ -61,7 +61,7 @@ public class LoginView extends MaskableView implements LoginController.ILoginVie
     gridPane.setHgap(10);
     gridPane.setVgap(10);
 
-    stackPane.getChildren().add(gridPane);
+    mainContainer.getChildren().add(gridPane);
   }
 
   private void addHandlers() {
@@ -103,6 +103,6 @@ public class LoginView extends MaskableView implements LoginController.ILoginVie
 
   @Override
   public Node asNode() {
-    return stackPane;
+    return mainContainer;
   }
 }

@@ -89,16 +89,16 @@ public class AdminController implements Controller<AdminController.IAdminView> {
         EventBus.fireEvent(new MaskViewEvent("Adaugare Marca"));
         Thread thread = new Thread(() -> {
           try {
-            System.out.println("start repo");
-            Thread.sleep(5000);
-            System.out.println("end repo");
-//            repository.addCarModel(event.getCarTypeModel());
+            repository.addCarModel(event.getCarTypeModel());
             Platform.runLater(() -> {
               EventBus.fireEvent(new UnmaskViewEvent());
             });
           } catch (Exception e) {
             //TODO handle exception
             e.printStackTrace();
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+            });
           }
         });
         thread.start();
