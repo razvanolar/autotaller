@@ -11,6 +11,7 @@ public class StyleProvider {
   public static final String ERROR_TEXT_COLOR_CLASS = "errorTextColor";
   public static final String DEFAULT_LINK_HOVER_CLASS = "defaultLinkBackground";
   public static final String DEFAULT_BUTTON_CLASS = "defaultButtonStyle";
+  public static final String REMOVE_BUTTON_CLASS = "removeButtonStyle";
   public static final String MASK_VIEW_BACKGROUND_CLASS = "maskViewBackground";
   public static final String APP_MENU_BOX_CLASS = "appMenuBox";
   public static final String BUTTONS_CONTAINER_CLASS = "clearButtonsContainer";

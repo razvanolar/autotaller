@@ -27,6 +27,12 @@ public class NodeProvider {
     return button;
   }
 
+  public static JFXButton createRemoveButton(String text) {
+    JFXButton button = new JFXButton(text);
+    button.getStyleClass().add(StyleProvider.REMOVE_BUTTON_CLASS);
+    return button;
+  }
+
   public static JFXTextField createTextField(String promptText, boolean labelFloat, int minWidth) {
     JFXTextField textField = new JFXTextField();
     textField.setPromptText(promptText);

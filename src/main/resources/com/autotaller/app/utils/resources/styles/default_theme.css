@@ -56,6 +56,19 @@
     -fx-background-color: cadetblue;
 }
 
+.removeButtonStyle {
+    -fx-background-color: rgba(204,10,7,0.7);
+    -fx-text-fill: aliceblue;
+}
+
+.removeButtonStyle:hover {
+    -fx-background-color: rgba(204,10,7,0.64);
+}
+
+.removeButtonStyle:focused {
+    -fx-background-color: rgba(204,10,7,0.46);
+}
+
 .maskViewBackground {
     -fx-background-color: rgba(50, 100, 100, 0.4);
 }
