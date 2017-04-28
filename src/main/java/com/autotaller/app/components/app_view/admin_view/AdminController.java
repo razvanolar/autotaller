@@ -8,6 +8,8 @@ import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AddCarM
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AddCarMakeEventHandler;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLoadCarMakesEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarMakesEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AddCarModelEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AddCarModelEventHandler;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
 import com.autotaller.app.repository.Repository;
@@ -68,6 +70,31 @@ public class AdminController implements Controller<AdminController.IAdminView> {
             Platform.runLater(() -> {
               EventBus.fireEvent(new UnmaskViewEvent());
               EventBus.fireEvent(new GetCarMakesEvent(cars -> EventBus.fireEvent(new AdminLoadCarMakesEvent(cars))));
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
+
+    EventBus.addHandler(AddCarModelEvent.TYPE, (AddCarModelEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Adaugare Marca"));
+        Thread thread = new Thread(() -> {
+          try {
+            System.out.println("start repo");
+            Thread.sleep(5000);
+            System.out.println("end repo");
+//            repository.addCarModel(event.getCarTypeModel());
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
             });
           } catch (Exception e) {
             //TODO handle exception

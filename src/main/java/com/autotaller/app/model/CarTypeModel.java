@@ -1,22 +1,28 @@
 package com.autotaller.app.model;
 
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by razvanolar on 20.04.2017
  */
 public class CarTypeModel {
 
+  private int id;
   private CarMakeModel carMake;
   private String name;
-  private Date from;
-  private Date to;
+  private LocalDate from;
+  private LocalDate to;
+  private List<String> engineNames;
 
-  public CarTypeModel(CarMakeModel carMake, String name, Date from, Date to) {
+  public CarTypeModel(int id, CarMakeModel carMake, String name, LocalDate from, LocalDate to, List<String> engineNames) {
+    this.id = id;
     this.carMake = carMake;
     this.name = name;
     this.from = from;
     this.to = to;
+    this.engineNames = engineNames;
   }
 
   public CarMakeModel getCarMake() {
@@ -27,12 +33,16 @@ public class CarTypeModel {
     return name;
   }
 
-  public Date getFrom() {
+  public LocalDate getFrom() {
     return from;
   }
 
-  public Date getTo() {
+  public LocalDate getTo() {
     return to;
+  }
+
+  public List<String> getEngineNames() {
+    return engineNames;
   }
 
   public void setCarMake(CarMakeModel carMake) {
@@ -43,11 +53,11 @@ public class CarTypeModel {
     this.name = name;
   }
 
-  public void setFrom(Date from) {
+  public void setFrom(LocalDate from) {
     this.from = from;
   }
 
-  public void setTo(Date to) {
+  public void setTo(LocalDate to) {
     this.to = to;
   }
 }

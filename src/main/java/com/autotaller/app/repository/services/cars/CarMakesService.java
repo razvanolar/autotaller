@@ -42,6 +42,37 @@ public class CarMakesService extends GenericService {
     }
   }
 
+  public List<CarMakeModel> getCarMakesByIds(List<Integer> ids) throws Exception {
+    Connection connection = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      return getCarMakesByIds(ids, connection);
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.closeConnection(connection);
+    }
+  }
+
+  public List<CarMakeModel> getCarMakesByIds(List<Integer> ids, Connection connection) throws Exception {
+    PreparedStatement statement = null;
+    ResultSet rs = null;
+    try {
+      String query = "SELECT id, name FROM car_makes WHERE id  IN (" + jdbcUtil.getInnerClause(ids) + ")";
+      statement = connection.prepareStatement(query);
+      rs = statement.executeQuery();
+      List<CarMakeModel> result = new ArrayList<>();
+      while (rs.next()) {
+        result.add(new CarMakeModel(rs.getInt(1), rs.getString(2)));
+      }
+      return result;
+    } finally {
+      jdbcUtil.closePrepareStatement(statement);
+      jdbcUtil.closeResultSet(rs);
+    }
+  }
+
   public void addCarMake(String name) throws Exception {
     Connection connection = null;
     PreparedStatement statement = null;

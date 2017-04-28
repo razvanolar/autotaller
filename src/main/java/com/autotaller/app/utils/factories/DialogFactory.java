@@ -3,6 +3,7 @@ package com.autotaller.app.utils.factories;
 import com.autotaller.app.components.utils.JFXOkCancelDialog;
 import com.autotaller.app.utils.Component;
 import com.autotaller.app.utils.DialogComponentType;
+import com.autotaller.app.utils.DialogController;
 import com.jfoenix.controls.JFXDialog;
 
 /**
@@ -24,8 +25,13 @@ public class DialogFactory {
   public static JFXDialog createDialog(DialogComponentType type, Component component) {
     JFXDialog dialog = new JFXDialog();
     JFXOkCancelDialog dialogView = new JFXOkCancelDialog(type.getTitle(), type.getActionButtonText(), dialog);
-    if (component != null)
+    if (component != null) {
       dialogView.setBody(component.getView().asNode());
+      if (component.getController() instanceof DialogController) {
+        DialogController controller = (DialogController) component.getController();
+        controller.injectActionButton(dialogView.getOkButton());
+      }
+    }
     dialog.setContent(dialogView);
     dialog.setTransitionType(JFXDialog.DialogTransition.CENTER);
     return dialog;

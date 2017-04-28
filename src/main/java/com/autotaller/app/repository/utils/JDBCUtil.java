@@ -1,6 +1,8 @@
 package com.autotaller.app.repository.utils;
 
 import java.sql.*;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by razvanolar on 11.04.2017
@@ -114,5 +116,16 @@ public class JDBCUtil {
       System.out.println("Unable to close result set. Attempts left: " + attemptsLeft);
       closeResultSet(resultSet, attemptsLeft);
     }
+  }
+
+  public String getInnerClause(Collection<Integer> ids) {
+    if (ids == null || ids.isEmpty())
+      return "";
+    StringBuilder rez = new StringBuilder();
+    for (Integer i : ids) {
+      rez.append(i).append(", ");
+    }
+    String s = rez.toString();
+    return s.substring(0, s.length() - 2);
   }
 }

@@ -1,12 +1,21 @@
 package com.autotaller.app.components.app_view.admin_view.admin_car_model_view;
 
+import com.autotaller.app.EventBus;
+import com.autotaller.app.events.app_view.HideDialogEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AddCarModelEvent;
 import com.autotaller.app.model.CarMakeModel;
+import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.DialogController;
+import com.autotaller.app.utils.StringValidator;
 import com.autotaller.app.utils.View;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,9 +25,15 @@ public class AddCarModelDialogController implements Controller<AddCarModelDialog
 
   public interface IAddCarModelDialogView extends View {
     ComboBox<CarMakeModel> getCarMakesCombo();
+    TextField getNameTextField();
+    DatePicker getFromDatePicker();
+    DatePicker getToDatePicker();
+    List<TextField> getEngineTextFields();
   }
 
+  private IAddCarModelDialogView view;
   private List<CarMakeModel> carMakes;
+  private Button actionButton;
 
   public AddCarModelDialogController(List<CarMakeModel> carMakes) {
     this.carMakes = carMakes;
@@ -26,12 +41,65 @@ public class AddCarModelDialogController implements Controller<AddCarModelDialog
 
   @Override
   public void bind(IAddCarModelDialogView view) {
+    this.view = view;
+
     view.getCarMakesCombo().getItems().addAll(carMakes);
     view.getCarMakesCombo().setValue(carMakes.get(0));
+
+    view.getNameTextField().setOnKeyReleased(event -> {
+      if (actionButton != null)
+        actionButton.setDisable(!isValidSelection());
+    });
+
+    view.getFromDatePicker().valueProperty().addListener((observable, oldValue, newValue) -> {
+      if (actionButton != null)
+        actionButton.setDisable(!isValidName() || !isValidInterval(newValue));
+    });
   }
 
   @Override
   public void injectActionButton(Button actionButton) {
+    this.actionButton = actionButton;
+    actionButton.setDisable(!isValidSelection());
+    actionButton.setOnAction(event -> {
+      if (isValidSelection()) {
+        EventBus.fireEvent(new HideDialogEvent());
+        EventBus.fireEvent(new AddCarModelEvent(collect()));
+      }
+    });
+  }
 
+  private CarTypeModel collect() {
+    List<TextField> engineTextFields = view.getEngineTextFields();
+    List<String> engines = null;
+    if (engineTextFields != null && !engineTextFields.isEmpty()) {
+      engines = new ArrayList<>(engineTextFields.size());
+      for (TextField field : engineTextFields) {
+        if (!StringValidator.isNullOrEmpty(field.getText())) {
+          engines.add(field.getText());
+        }
+      }
+    }
+    return new CarTypeModel(-1, view.getCarMakesCombo().getValue(),
+            view.getNameTextField().getText(),
+            view.getFromDatePicker().getValue(),
+            view.getToDatePicker().getValue(),
+            engines);
+  }
+
+  private boolean isValidSelection() {
+    return isValidName() && isValidInterval();
+  }
+
+  private boolean isValidName() {
+    return !StringValidator.isNullOrEmpty(view.getNameTextField().getText());
+  }
+
+  private boolean isValidInterval() {
+    return isValidInterval(view.getFromDatePicker().getValue());
+  }
+
+  private boolean isValidInterval(LocalDate date) {
+    return date != null;
   }
 }

@@ -1,8 +1,10 @@
 package com.autotaller.app.repository;
 
 import com.autotaller.app.model.CarMakeModel;
+import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.repository.services.UserService;
 import com.autotaller.app.repository.services.cars.CarMakesService;
+import com.autotaller.app.repository.services.cars.CarModelService;
 import com.autotaller.app.repository.utils.JDBCUtil;
 
 import java.util.List;
@@ -15,6 +17,7 @@ public class Repository {
   private JDBCUtil jdbcUtil;
   private UserService userService;
   private CarMakesService carMakesService;
+  private CarModelService carModelService;
 
   public Repository() throws Exception {
     try {
@@ -47,6 +50,20 @@ public class Repository {
     carMakesService.addCarMake(name);
   }
 
+
+  /*
+    CarModelService
+   */
+
+  public List<CarTypeModel> getCarModels() throws Exception {
+    return carModelService.getCarModels();
+  }
+
+  public void addCarModel(CarTypeModel carModel) throws Exception {
+    carModelService.addCarModel(carModel);
+  }
+
+
   public void testConnection() throws Exception {
     jdbcUtil.testConnection();
     System.out.println("[ Test Connection executed successfully ]");
@@ -58,5 +75,6 @@ public class Repository {
   private void initServices() throws Exception {
     userService = new UserService(jdbcUtil);
     carMakesService = new CarMakesService(jdbcUtil);
+    carModelService = new CarModelService(jdbcUtil, carMakesService);
   }
 }

@@ -53,9 +53,13 @@ public class AutoTallerView extends MaskableView implements AutoTallerController
   }
 
   private void addHandlers() {
-    EventBus.addHandler(MaskViewEvent.TYPE, (MaskViewEventHandler) event -> maskView(event.getMessage()));
+    EventBus.addHandler(MaskViewEvent.TYPE, (MaskViewEventHandler) event -> {
+      maskView(event.getMessage());
+    }, true);
 
-    EventBus.addHandler(UnmaskViewEvent.TYPE, (UnmaskViewEventHandler) event -> unmaskView());
+    EventBus.addHandler(UnmaskViewEvent.TYPE, (UnmaskViewEventHandler) event -> {
+      unmaskView();
+    }, true);
   }
 
   public Node getAdminMenu() {

@@ -64,25 +64,35 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
     EventBus.addHandler(TestCredentialsEvent.TYPE, (TestCredentialsEventHandler) event -> {
       try {
         EventBus.fireEvent(new MaskViewEvent("Autentificare"));
-        int userId = repository.getUserIdByCredentials(event.getUsername(), event.getPassword());
-        if (userId < 0) {
-          EventBus.fireEvent(new AuthenticationFailedEvent());
-          EventBus.fireEvent(new UnmaskViewEvent());
-          return;
-        }
-        EventBus.fireEvent(new ReleaseLoginViewEvent());
-        // init autoTallerView
-        initAppView();
-        EventBus.fireEvent(new ShowAppViewEvent(autoTallerView));
-        Notifications notification = Notifications.create()
-                .title("Notificare")
-                .text("Autentificat la: " + (new Date(System.currentTimeMillis())).toLocaleString())
-                .hideAfter(Duration.seconds(4))
-                .position(Pos.BOTTOM_RIGHT)
-                .graphic(null)
-                .materiaDesignStyle()
-                .setHeaderCheck();
-        notification.show();
+        Thread thread = new Thread(() -> {
+          try {
+            int userId = repository.getUserIdByCredentials(event.getUsername(), event.getPassword());
+            Platform.runLater(() -> {
+              if (userId < 0) {
+                EventBus.fireEvent(new AuthenticationFailedEvent());
+                EventBus.fireEvent(new UnmaskViewEvent());
+                return;
+              }
+              EventBus.fireEvent(new ReleaseLoginViewEvent());
+              // init autoTallerView
+              initAppView();
+              EventBus.fireEvent(new ShowAppViewEvent(autoTallerView));
+              Notifications notification = Notifications.create()
+                      .title("Notificare")
+                      .text("Autentificat la: " + (new Date(System.currentTimeMillis())).toLocaleString())
+                      .hideAfter(Duration.seconds(4))
+                      .position(Pos.BOTTOM_RIGHT)
+                      .graphic(null)
+                      .materiaDesignStyle()
+                      .setHeaderCheck();
+              notification.show();
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+          }
+        });
+        thread.start();
       } catch (NullPointerException npe) {
         npe.printStackTrace();
       } catch (Exception e) {

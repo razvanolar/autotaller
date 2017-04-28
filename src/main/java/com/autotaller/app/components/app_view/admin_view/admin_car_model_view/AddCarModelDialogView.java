@@ -2,11 +2,11 @@ package com.autotaller.app.components.app_view.admin_view.admin_car_model_view;
 
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.utils.resources.NodeProvider;
-import com.jfoenix.controls.JFXDatePicker;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -23,8 +23,8 @@ public class AddCarModelDialogView implements AddCarModelDialogController.IAddCa
   private GridPane gridPane;
   private ComboBox<CarMakeModel> carMakesCombo;
   private TextField nameTextField;
-  private JFXDatePicker fromDatePicker;
-  private JFXDatePicker toDatePicker;
+  private DatePicker fromDatePicker;
+  private DatePicker toDatePicker;
   private Button addEngineFieldButton;
 
   private List<TextField> engineTextFields;
@@ -41,12 +41,14 @@ public class AddCarModelDialogView implements AddCarModelDialogController.IAddCa
   private void init() {
     carMakesCombo = new ComboBox<>();
     nameTextField = new TextField();
-    fromDatePicker = new JFXDatePicker();
-    toDatePicker = new JFXDatePicker();
+    fromDatePicker = new DatePicker();
+    toDatePicker = new DatePicker();
     addEngineFieldButton = NodeProvider.createButton("Adauga Camp");
 
     carMakesCombo.setPrefWidth(FIELD_WIDTH);
     nameTextField.setPrefWidth(FIELD_WIDTH);
+    fromDatePicker.setPrefWidth(FIELD_WIDTH);
+    toDatePicker.setPrefWidth(FIELD_WIDTH);
 
     gridPane = new GridPane();
     gridPane.setAlignment(Pos.CENTER);
@@ -114,6 +116,22 @@ public class AddCarModelDialogView implements AddCarModelDialogController.IAddCa
 
   public ComboBox<CarMakeModel> getCarMakesCombo() {
     return carMakesCombo;
+  }
+
+  public TextField getNameTextField() {
+    return nameTextField;
+  }
+
+  public DatePicker getFromDatePicker() {
+    return fromDatePicker;
+  }
+
+  public DatePicker getToDatePicker() {
+    return toDatePicker;
+  }
+
+  public List<TextField> getEngineTextFields() {
+    return engineTextFields;
   }
 
   @Override
