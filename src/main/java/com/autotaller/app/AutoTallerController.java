@@ -10,6 +10,7 @@ import com.autotaller.app.events.test_connection.TestConnectionEventHandler;
 import com.autotaller.app.events.test_connection.TestConnectionFailedEvent;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.model.CarMakeModel;
+import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.Component;
 import com.autotaller.app.utils.ComponentType;
@@ -149,8 +150,20 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
     EventBus.addHandler(GetCarModelsEvent.TYPE, (GetCarModelsEventHandler) event -> {
       try {
         EventBus.fireEvent(new MaskViewEvent("Incarcare Modele"));
-        event.getCallback().call(null);
-        EventBus.fireEvent(new UnmaskViewEvent());
+        Thread thread = new Thread(() -> {
+          try {
+            List<CarTypeModel> carModels = repository.getCarModels();
+            Platform.runLater(() -> {
+              event.getCallback().call(carModels);
+              EventBus.fireEvent(new UnmaskViewEvent());
+            });
+          } catch (Exception e) {
+            //TODO show error dialog
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
       } catch (Exception e) {
         //TODO show error dialog
         e.printStackTrace();

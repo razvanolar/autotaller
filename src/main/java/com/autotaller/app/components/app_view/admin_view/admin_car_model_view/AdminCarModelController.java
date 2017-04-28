@@ -4,13 +4,18 @@ import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLoadCarMakesEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLoadCarMakesEventHandler;
+import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AdminLoadCarModelsEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AdminLoadCarModelsEventHandler;
 import com.autotaller.app.model.CarMakeModel;
+import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.utils.Component;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.DialogComponentType;
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.factories.DialogFactory;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
 
 import java.util.List;
@@ -23,11 +28,13 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
   public interface IAdminCarModelView extends View {
     Button getAddCarModelButton();
     ToggleButton getFilterButton();
+    TableView<CarTypeModel> getCarModelTable();
     void showFilterPane();
     void hideFilterPane();
   }
 
   private List<CarMakeModel> carMakes;
+  private List<CarTypeModel> carModels;
 
   @Override
   public void bind(IAdminCarModelView view) {
@@ -48,5 +55,12 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
     });
 
     EventBus.addHandler(AdminLoadCarMakesEvent.TYPE, (AdminLoadCarMakesEventHandler) event -> carMakes = event.getCarMakeModels());
+
+    EventBus.addHandler(AdminLoadCarModelsEvent.TYPE, (AdminLoadCarModelsEventHandler) event -> {
+      carModels = event.getCarModels();
+      ObservableList<CarTypeModel> items = view.getCarModelTable().getItems();
+      items.clear();
+      items.addAll(carModels);
+    });
   }
 }

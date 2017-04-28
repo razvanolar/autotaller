@@ -10,6 +10,7 @@ import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLo
 import com.autotaller.app.events.app_view.admin_view.GetCarMakesEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AddCarModelEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AddCarModelEventHandler;
+import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AdminLoadCarModelsEvent;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
 import com.autotaller.app.repository.Repository;
@@ -45,6 +46,7 @@ public class AdminController implements Controller<AdminController.IAdminView> {
     });
 
     loadCarMakes();
+    loadCarModels();
   }
 
   private void initToolbarPanes() {
@@ -69,7 +71,7 @@ public class AdminController implements Controller<AdminController.IAdminView> {
             repository.addCarMake(event.getCarMakeName());
             Platform.runLater(() -> {
               EventBus.fireEvent(new UnmaskViewEvent());
-              EventBus.fireEvent(new GetCarMakesEvent(cars -> EventBus.fireEvent(new AdminLoadCarMakesEvent(cars))));
+              loadCarMakes();
             });
           } catch (Exception e) {
             //TODO handle exception
@@ -92,13 +94,12 @@ public class AdminController implements Controller<AdminController.IAdminView> {
             repository.addCarModel(event.getCarTypeModel());
             Platform.runLater(() -> {
               EventBus.fireEvent(new UnmaskViewEvent());
+              loadCarModels();
             });
           } catch (Exception e) {
             //TODO handle exception
             e.printStackTrace();
-            Platform.runLater(() -> {
-              EventBus.fireEvent(new UnmaskViewEvent());
-            });
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
           }
         });
         thread.start();
@@ -114,19 +115,7 @@ public class AdminController implements Controller<AdminController.IAdminView> {
     EventBus.fireEvent(new GetCarMakesEvent(cars -> EventBus.fireEvent(new AdminLoadCarMakesEvent(cars))));
   }
 
-  private void initCarModelsView() {
-    System.out.println("initCarModelsView");
-    EventBus.fireEvent(new GetCarModelsEvent(carModels -> {
-      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_CAR_MODEL_VIEW);
-      if (component != null) {
-//        view.setContent(component.getView());
-      } else {
-        //TODO handle exception
-      }
-    }));
-  }
-
-  private void initCarsView() {
-
+  private void loadCarModels() {
+    EventBus.fireEvent(new GetCarModelsEvent(carModels -> EventBus.fireEvent(new AdminLoadCarModelsEvent(carModels))));
   }
 }

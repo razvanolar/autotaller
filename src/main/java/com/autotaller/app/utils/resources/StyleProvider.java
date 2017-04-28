@@ -17,6 +17,8 @@ public class StyleProvider {
   public static final String BUTTONS_CONTAINER_CLASS = "clearButtonsContainer";
   public static final String ADMIN_TOOLBAR_PANE_CLASS = "adminToolbarPaneBackground";
 
+  public static final String CENTERED_TABLE_CELL_TEXT_CSS = "-fx-alignment: CENTER;";
+
   public static String getDefaultTheme() {
     String path = StyleProvider.class.getResource("styles/default_theme.css").getPath();
     return path.contains("!") ? path.substring(path.lastIndexOf("!") + 1) : "file:///" + path.replace("\\", "/");

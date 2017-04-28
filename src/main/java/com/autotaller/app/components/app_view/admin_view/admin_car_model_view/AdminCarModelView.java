@@ -67,6 +67,10 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
     return filterButton;
   }
 
+  public TableView<CarTypeModel> getCarModelTable() {
+    return carModelTable;
+  }
+
   public void showFilterPane() {
     if (!splitPane.getItems().contains(filterPane)) {
       splitPane.getItems().add(0, filterPane);

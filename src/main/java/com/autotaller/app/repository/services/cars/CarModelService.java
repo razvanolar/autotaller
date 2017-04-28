@@ -35,12 +35,13 @@ public class CarModelService extends GenericService {
       engineStatement = connection.prepareStatement("SELECT engine_name FROM car_model_engines WHERE car_model_id = ?");
       while (rs.next()) {
         int id = rs.getInt(1);
+        Date toDate = rs.getDate(4);
         result.add(new CarTypeModel(
                   id,
                   new CarMakeModel(rs.getInt(5), rs.getString(6)),
                   rs.getString(2),
                   rs.getDate(3).toLocalDate(),
-                  rs.getDate(4).toLocalDate(),
+                  toDate != null ? toDate.toLocalDate() : null,
                   getEnginesForCarModelId(id, engineStatement)
                 )
         );

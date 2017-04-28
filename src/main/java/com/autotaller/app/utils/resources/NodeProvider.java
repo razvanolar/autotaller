@@ -4,6 +4,8 @@ import com.autotaller.app.model.CarTypeModel;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
@@ -118,6 +120,37 @@ public class NodeProvider {
     fromColumn.prefWidthProperty().bind(table.widthProperty().multiply(.17));
     toColumn.prefWidthProperty().bind(table.widthProperty().multiply(.17));
     makeColumn.prefWidthProperty().bind(table.widthProperty().multiply(.33));
+
+    nameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getName()) : new SimpleStringProperty());
+    fromColumn.setCellValueFactory(p -> {
+      CarTypeModel value = p.getValue();
+      if (value != null && value.getFrom() != null) {
+        return new SimpleStringProperty(value.getFrom().toString());
+      } else {
+        return new SimpleStringProperty();
+      }
+    });
+    toColumn.setCellValueFactory(p -> {
+      CarTypeModel value = p.getValue();
+      if (value != null && value.getTo() != null) {
+        return new SimpleStringProperty(value.getTo().toString());
+      } else {
+        return new SimpleStringProperty();
+      }
+    });
+    makeColumn.setCellValueFactory(p -> {
+      CarTypeModel value = p.getValue();
+      if (value != null && value.getCarMake() != null) {
+        return new SimpleStringProperty(value.getCarMake().getName());
+      } else {
+        return new SimpleStringProperty();
+      }
+    });
+
+    nameColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    fromColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    toColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    makeColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
 
     table.getColumns().addAll(nameColumn, fromColumn, toColumn, makeColumn);
     return table;
