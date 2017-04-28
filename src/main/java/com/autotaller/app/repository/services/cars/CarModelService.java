@@ -5,10 +5,7 @@ import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.repository.services.GenericService;
 import com.autotaller.app.repository.utils.JDBCUtil;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,11 +16,8 @@ import java.util.Set;
  */
 public class CarModelService extends GenericService {
 
-  private CarMakesService carMakesService;
-
-  public CarModelService(JDBCUtil jdbcUtil, CarMakesService carMakesService) {
+  public CarModelService(JDBCUtil jdbcUtil) {
     super(jdbcUtil);
-    this.carMakesService = carMakesService;
   }
 
   public List<CarTypeModel> getCarModels() throws Exception {
@@ -77,7 +71,12 @@ public class CarModelService extends GenericService {
       carStatement = connection.prepareStatement(sql);
       carStatement.setString(1, carModel.getName());
       carStatement.setDate(2, Date.valueOf(carModel.getFrom()));
-      carStatement.setDate(3, Date.valueOf(carModel.getTo()));
+      if (carModel.getTo() != null) {
+        carStatement.setDate(3, Date.valueOf(carModel.getTo()));
+      } else {
+        carStatement.setNull(3, Types.DATE);
+      }
+
       carStatement.setInt(4, carModel.getCarMake().getId());
       carStatement.executeUpdate();
 
@@ -103,7 +102,7 @@ public class CarModelService extends GenericService {
 
       connection.commit();
     } catch (Exception e) {
-      //TODO handle exeption
+      //TODO handle exception
       e.printStackTrace();
       if (connection != null)
         connection.rollback();

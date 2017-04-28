@@ -75,6 +75,6 @@ public class Repository {
   private void initServices() throws Exception {
     userService = new UserService(jdbcUtil);
     carMakesService = new CarMakesService(jdbcUtil);
-    carModelService = new CarModelService(jdbcUtil, carMakesService);
+    carModelService = new CarModelService(jdbcUtil);
   }
 }
