@@ -4,7 +4,6 @@ import com.autotaller.app.components.app_view.AutoTallerMenuBarController;
 import com.autotaller.app.components.app_view.admin_view.AdminController;
 import com.autotaller.app.components.app_view.admin_view.admin_car_make_view.AddCarMakeDialogController;
 import com.autotaller.app.components.app_view.admin_view.admin_car_make_view.AdminCarMakeController;
-import com.autotaller.app.components.app_view.admin_view.admin_car_model_view.AddCarModelDialogController;
 import com.autotaller.app.components.app_view.admin_view.admin_car_model_view.AdminCarModelController;
 import com.autotaller.app.components.login_view.login.LoginController;
 import com.autotaller.app.components.login_view.sign_up.SignUpController;

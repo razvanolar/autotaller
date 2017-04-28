@@ -2,7 +2,6 @@ package com.autotaller.app.repository.utils;
 
 import java.sql.*;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by razvanolar on 11.04.2017
