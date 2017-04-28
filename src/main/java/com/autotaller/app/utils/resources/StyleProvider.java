@@ -14,6 +14,7 @@ public class StyleProvider {
   public static final String MASK_VIEW_BACKGROUND_CLASS = "maskViewBackground";
   public static final String APP_MENU_BOX_CLASS = "appMenuBox";
   public static final String BUTTONS_CONTAINER_CLASS = "clearButtonsContainer";
+  public static final String ADMIN_TOOLBAR_PANE_CLASS = "adminToolbarPaneBackground";
 
   public static String getDefaultTheme() {
     String path = StyleProvider.class.getResource("styles/default_theme.css").getPath();

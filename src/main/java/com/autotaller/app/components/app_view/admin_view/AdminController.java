@@ -17,9 +17,7 @@ import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.factories.ComponentFactory;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.Node;
 
 /**
  * Created by razvanolar on 18.04.2017
@@ -27,10 +25,7 @@ import javafx.scene.control.ToggleButton;
 public class AdminController implements Controller<AdminController.IAdminView> {
 
   public interface IAdminView extends View {
-    void setContent(View view);
-    ToggleButton getAddCarMakeButton();
-    ToggleButton getAddCarModelButton();
-    ToggleButton getAddCarButton();
+    void addToolbarPane(Node toolbarPane);
   }
 
   private IAdminView view;
@@ -40,27 +35,27 @@ public class AdminController implements Controller<AdminController.IAdminView> {
   public void bind(IAdminView view) {
     this.view = view;
 
-    view.getAddCarMakeButton().setSelected(true);
-
-    EventHandler<ActionEvent> actionEventHandler = event -> {
-      if (event.getSource() == view.getAddCarMakeButton() && view.getAddCarMakeButton().isSelected()) {
-        initCarMakesView();
-      } else if (event.getSource() == view.getAddCarModelButton() && view.getAddCarModelButton().isSelected()) {
-        initCarModelsView();
-      } else if (event.getSource() == view.getAddCarButton() && view.getAddCarButton().isSelected()) {
-        initCarsView();
-      }
-    };
-    view.getAddCarMakeButton().setOnAction(actionEventHandler);
-    view.getAddCarModelButton().setOnAction(actionEventHandler);
-    view.getAddCarButton().setOnAction(actionEventHandler);
+    initToolbarPanes();
 
     EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> {
       this.repository = event.getRepository();
       initRepoHandlers();
     });
 
-    initCarMakesView();
+    loadCarMakes();
+  }
+
+  private void initToolbarPanes() {
+    Component carMakeComponent = ComponentFactory.createComponent(ComponentType.ADMIN_CAR_MAKE_VIEW);
+    Component carModelComponent = ComponentFactory.createComponent(ComponentType.ADMIN_CAR_MODEL_VIEW);
+
+    if (carMakeComponent == null || carModelComponent == null) {
+      //TODO handle exception
+      return;
+    }
+
+    view.addToolbarPane(carMakeComponent.getView().asNode());
+    view.addToolbarPane(carModelComponent.getView().asNode());
   }
 
   private void initRepoHandlers() {
@@ -88,24 +83,16 @@ public class AdminController implements Controller<AdminController.IAdminView> {
     });
   }
 
-  private void initCarMakesView() {
-    EventBus.fireEvent(new GetCarMakesEvent(cars -> {
-      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_CAR_MAKE_VIEW);
-      if (component != null) {
-        view.setContent(component.getView());
-        EventBus.fireEvent(new AdminLoadCarMakesEvent(cars));
-      } else {
-        //TODO handle exception
-      }
-    }));
+  private void loadCarMakes() {
+    EventBus.fireEvent(new GetCarMakesEvent(cars -> EventBus.fireEvent(new AdminLoadCarMakesEvent(cars))));
   }
 
   private void initCarModelsView() {
     System.out.println("initCarModelsView");
     EventBus.fireEvent(new GetCarModelsEvent(carModels -> {
-      Component component = ComponentFactory.createComponent(ComponentType.ADD_CAR_MODEL_VIEW);
+      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_CAR_MODEL_VIEW);
       if (component != null) {
-        view.setContent(component.getView());
+//        view.setContent(component.getView());
       } else {
         //TODO handle exception
       }

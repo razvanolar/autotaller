@@ -1,5 +1,6 @@
 package com.autotaller.app.components.app_view.admin_view.admin_car_make_view;
 
+import com.autotaller.app.components.app_view.admin_view.AdminToolbarPane;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.utils.resources.NodeProvider;
 import com.jfoenix.controls.JFXMasonryPane;
@@ -9,13 +10,14 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 
 /**
  * Created by razvanolar on 18.04.2017
  */
-public class AdminCarMakeView implements AdminCarMakeController.ICarsAdminView {
+public class AdminCarMakeView extends AdminToolbarPane implements AdminCarMakeController.ICarsAdminView {
 
-  private BorderPane mainContainer;
+  private BorderPane borderPane;
   private SplitPane splitPane;
   private JFXMasonryPane masonryPane;
   private Button addCarMakeButton;
@@ -30,13 +32,20 @@ public class AdminCarMakeView implements AdminCarMakeController.ICarsAdminView {
   private ScrollPane scrollPane;
 
   public AdminCarMakeView() {
+    super("Marca");
     init();
+    setContentNode(borderPane);
   }
 
   private void init() {
     masonryPane = new JFXMasonryPane();
 
-    scrollPane = new ScrollPane(masonryPane);
+    scrollPane = new ScrollPane(masonryPane) {
+      @Override
+      public void requestFocus() {
+
+      }
+    };
     scrollPane.setFitToHeight(true);
     scrollPane.setFitToWidth(true);
 
@@ -53,14 +62,21 @@ public class AdminCarMakeView implements AdminCarMakeController.ICarsAdminView {
     toolBar.setOrientation(Orientation.VERTICAL);
 
     splitPane = new SplitPane(scrollPane);
-    mainContainer = new BorderPane(splitPane);
-    mainContainer.setLeft(toolBar);
+    borderPane = new BorderPane(splitPane);
+    borderPane.setLeft(toolBar);
 
     initFilterCarMakePane();
+
+    borderPane.setPrefHeight(500);
   }
 
   private void initFilterCarMakePane() {
     filterCarMakePane = new GridPane();
+  }
+
+  @Override
+  protected void addToolbarButtons() {
+
   }
 
   @Override
@@ -95,7 +111,6 @@ public class AdminCarMakeView implements AdminCarMakeController.ICarsAdminView {
     masonryPane = new JFXMasonryPane();
     masonryPane.setCellWidth(CELL_WIDTH);
     masonryPane.setCellHeight(CELL_HEIGHT);
-//    masonryPane.setLimitColumn(5);
     scrollPane.setContent(masonryPane);
   }
 

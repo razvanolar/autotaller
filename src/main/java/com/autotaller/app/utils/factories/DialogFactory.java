@@ -20,4 +20,14 @@ public class DialogFactory {
     dialog.setTransitionType(JFXDialog.DialogTransition.CENTER);
     return dialog;
   }
+
+  public static JFXDialog createDialog(DialogComponentType type, Component component) {
+    JFXDialog dialog = new JFXDialog();
+    JFXOkCancelDialog dialogView = new JFXOkCancelDialog(type.getTitle(), type.getActionButtonText(), dialog);
+    if (component != null)
+      dialogView.setBody(component.getView().asNode());
+    dialog.setContent(dialogView);
+    dialog.setTransitionType(JFXDialog.DialogTransition.CENTER);
+    return dialog;
+  }
 }

@@ -44,6 +44,14 @@ public class ImageProvider {
     return getImage("icons/exit_menu_icon.png");
   }
 
+  public static Image plusIcon() {
+    return getImage("icons/plus.png");
+  }
+
+  public static Image minusIcon() {
+    return getImage("icons/minus.png");
+  }
+
   private static Image getImage(String file) {
     String path = ImageProvider.class.getResource(file).getPath();
     if (path.contains("!")) {

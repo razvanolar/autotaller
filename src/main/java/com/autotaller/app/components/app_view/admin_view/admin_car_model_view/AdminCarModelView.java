@@ -1,5 +1,6 @@
 package com.autotaller.app.components.app_view.admin_view.admin_car_model_view;
 
+import com.autotaller.app.components.app_view.admin_view.AdminToolbarPane;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.geometry.Orientation;
@@ -12,9 +13,9 @@ import javafx.scene.layout.GridPane;
 /**
  * Created by razvanolar on 20.04.2017
  */
-public class AddCarModelView implements AddCarModelController.IAddCarModelView {
+public class AdminCarModelView extends AdminToolbarPane implements AdminCarModelController.IAdminCarModelView {
 
-  private BorderPane mainContainer;
+  private BorderPane borderPane;
 
   private Button addCarModelButton;
   private ToggleButton filterButton;
@@ -25,8 +26,10 @@ public class AddCarModelView implements AddCarModelController.IAddCarModelView {
 
   private double lastDividerPosition = .25;
 
-  public AddCarModelView() {
+  public AdminCarModelView() {
+    super("Model");
     init();
+    setContentNode(borderPane);
   }
 
   private void init() {
@@ -46,8 +49,14 @@ public class AddCarModelView implements AddCarModelController.IAddCarModelView {
     toolBar.getItems().addAll(addCarModelGroup, filterGroup);
     toolBar.setOrientation(Orientation.VERTICAL);
 
-    mainContainer = new BorderPane(splitPane);
-    mainContainer.setLeft(toolBar);
+    borderPane = new BorderPane(splitPane);
+    borderPane.setLeft(toolBar);
+    borderPane.setPrefHeight(500);
+  }
+
+  @Override
+  protected void addToolbarButtons() {
+
   }
 
   public Button getAddCarModelButton() {

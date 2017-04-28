@@ -28,7 +28,7 @@ public class AdminCarMakeController implements Controller<AdminCarMakeController
 
   @Override
   public void bind(ICarsAdminView view) {
-
+    System.out.println("bind");
     view.getAddCarMakeButton().setOnAction(event -> EventBus.fireEvent(new ShowDialogEvent(DialogFactory.createDialog(DialogComponentType.ADD_CAR_MAKE_DIALOG))));
 
     view.getFilterCarMakeButton().setOnAction(event -> {
@@ -44,6 +44,6 @@ public class AdminCarMakeController implements Controller<AdminCarMakeController
       for (CarMakeModel car : event.getCarMakeModels()) {
         view.addNode(car);
       }
-    }, true);
+    });
   }
 }

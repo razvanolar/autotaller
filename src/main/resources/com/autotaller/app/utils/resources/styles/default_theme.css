@@ -67,3 +67,11 @@
 .appMenuBox:hover {
     -fx-background-color: darkcyan;
 }
+
+.adminToolbarPaneBackground {
+    -fx-background-color: darkgray;
+}
+
+.adminToolbarPaneBackground:hover {
+    -fx-background-color: rgba(8,52,112,0.3);
+}

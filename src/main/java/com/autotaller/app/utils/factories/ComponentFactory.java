@@ -8,8 +8,8 @@ import javafx.scene.control.Button;
  */
 public class ComponentFactory {
 
-  private static ControllerFactory controllerFactory = new ControllerFactory();
-  private static ViewFactory viewFactory = new ViewFactory();
+  public static ControllerFactory controllerFactory = new ControllerFactory();
+  public static ViewFactory viewFactory = new ViewFactory();
 
   public static Component createComponent(ComponentType type) {
     Controller controller = controllerFactory.createController(type);
