@@ -21,22 +21,12 @@ public class AdminCarMakeController implements Controller<AdminCarMakeController
     void addNode(CarMakeModel model);
     Button getAddCarMakeButton();
     ToggleButton getFilterCarMakeButton();
-    void showFilterCarMakePane();
-    void hideAdditionalPanel();
     void clearNodes();
   }
 
   @Override
   public void bind(ICarsAdminView view) {
     view.getAddCarMakeButton().setOnAction(event -> EventBus.fireEvent(new ShowDialogEvent(DialogFactory.createDialog(DialogComponentType.ADD_CAR_MAKE_DIALOG))));
-
-    view.getFilterCarMakeButton().setOnAction(event -> {
-      if (event.getSource() == view.getFilterCarMakeButton() && view.getFilterCarMakeButton().isSelected()) {
-        view.showFilterCarMakePane();
-      } else {
-        view.hideAdditionalPanel();
-      }
-    });
 
     EventBus.addHandler(AdminLoadCarMakesEvent.TYPE, (AdminLoadCarMakesEventHandler) event -> {
       view.clearNodes();

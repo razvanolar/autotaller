@@ -1,8 +1,11 @@
 package com.autotaller.app.repository;
 
+import com.autotaller.app.model.CarKitCategoryModel;
+import com.autotaller.app.model.CarKitModel;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.repository.services.UserService;
+import com.autotaller.app.repository.services.cars.CarKitsService;
 import com.autotaller.app.repository.services.cars.CarMakesService;
 import com.autotaller.app.repository.services.cars.CarModelService;
 import com.autotaller.app.repository.utils.JDBCUtil;
@@ -18,6 +21,7 @@ public class Repository {
   private UserService userService;
   private CarMakesService carMakesService;
   private CarModelService carModelService;
+  private CarKitsService carKitsService;
 
   public Repository() throws Exception {
     try {
@@ -64,6 +68,18 @@ public class Repository {
   }
 
 
+  /*
+    CarKitsService
+   */
+
+  public List<CarKitCategoryModel> getCarKitCategories() throws Exception {
+    return carKitsService.getCarKitCategories();
+  }
+
+  public List<CarKitModel> getCarKits() throws Exception {
+    return carKitsService.getCarKits();
+  }
+
   public void testConnection() throws Exception {
     jdbcUtil.testConnection();
     System.out.println("[ Test Connection executed successfully ]");
@@ -76,5 +92,6 @@ public class Repository {
     userService = new UserService(jdbcUtil);
     carMakesService = new CarMakesService(jdbcUtil);
     carModelService = new CarModelService(jdbcUtil);
+    carKitsService = new CarKitsService(jdbcUtil);
   }
 }

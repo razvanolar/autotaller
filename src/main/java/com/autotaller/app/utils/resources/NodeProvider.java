@@ -1,5 +1,6 @@
 package com.autotaller.app.utils.resources;
 
+import com.autotaller.app.model.CarKitModel;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.utils.StringValidator;
@@ -193,7 +194,38 @@ public class NodeProvider {
     return table;
   }
 
+  @SuppressWarnings("unchecked")
+  public static TableView<CarKitModel> createCarKitModelTable() {
+    TableView<CarKitModel> table = new TableView<>();
+    TableColumn<CarKitModel, String> nameColumn = new TableColumn<>("Nume");
+    TableColumn<CarKitModel, String> categoryColumn = new TableColumn<>("Categorie");
 
+    nameColumn.prefWidthProperty().bind(table.widthProperty().multiply(.5));
+    categoryColumn.prefWidthProperty().bind(table.widthProperty().multiply(.5));
+
+    nameColumn.setCellValueFactory(p -> {
+      CarKitModel value = p.getValue();
+      if (value != null) {
+        return new SimpleStringProperty(value.getName());
+      } else {
+        return new SimpleStringProperty();
+      }
+    });
+    categoryColumn.setCellValueFactory(p -> {
+      CarKitModel value = p.getValue();
+      if (value != null && value.getKitCategory() != null) {
+        return new SimpleStringProperty(value.getKitCategory().getName());
+      } else {
+        return new SimpleStringProperty();
+      }
+    });
+
+    nameColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    categoryColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+
+    table.getColumns().addAll(nameColumn, categoryColumn);
+    return table;
+  }
 
   public static ScrollPane createScrollPane(Region content) {
     ScrollPane scrollPane = new ScrollPane(content) {public void requestFocus() {}};

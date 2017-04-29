@@ -37,7 +37,6 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
     TextField getEngineTextField();
     YearsPanelView getYearsPanelView();
     void showFilterPane();
-    void hideFilterPane();
   }
 
   private IAdminCarModelView view;
@@ -59,13 +58,6 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
 
     view.showFilterPane();
     view.getFilterButton().setSelected(true);
-    view.getFilterButton().setOnAction(event -> {
-      if (view.getFilterButton().isSelected()) {
-        view.showFilterPane();
-      } else {
-        view.hideFilterPane();
-      }
-    });
 
     EventBus.addHandler(AdminLoadCarMakesEvent.TYPE, (AdminLoadCarMakesEventHandler) event -> {
       carMakes = event.getCarMakeModels();

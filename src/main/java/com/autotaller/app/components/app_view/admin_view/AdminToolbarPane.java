@@ -11,35 +11,47 @@ import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
- * Make sure to call setContentNode method after the components of the child class were initialized
- *
  * Created by razvanolar on 26.04.2017
  */
 public class AdminToolbarPane implements View {
 
   protected VBox mainContainer;
   protected HBox toolbarContainer;
+  protected SplitPane content;
+
+  protected Button addButton;
+  protected ToggleButton filterButton;
   private HBox imageContainer;
   private ImageView plusImageView;
   private ImageView minusImageView;
 
+  private ScrollPane filterScrollPane;
+  protected GridPane filterPane;
+
   private String title;
-  protected Region content;
+  private String addButtonText;
+  private String filterButtonText;
 
   private Timeline showContentTimeline;
   private Timeline hideContentTimeline;
 
-  public AdminToolbarPane(String title) {
+  private double lastDividerPosition = .25;
+
+  public AdminToolbarPane(String title, String addButtonText, String filterButtonText) {
     this.title = title;
+    this.addButtonText = addButtonText;
+    this.filterButtonText = filterButtonText;
     init();
     initHandlers();
   }
@@ -48,9 +60,14 @@ public class AdminToolbarPane implements View {
     plusImageView = new ImageView(ImageProvider.plusIcon());
     minusImageView = new ImageView(ImageProvider.minusIcon());
 
+    addButton = new Button(addButtonText);
+    filterButton = new ToggleButton(filterButtonText);
+
     imageContainer = new HBox(plusImageView);
     imageContainer.setAlignment(Pos.CENTER);
     imageContainer.setPadding(new Insets(0, 20, 0, 0));
+
+    content = new SplitPane();
 
     Text textLabel = NodeProvider.createTextLabel(title, 16, false);
     HBox textContainer = new HBox(textLabel);
@@ -58,7 +75,7 @@ public class AdminToolbarPane implements View {
     textContainer.setAlignment(Pos.CENTER);
 
     toolbarContainer = new HBox(textContainer);
-    addToolbarButtons();
+    toolbarContainer.getChildren().addAll(addButton, filterButton);
     toolbarContainer.getChildren().addAll(new FillToolItem(), imageContainer);
     toolbarContainer.setPrefHeight(35);
     toolbarContainer.setAlignment(Pos.CENTER);
@@ -70,14 +87,13 @@ public class AdminToolbarPane implements View {
     mainContainer.setAlignment(Pos.CENTER);
 
     mainContainer.setPadding(new Insets(5));
-  }
 
-  protected void addToolbarButtons() {
-
-  }
-
-  protected void setContentNode(Region content) {
-    this.content = content;
+    filterPane = new GridPane();
+    filterPane.setAlignment(Pos.CENTER);
+    filterPane.setVgap(10);
+    filterPane.setHgap(10);
+    StackPane content = new StackPane(filterPane);
+    filterScrollPane = NodeProvider.createScrollPane(content, true);
   }
 
   private void initHandlers() {
@@ -94,6 +110,30 @@ public class AdminToolbarPane implements View {
         }
       }
     });
+
+    filterButton.setOnAction(event -> {
+      if (filterButton.isSelected()) {
+        showFilterPane();
+      } else {
+        hideFilterPane();
+      }
+    });
+  }
+
+  protected void showFilterPane() {
+    if (!content.getItems().contains(filterScrollPane)) {
+      content.getItems().add(0, filterScrollPane);
+      content.setDividerPositions(lastDividerPosition);
+    }
+  }
+
+  protected void hideFilterPane() {
+    if (content.getItems().contains(filterScrollPane)) {
+      double[] dividers = content.getDividerPositions();
+      if (dividers != null && dividers.length > 0)
+        lastDividerPosition = dividers[0];
+      content.getItems().remove(filterScrollPane);
+    }
   }
 
   private Timeline getHideTimeline() {

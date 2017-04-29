@@ -17,6 +17,14 @@ public class RepositoryTest extends TestCase {
   }
 
   public void testGetAllCarModels() throws Exception {
-    assertTrue(!repo.getCarModels().isEmpty());
+    assertTrue(repo.getCarModels() != null);
+  }
+
+  public void testGetCarKitCategories() throws Exception {
+    assertTrue(repo.getCarKitCategories() != null);
+  }
+
+  public void testGetCarKits() throws Exception {
+    assertTrue(repo.getCarKits() != null);
   }
 }
