@@ -1,6 +1,7 @@
 package com.autotaller.app.components.app_view.admin_view;
 
 import com.autotaller.app.components.utils.IterableView;
+import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
@@ -24,10 +25,8 @@ public class AdminView extends IterableView implements AdminController.IAdminVie
             );
 
     vBox = new VBox();
-    ScrollPane scrollPane = new ScrollPane(vBox) {public void requestFocus() {}};
-    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-    borderPane.setCenter(scrollPane);
+    borderPane.setCenter(NodeProvider.createScrollPane(vBox));
     vBox.prefWidthProperty().bind(borderPane.widthProperty());
   }
 

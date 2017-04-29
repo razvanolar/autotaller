@@ -5,26 +5,22 @@ import com.autotaller.app.components.app_view.admin_view.admin_car_model_view.ut
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.utils.resources.NodeProvider;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 
 /**
  * Created by razvanolar on 20.04.2017
  */
 public class AdminCarModelView extends AdminToolbarPane implements AdminCarModelController.IAdminCarModelView {
 
-  private BorderPane borderPane;
-
   private Button addCarModelButton;
   private ToggleButton filterButton;
 
   private SplitPane splitPane;
-  private GridPane filterPane;
+  private ScrollPane filterScrollPane;
   private TableView<CarTypeModel> carModelTable;
 
   private double lastDividerPosition = .25;
@@ -40,33 +36,17 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
   public AdminCarModelView() {
     super("Model");
     init();
-    setContentNode(borderPane);
+    setContentNode(splitPane);
   }
 
   private void init() {
     createFilterPane();
     carModelTable = NodeProvider.createCarModelTable();
-
     splitPane = new SplitPane(carModelTable);
-
-    addCarModelButton = new Button("Adauga Model");
-    filterButton = new ToggleButton("Filtrare");
-    addCarModelButton.setRotate(-90);
-    filterButton.setRotate(-90);
-    Group addCarModelGroup = new Group(addCarModelButton);
-    Group filterGroup = new Group(filterButton);
-
-    ToolBar toolBar = NodeProvider.createToolBar();
-    toolBar.getItems().addAll(addCarModelGroup, filterGroup);
-    toolBar.setOrientation(Orientation.VERTICAL);
-
-    borderPane = new BorderPane(splitPane);
-    borderPane.setLeft(toolBar);
-    borderPane.setPrefHeight(500);
   }
 
   private void createFilterPane() {
-    filterPane = new GridPane();
+    GridPane filterPane = new GridPane();
     carMakeCombo = NodeProvider.createCarMakesCombo(FIELD_WIDTH);
     carModelNameTextField = NodeProvider.createTextField(FIELD_WIDTH);
     fromDatePicker = NodeProvider.createDatePicker(FIELD_WIDTH);
@@ -89,11 +69,16 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
     filterPane.setAlignment(Pos.CENTER);
     filterPane.setVgap(10);
     filterPane.setHgap(10);
+
+    StackPane content = new StackPane(filterPane);
+    filterScrollPane = NodeProvider.createScrollPane(content, true);
   }
 
   @Override
   protected void addToolbarButtons() {
-
+    addCarModelButton = new Button("Adauga Model");
+    filterButton = new ToggleButton("Filtrare");
+    toolbarContainer.getChildren().addAll(addCarModelButton, filterButton);
   }
 
   public Button getAddCarModelButton() {
@@ -133,18 +118,18 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
   }
 
   public void showFilterPane() {
-    if (!splitPane.getItems().contains(filterPane)) {
-      splitPane.getItems().add(0, filterPane);
+    if (!splitPane.getItems().contains(filterScrollPane)) {
+      splitPane.getItems().add(0, filterScrollPane);
       splitPane.setDividerPositions(lastDividerPosition);
     }
   }
 
   public void hideFilterPane() {
-    if (splitPane.getItems().contains(filterPane)) {
+    if (splitPane.getItems().contains(filterScrollPane)) {
       double[] dividers = splitPane.getDividerPositions();
       if (dividers != null && dividers.length > 0)
         lastDividerPosition = dividers[0];
-      splitPane.getItems().remove(filterPane);
+      splitPane.getItems().remove(filterScrollPane);
     }
   }
 

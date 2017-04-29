@@ -4,11 +4,8 @@ import com.autotaller.app.components.app_view.admin_view.AdminToolbarPane;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.utils.resources.NodeProvider;
 import com.jfoenix.controls.JFXMasonryPane;
-import javafx.geometry.Orientation;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
 /**
@@ -16,7 +13,6 @@ import javafx.scene.layout.GridPane;
  */
 public class AdminCarMakeView extends AdminToolbarPane implements AdminCarMakeController.ICarsAdminView {
 
-  private BorderPane borderPane;
   private SplitPane splitPane;
   private JFXMasonryPane masonryPane;
   private Button addCarMakeButton;
@@ -33,40 +29,19 @@ public class AdminCarMakeView extends AdminToolbarPane implements AdminCarMakeCo
   public AdminCarMakeView() {
     super("Marca");
     init();
-    setContentNode(borderPane);
+    setContentNode(splitPane);
   }
 
   private void init() {
     masonryPane = new JFXMasonryPane();
 
-    scrollPane = new ScrollPane(masonryPane) {
-      @Override
-      public void requestFocus() {
-
-      }
-    };
+    scrollPane = NodeProvider.createScrollPane(masonryPane);
     scrollPane.setFitToHeight(true);
     scrollPane.setFitToWidth(true);
 
-    addCarMakeButton = new Button("Adauga");
-    filterCarMakeButton = new ToggleButton("Filtreaza");
-    addCarMakeButton.setRotate(-90);
-    filterCarMakeButton.setRotate(-90);
-    Group addCarMakeGroup = new Group(addCarMakeButton);
-    Group filterCarMakeGroup = new Group(filterCarMakeButton);
-
-
-    ToolBar toolBar = NodeProvider.createToolBar();
-    toolBar.getItems().addAll(addCarMakeGroup, filterCarMakeGroup);
-    toolBar.setOrientation(Orientation.VERTICAL);
-
     splitPane = new SplitPane(scrollPane);
-    borderPane = new BorderPane(splitPane);
-    borderPane.setLeft(toolBar);
 
     initFilterCarMakePane();
-
-    borderPane.setPrefHeight(500);
   }
 
   private void initFilterCarMakePane() {
@@ -75,7 +50,9 @@ public class AdminCarMakeView extends AdminToolbarPane implements AdminCarMakeCo
 
   @Override
   protected void addToolbarButtons() {
-
+    addCarMakeButton = new Button("Adauga");
+    filterCarMakeButton = new ToggleButton("Filtreaza");
+    toolbarContainer.getChildren().addAll(addCarMakeButton, filterCarMakeButton);
   }
 
   @Override

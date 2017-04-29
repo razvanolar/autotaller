@@ -52,14 +52,16 @@ public class AdminController implements Controller<AdminController.IAdminView> {
   private void initToolbarPanes() {
     Component carMakeComponent = ComponentFactory.createComponent(ComponentType.ADMIN_CAR_MAKE_VIEW);
     Component carModelComponent = ComponentFactory.createComponent(ComponentType.ADMIN_CAR_MODEL_VIEW);
+    Component carKitComponent = ComponentFactory.createComponent(ComponentType.ADMIN_CAR_KIT_VIEW);
 
-    if (carMakeComponent == null || carModelComponent == null) {
+    if (carMakeComponent == null || carModelComponent == null || carKitComponent == null) {
       //TODO handle exception
       return;
     }
 
     view.addToolbarPane(carMakeComponent.getView().asNode());
     view.addToolbarPane(carModelComponent.getView().asNode());
+    view.addToolbarPane(carKitComponent.getView().asNode());
   }
 
   private void initRepoHandlers() {

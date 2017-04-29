@@ -82,7 +82,7 @@
 }
 
 .adminToolbarPaneBackground {
-    -fx-background-color: darkgray;
+    -fx-background-color: rgba(8,52,112,0.5);
 }
 
 .adminToolbarPaneBackground:hover {

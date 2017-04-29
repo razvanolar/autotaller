@@ -20,12 +20,14 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
+ * Make sure to call setContentNode method after the components of the child class were initialized
+ *
  * Created by razvanolar on 26.04.2017
  */
 public class AdminToolbarPane implements View {
 
   protected VBox mainContainer;
-  private HBox toolbarContainer;
+  protected HBox toolbarContainer;
   private HBox imageContainer;
   private ImageView plusImageView;
   private ImageView minusImageView;
@@ -60,7 +62,9 @@ public class AdminToolbarPane implements View {
     toolbarContainer.getChildren().addAll(new FillToolItem(), imageContainer);
     toolbarContainer.setPrefHeight(35);
     toolbarContainer.setAlignment(Pos.CENTER);
+    toolbarContainer.setSpacing(10);
     toolbarContainer.getStyleClass().add(StyleProvider.ADMIN_TOOLBAR_PANE_CLASS);
+    toolbarContainer.getStyleClass().add(StyleProvider.BUTTONS_CONTAINER_CLASS);
 
     mainContainer = new VBox(10, toolbarContainer);
     mainContainer.setAlignment(Pos.CENTER);

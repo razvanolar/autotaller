@@ -7,6 +7,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -14,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -32,6 +34,12 @@ public class NodeProvider {
   public static JFXButton createRemoveButton(String text) {
     JFXButton button = new JFXButton(text);
     button.getStyleClass().add(StyleProvider.REMOVE_BUTTON_CLASS);
+    return button;
+  }
+
+  public static Button createAdminToolbarButton(String text) {
+    Button button = new Button(text);
+
     return button;
   }
 
@@ -183,5 +191,22 @@ public class NodeProvider {
 
     table.getColumns().addAll(nameColumn, fromColumn, toColumn, makeColumn);
     return table;
+  }
+
+
+
+  public static ScrollPane createScrollPane(Region content) {
+    ScrollPane scrollPane = new ScrollPane(content) {public void requestFocus() {}};
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    return scrollPane;
+  }
+
+  public static ScrollPane createScrollPane(Region content, boolean centerContent) {
+    ScrollPane scroll = createScrollPane(content);
+    if (centerContent) {
+      content.minWidthProperty().bind(Bindings.createDoubleBinding(() -> scroll.getViewportBounds().getWidth(), scroll.viewportBoundsProperty()));
+      content.minHeightProperty().bind(Bindings.createDoubleBinding(() -> scroll.getViewportBounds().getHeight(), scroll.viewportBoundsProperty()));
+    }
+    return scroll;
   }
 }

@@ -86,7 +86,8 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
     ObservableList<CarMakeModel> carMakeStore = view.getCarMakeCombo().getItems();
     carMakeStore.clear();
     carMakeStore.add(allCarMakesItem);
-    carMakeStore.addAll(carMakes);
+    if (carMakes != null)
+      carMakeStore.addAll(carMakes);
     view.getCarMakeCombo().setValue(selectedCarMake != null ? selectedCarMake : allCarMakesItem);
 
 

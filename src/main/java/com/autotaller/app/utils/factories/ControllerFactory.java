@@ -2,6 +2,7 @@ package com.autotaller.app.utils.factories;
 
 import com.autotaller.app.components.app_view.AutoTallerMenuBarController;
 import com.autotaller.app.components.app_view.admin_view.AdminController;
+import com.autotaller.app.components.app_view.admin_view.admin_car_kit_view.AdminCarKitController;
 import com.autotaller.app.components.app_view.admin_view.admin_car_make_view.AddCarMakeDialogController;
 import com.autotaller.app.components.app_view.admin_view.admin_car_make_view.AdminCarMakeController;
 import com.autotaller.app.components.app_view.admin_view.admin_car_model_view.AdminCarModelController;
@@ -31,6 +32,8 @@ public class ControllerFactory {
         return new AddCarMakeDialogController();
       case ADMIN_CAR_MODEL_VIEW:
         return new AdminCarModelController();
+      case ADMIN_CAR_KIT_VIEW:
+        return new AdminCarKitController();
     }
     return null;
   }
