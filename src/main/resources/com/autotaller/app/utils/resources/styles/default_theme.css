@@ -88,3 +88,11 @@
 .adminToolbarPaneBackground:hover {
     -fx-background-color: rgba(8,52,112,0.3);
 }
+
+.yearViewUnselectedBackground {
+    -fx-background-color: rgba(209,209,212,0.46);
+}
+
+.yearViewSelectedBackground {
+    -fx-background-color: rgba(6,38,212,0.46);
+}

@@ -1,6 +1,7 @@
 package com.autotaller.app.components.app_view.admin_view.admin_car_model_view;
 
 import com.autotaller.app.components.app_view.admin_view.AdminToolbarPane;
+import com.autotaller.app.components.app_view.admin_view.admin_car_model_view.utils.YearsPanelView;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.utils.resources.NodeProvider;
@@ -32,6 +33,7 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
   private DatePicker fromDatePicker;
   private DatePicker toDatePicker;
   private TextField engineTextField;
+  private YearsPanelView yearsPanelView;
 
   private static int FIELD_WIDTH = 200;
 
@@ -70,6 +72,7 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
     fromDatePicker = NodeProvider.createDatePicker(FIELD_WIDTH);
     toDatePicker = NodeProvider.createDatePicker(FIELD_WIDTH);
     engineTextField = NodeProvider.createTextField(FIELD_WIDTH);
+    yearsPanelView = new YearsPanelView(FIELD_WIDTH);
 
     filterPane.add(NodeProvider.createFormTextLabel("Marca: "), 0, 0);
     filterPane.add(carMakeCombo, 1, 0);
@@ -81,6 +84,7 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
     filterPane.add(toDatePicker, 1, 3);
     filterPane.add(NodeProvider.createFormTextLabel("Motor: "), 0, 4);
     filterPane.add(engineTextField, 1, 4);
+    filterPane.add(yearsPanelView.asNode(), 0, 5, 2, 1);
 
     filterPane.setAlignment(Pos.CENTER);
     filterPane.setVgap(10);
@@ -122,6 +126,10 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
 
   public TextField getEngineTextField() {
     return engineTextField;
+  }
+
+  public YearsPanelView getYearsPanelView() {
+    return yearsPanelView;
   }
 
   public void showFilterPane() {
