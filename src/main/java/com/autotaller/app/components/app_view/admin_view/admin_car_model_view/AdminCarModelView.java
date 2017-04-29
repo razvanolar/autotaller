@@ -22,8 +22,6 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
   private TextField engineTextField;
   private YearsPanelView yearsPanelView;
 
-  private static int FIELD_WIDTH = 200;
-
   public AdminCarModelView() {
     super("Model", "Adauga Model", "Filtrare");
     init();

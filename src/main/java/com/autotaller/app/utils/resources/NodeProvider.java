@@ -1,5 +1,6 @@
 package com.autotaller.app.utils.resources;
 
+import com.autotaller.app.model.CarKitCategoryModel;
 import com.autotaller.app.model.CarKitModel;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
@@ -68,6 +69,12 @@ public class NodeProvider {
 
   public static JFXComboBox<CarMakeModel> createCarMakesCombo(int width) {
     JFXComboBox<CarMakeModel> combo = new JFXComboBox<>();
+    combo.setPrefWidth(width);
+    return combo;
+  }
+
+  public static JFXComboBox<CarKitCategoryModel> createCarKitCategoriesCombo(int width) {
+    JFXComboBox<CarKitCategoryModel> combo = new JFXComboBox<>();
     combo.setPrefWidth(width);
     return combo;
   }

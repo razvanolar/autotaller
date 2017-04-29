@@ -47,6 +47,7 @@ public class AdminToolbarPane implements View {
   private Timeline hideContentTimeline;
 
   private double lastDividerPosition = .25;
+  protected static int FIELD_WIDTH = 200;
 
   public AdminToolbarPane(String title, String addButtonText, String filterButtonText) {
     this.title = title;

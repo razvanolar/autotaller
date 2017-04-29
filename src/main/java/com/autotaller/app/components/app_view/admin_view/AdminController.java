@@ -1,13 +1,11 @@
 package com.autotaller.app.components.app_view.admin_view;
 
 import com.autotaller.app.EventBus;
-import com.autotaller.app.events.app_view.admin_view.GetCarModelsEvent;
-import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
-import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEventHandler;
+import com.autotaller.app.events.app_view.admin_view.*;
+import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.AdminLoadCarKitCategoriesEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AddCarMakeEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AddCarMakeEventHandler;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLoadCarMakesEvent;
-import com.autotaller.app.events.app_view.admin_view.GetCarMakesEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AddCarModelEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AddCarModelEventHandler;
 import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AdminLoadCarModelsEvent;
@@ -47,6 +45,7 @@ public class AdminController implements Controller<AdminController.IAdminView> {
 
     loadCarMakes();
     loadCarModels();
+    loadCarKitCategories();
   }
 
   private void initToolbarPanes() {
@@ -119,5 +118,9 @@ public class AdminController implements Controller<AdminController.IAdminView> {
 
   private void loadCarModels() {
     EventBus.fireEvent(new GetCarModelsEvent(carModels -> EventBus.fireEvent(new AdminLoadCarModelsEvent(carModels))));
+  }
+
+  private void loadCarKitCategories() {
+    EventBus.fireEvent(new GetCarKitCategoriesEvent(carKitCategories -> EventBus.fireEvent(new AdminLoadCarKitCategoriesEvent(carKitCategories))));
   }
 }

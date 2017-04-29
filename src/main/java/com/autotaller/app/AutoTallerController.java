@@ -9,6 +9,8 @@ import com.autotaller.app.events.test_connection.TestConnectionEvent;
 import com.autotaller.app.events.test_connection.TestConnectionEventHandler;
 import com.autotaller.app.events.test_connection.TestConnectionFailedEvent;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
+import com.autotaller.app.model.CarKitCategoryModel;
+import com.autotaller.app.model.CarKitModel;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.repository.Repository;
@@ -155,6 +157,54 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
             List<CarTypeModel> carModels = repository.getCarModels();
             Platform.runLater(() -> {
               event.getCallback().call(carModels);
+              EventBus.fireEvent(new UnmaskViewEvent());
+            });
+          } catch (Exception e) {
+            //TODO show error dialog
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO show error dialog
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
+
+    EventBus.addHandler(GetCarKitCategoriesEvent.TYPE, (GetCarKitCategoriesEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Incarcare Categorii Ansamble"));
+        Thread thread = new Thread(() -> {
+          try {
+            List<CarKitCategoryModel> carKitCategories = repository.getCarKitCategories();
+            Platform.runLater(() -> {
+              event.getCallback().call(carKitCategories);
+              EventBus.fireEvent(new UnmaskViewEvent());
+            });
+          } catch (Exception e) {
+            //TODO show error dialog
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO show error dialog
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
+
+    EventBus.addHandler(GetCarKitsEvent.TYPE, (GetCarKitsEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Incarcare Ansamble"));
+        Thread thread = new Thread(() -> {
+          try {
+            List<CarKitModel> carKits = repository.getCarKits();
+            Platform.runLater(() -> {
+              event.getCallback().call(carKits);
               EventBus.fireEvent(new UnmaskViewEvent());
             });
           } catch (Exception e) {
