@@ -1,15 +1,16 @@
 package com.autotaller.app.utils.resources;
 
+import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
+import com.autotaller.app.utils.StringValidator;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -34,11 +35,17 @@ public class NodeProvider {
     return button;
   }
 
-  public static JFXTextField createTextField(String promptText, boolean labelFloat, int minWidth) {
+  public static JFXTextField createMaterialTextField(String promptText, boolean labelFloat, int minWidth) {
     JFXTextField textField = new JFXTextField();
     textField.setPromptText(promptText);
     textField.setLabelFloat(labelFloat);
     textField.setMinWidth(minWidth);
+    return textField;
+  }
+
+  public static TextField createTextField(int width) {
+    TextField textField = new TextField();
+    textField.setPrefWidth(width);
     return textField;
   }
 
@@ -50,8 +57,14 @@ public class NodeProvider {
     return textField;
   }
 
-  public static Text createTextLabel(String text, boolean isLink) {
-    return createTextLabel(text, -1, isLink);
+  public static JFXComboBox<CarMakeModel> createCarMakesCombo(int width) {
+    JFXComboBox<CarMakeModel> combo = new JFXComboBox<>();
+    combo.setPrefWidth(width);
+    return combo;
+  }
+
+  public static Text createFormTextLabel(String text) {
+    return createTextLabel(text, 13, false);
   }
 
   public static Text createErrorTextLabel(String text, int fontSize) {
@@ -76,6 +89,12 @@ public class NodeProvider {
     ToolBar toolBar = new ToolBar();
     toolBar.getStyleClass().add(StyleProvider.BUTTONS_CONTAINER_CLASS);
     return toolBar;
+  }
+
+  public static DatePicker createDatePicker(int width) {
+    DatePicker datePicker = new DatePicker();
+    datePicker.setPrefWidth(width);
+    return datePicker;
   }
 
   public static HBox createCenteredNode(Node node) {
@@ -120,7 +139,18 @@ public class NodeProvider {
     toColumn.prefWidthProperty().bind(table.widthProperty().multiply(.17));
     makeColumn.prefWidthProperty().bind(table.widthProperty().multiply(.33));
 
-    nameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getName()) : new SimpleStringProperty());
+    nameColumn.setCellValueFactory(p -> {
+      CarTypeModel value = p.getValue();
+      if (value != null) {
+        if (!StringValidator.isNullOrEmpty(value.getEngines())) {
+          return new SimpleStringProperty(value.getName() + " (" + value.getEngines() + ")");
+        } else {
+          return new SimpleStringProperty(value.getName());
+        }
+      } else {
+        return new SimpleStringProperty();
+      }
+    });
     fromColumn.setCellValueFactory(p -> {
       CarTypeModel value = p.getValue();
       if (value != null && value.getFrom() != null) {

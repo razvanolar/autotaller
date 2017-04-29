@@ -14,9 +14,7 @@ import com.autotaller.app.utils.DialogComponentType;
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.factories.DialogFactory;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 
 import java.util.List;
 
@@ -29,15 +27,24 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
     Button getAddCarModelButton();
     ToggleButton getFilterButton();
     TableView<CarTypeModel> getCarModelTable();
+    ComboBox<CarMakeModel> getCarMakeCombo();
+    TextField getCarModelNameTextField();
+    DatePicker getFromDatePicker();
+    DatePicker getToDatePicker();
+    TextField getEngineTextField();
     void showFilterPane();
     void hideFilterPane();
   }
 
+  private IAdminCarModelView view;
+
+  private CarMakeModel allCarMakesItem = new CarMakeModel(-1, "--Toate--");
   private List<CarMakeModel> carMakes;
   private List<CarTypeModel> carModels;
 
   @Override
   public void bind(IAdminCarModelView view) {
+    this.view = view;
 
     view.getAddCarModelButton().setOnAction(event -> {
       AddCarModelDialogController controller = new AddCarModelDialogController(carMakes);
@@ -46,6 +53,8 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
       EventBus.fireEvent(new ShowDialogEvent(DialogFactory.createDialog(DialogComponentType.ADD_CAR_MODEL_DIALOG, component)));
     });
 
+    view.showFilterPane();
+    view.getFilterButton().setSelected(true);
     view.getFilterButton().setOnAction(event -> {
       if (view.getFilterButton().isSelected()) {
         view.showFilterPane();
@@ -54,13 +63,26 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
       }
     });
 
-    EventBus.addHandler(AdminLoadCarMakesEvent.TYPE, (AdminLoadCarMakesEventHandler) event -> carMakes = event.getCarMakeModels());
+    EventBus.addHandler(AdminLoadCarMakesEvent.TYPE, (AdminLoadCarMakesEventHandler) event -> {
+      carMakes = event.getCarMakeModels();
+      updateFilterPane();
+    });
 
     EventBus.addHandler(AdminLoadCarModelsEvent.TYPE, (AdminLoadCarModelsEventHandler) event -> {
       carModels = event.getCarModels();
       ObservableList<CarTypeModel> items = view.getCarModelTable().getItems();
       items.clear();
       items.addAll(carModels);
+      updateFilterPane();
     });
+  }
+
+  private void updateFilterPane() {
+    CarMakeModel selectedCarMake = view.getCarMakeCombo().getValue();
+    ObservableList<CarMakeModel> carMakeStore = view.getCarMakeCombo().getItems();
+    carMakeStore.clear();
+    carMakeStore.add(allCarMakesItem);
+    carMakeStore.addAll(carMakes);
+    view.getCarMakeCombo().setValue(selectedCarMake != null ? selectedCarMake : allCarMakesItem);
   }
 }

@@ -21,7 +21,7 @@ public class AddCarMakeDialogView implements AddCarMakeDialogController.IAddCarM
   }
 
   private void init() {
-    carMakeNameField = NodeProvider.createTextField("Nume Marca", true, 350);
+    carMakeNameField = NodeProvider.createMaterialTextField("Nume Marca", true, 350);
     gridPane = new GridPane();
     gridPane.setAlignment(Pos.CENTER);
     gridPane.add(carMakeNameField, 0, 0);

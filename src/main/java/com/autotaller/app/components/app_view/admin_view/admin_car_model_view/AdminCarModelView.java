@@ -1,9 +1,11 @@
 package com.autotaller.app.components.app_view.admin_view.admin_car_model_view;
 
 import com.autotaller.app.components.app_view.admin_view.AdminToolbarPane;
+import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -25,6 +27,13 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
   private TableView<CarTypeModel> carModelTable;
 
   private double lastDividerPosition = .25;
+  private ComboBox<CarMakeModel> carMakeCombo;
+  private TextField carModelNameTextField;
+  private DatePicker fromDatePicker;
+  private DatePicker toDatePicker;
+  private TextField engineTextField;
+
+  private static int FIELD_WIDTH = 200;
 
   public AdminCarModelView() {
     super("Model");
@@ -33,7 +42,7 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
   }
 
   private void init() {
-    filterPane = new GridPane();
+    createFilterPane();
     carModelTable = NodeProvider.createCarModelTable();
 
     splitPane = new SplitPane(carModelTable);
@@ -54,6 +63,30 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
     borderPane.setPrefHeight(500);
   }
 
+  private void createFilterPane() {
+    filterPane = new GridPane();
+    carMakeCombo = NodeProvider.createCarMakesCombo(FIELD_WIDTH);
+    carModelNameTextField = NodeProvider.createTextField(FIELD_WIDTH);
+    fromDatePicker = NodeProvider.createDatePicker(FIELD_WIDTH);
+    toDatePicker = NodeProvider.createDatePicker(FIELD_WIDTH);
+    engineTextField = NodeProvider.createTextField(FIELD_WIDTH);
+
+    filterPane.add(NodeProvider.createFormTextLabel("Marca: "), 0, 0);
+    filterPane.add(carMakeCombo, 1, 0);
+    filterPane.add(NodeProvider.createFormTextLabel("Nume Model: "), 0, 1);
+    filterPane.add(carModelNameTextField, 1, 1);
+    filterPane.add(NodeProvider.createFormTextLabel("De la: "), 0, 2);
+    filterPane.add(fromDatePicker, 1, 2);
+    filterPane.add(NodeProvider.createFormTextLabel("Pana la: "), 0, 3);
+    filterPane.add(toDatePicker, 1, 3);
+    filterPane.add(NodeProvider.createFormTextLabel("Motor: "), 0, 4);
+    filterPane.add(engineTextField, 1, 4);
+
+    filterPane.setAlignment(Pos.CENTER);
+    filterPane.setVgap(10);
+    filterPane.setHgap(10);
+  }
+
   @Override
   protected void addToolbarButtons() {
 
@@ -69,6 +102,26 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
 
   public TableView<CarTypeModel> getCarModelTable() {
     return carModelTable;
+  }
+
+  public ComboBox<CarMakeModel> getCarMakeCombo() {
+    return carMakeCombo;
+  }
+
+  public TextField getCarModelNameTextField() {
+    return carModelNameTextField;
+  }
+
+  public DatePicker getFromDatePicker() {
+    return fromDatePicker;
+  }
+
+  public DatePicker getToDatePicker() {
+    return toDatePicker;
+  }
+
+  public TextField getEngineTextField() {
+    return engineTextField;
   }
 
   public void showFilterPane() {

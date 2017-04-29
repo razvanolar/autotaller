@@ -42,7 +42,7 @@ public class LoginView extends MaskableView implements LoginController.ILoginVie
 
   private void init() {
     gridPane = new GridPane();
-    usernameTextField = NodeProvider.createTextField("Nume Utilizator", true, 350);
+    usernameTextField = NodeProvider.createMaterialTextField("Nume Utilizator", true, 350);
     passwordField = NodeProvider.createPasswordField("Parola", true, 350);
     loginButton = NodeProvider.createButton("Autentificare");
     signUpLabel = NodeProvider.createTextLabel("Inregistreaza cont", 15, true);

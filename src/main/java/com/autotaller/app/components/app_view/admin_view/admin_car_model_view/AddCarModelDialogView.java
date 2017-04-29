@@ -39,16 +39,11 @@ public class AddCarModelDialogView implements AddCarModelDialogController.IAddCa
   }
 
   private void init() {
-    carMakesCombo = new ComboBox<>();
-    nameTextField = new TextField();
-    fromDatePicker = new DatePicker();
-    toDatePicker = new DatePicker();
+    carMakesCombo = NodeProvider.createCarMakesCombo(FIELD_WIDTH);
+    nameTextField = NodeProvider.createTextField(FIELD_WIDTH);
+    fromDatePicker = NodeProvider.createDatePicker(FIELD_WIDTH);
+    toDatePicker = NodeProvider.createDatePicker(FIELD_WIDTH);
     addEngineFieldButton = NodeProvider.createButton("Adauga Camp");
-
-    carMakesCombo.setPrefWidth(FIELD_WIDTH);
-    nameTextField.setPrefWidth(FIELD_WIDTH);
-    fromDatePicker.setPrefWidth(FIELD_WIDTH);
-    toDatePicker.setPrefWidth(FIELD_WIDTH);
 
     gridPane = new GridPane();
     gridPane.setAlignment(Pos.CENTER);

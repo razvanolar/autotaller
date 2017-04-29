@@ -34,8 +34,8 @@ public class SignUpView implements SignUpController.ISignUpView {
   }
 
   private void init() {
-    emplyeeNameTextField = NodeProvider.createTextField("Nume Angajat", true, 350);
-    usernameTextField = NodeProvider.createTextField("Nume Utilizator", true, 350);
+    emplyeeNameTextField = NodeProvider.createMaterialTextField("Nume Angajat", true, 350);
+    usernameTextField = NodeProvider.createMaterialTextField("Nume Utilizator", true, 350);
     passwordField = NodeProvider.createPasswordField("Parola", true, 350);
     re_passwordField = NodeProvider.createPasswordField("Retiparire Parola", true, 350);
     backLabel = NodeProvider.createTextLabel("Inapoi", 15, true);
