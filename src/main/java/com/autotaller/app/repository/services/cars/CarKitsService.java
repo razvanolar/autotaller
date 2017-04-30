@@ -70,4 +70,23 @@ public class CarKitsService extends GenericService {
       jdbcUtil.close(connection, statement, rs);
     }
   }
+
+  public void addCarKit(CarKitModel carKit) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      String sql = "INSERT INTO car_kits (name, category) VALUES (?, ?)";
+      statement = connection.prepareStatement(sql);
+      statement.setString(1, carKit.getName());
+      statement.setInt(2, carKit.getKitCategory().getId());
+      statement.executeUpdate();
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
 }

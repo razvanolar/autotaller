@@ -121,14 +121,14 @@ public class AdminToolbarPane implements View {
     });
   }
 
-  protected void showFilterPane() {
+  public void showFilterPane() {
     if (!content.getItems().contains(filterScrollPane)) {
       content.getItems().add(0, filterScrollPane);
       content.setDividerPositions(lastDividerPosition);
     }
   }
 
-  protected void hideFilterPane() {
+  public void hideFilterPane() {
     if (content.getItems().contains(filterScrollPane)) {
       double[] dividers = content.getDividerPositions();
       if (dividers != null && dividers.length > 0)

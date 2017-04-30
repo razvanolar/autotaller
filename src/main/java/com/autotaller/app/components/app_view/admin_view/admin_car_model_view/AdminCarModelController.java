@@ -10,10 +10,7 @@ import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AdminL
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.model.utils.YearsRange;
-import com.autotaller.app.utils.Component;
-import com.autotaller.app.utils.Controller;
-import com.autotaller.app.utils.DialogComponentType;
-import com.autotaller.app.utils.View;
+import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.factories.DialogFactory;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -26,9 +23,7 @@ import java.util.List;
  */
 public class AdminCarModelController implements Controller<AdminCarModelController.IAdminCarModelView> {
 
-  public interface IAdminCarModelView extends View {
-    Button getAddCarModelButton();
-    ToggleButton getFilterButton();
+  public interface IAdminCarModelView extends AdminToolbarView {
     TableView<CarTypeModel> getCarModelTable();
     ComboBox<CarMakeModel> getCarMakeCombo();
     TextField getCarModelNameTextField();
@@ -36,7 +31,6 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
     DatePicker getToDatePicker();
     TextField getEngineTextField();
     YearsPanelView getYearsPanelView();
-    void showFilterPane();
   }
 
   private IAdminCarModelView view;
@@ -49,7 +43,7 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
   public void bind(IAdminCarModelView view) {
     this.view = view;
 
-    view.getAddCarModelButton().setOnAction(event -> {
+    view.getAddButton().setOnAction(event -> {
       AddCarModelDialogController controller = new AddCarModelDialogController(carMakes);
       AddCarModelDialogView dialogView = new AddCarModelDialogView();
       Component component = new Component(controller, dialogView);

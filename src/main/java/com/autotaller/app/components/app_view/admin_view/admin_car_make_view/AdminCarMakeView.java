@@ -39,11 +39,13 @@ public class AdminCarMakeView extends AdminToolbarPane implements AdminCarMakeCo
     masonryPane.getChildren().add(NodeProvider.createCarMakeMenu(model.getName(), null, CELL_WIDTH, CELL_HEIGHT));
   }
 
-  public Button getAddCarMakeButton() {
+  @Override
+  public Button getAddButton() {
     return addButton;
   }
 
-  public ToggleButton getFilterCarMakeButton() {
+  @Override
+  public ToggleButton getFilterButton() {
     return filterButton;
   }
 

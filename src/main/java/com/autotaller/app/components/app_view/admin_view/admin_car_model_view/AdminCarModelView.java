@@ -54,7 +54,7 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
     filterPane.add(yearsPanelView.asNode(), 0, 5, 2, 1);
   }
 
-  public Button getAddCarModelButton() {
+  public Button getAddButton() {
     return addButton;
   }
 
@@ -88,11 +88,6 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
 
   public YearsPanelView getYearsPanelView() {
     return yearsPanelView;
-  }
-
-  @Override
-  public void showFilterPane() {
-    super.showFilterPane();
   }
 
   @Override

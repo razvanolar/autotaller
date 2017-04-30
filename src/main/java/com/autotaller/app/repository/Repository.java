@@ -80,6 +80,10 @@ public class Repository {
     return carKitsService.getCarKits();
   }
 
+  public void addCarKit(CarKitModel carKit) throws Exception {
+    carKitsService.addCarKit(carKit);
+  }
+
   public void testConnection() throws Exception {
     jdbcUtil.testConnection();
     System.out.println("[ Test Connection executed successfully ]");
