@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 
 /**
  * Created by razvanolar on 30.04.2017
@@ -129,6 +130,11 @@ public class TableProvider {
     dieselColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleBooleanProperty(p.getValue().isUsedForDiesel()) : new SimpleBooleanProperty());
     gplColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleBooleanProperty(p.getValue().isUsedForGPL()) : new SimpleBooleanProperty());
     electricColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleBooleanProperty(p.getValue().isUsedForElectric()) : new SimpleBooleanProperty());
+
+    gasolineColumn.setCellFactory(param -> new CheckBoxTableCell<>());
+    dieselColumn.setCellFactory(param -> new CheckBoxTableCell<>());
+    gplColumn.setCellFactory(param -> new CheckBoxTableCell<>());
+    electricColumn.setCellFactory(param -> new CheckBoxTableCell<>());
 
     nameColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     carKitColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);

@@ -138,6 +138,30 @@ public class AdminController implements Controller<AdminController.IAdminView> {
         EventBus.fireEvent(new UnmaskViewEvent());
       }
     }, true);
+
+    EventBus.addHandler(AddCarSubkitEvent.TYPE, (AddCarSubkitEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Adaugare Sub-Ansamblu"));
+        Thread thread = new Thread(() -> {
+          try {
+            repository.addCarSubkit(event.getCarSubkits());
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              loadCarSubkits();
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    }, true);
   }
 
   private void loadCarMakes() {

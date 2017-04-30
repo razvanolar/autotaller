@@ -85,6 +85,10 @@ public class Repository {
     carKitsService.addCarKit(carKit);
   }
 
+  public void addCarSubkit(CarSubkitModel carSubkit) throws Exception {
+    carKitsService.addCarSubkit(carSubkit);
+  }
+
 
   public void testConnection() throws Exception {
     jdbcUtil.testConnection();

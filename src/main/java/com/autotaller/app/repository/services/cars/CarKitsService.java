@@ -122,4 +122,27 @@ public class CarKitsService extends GenericService {
       jdbcUtil.close(connection, statement, null);
     }
   }
+
+  public void addCarSubkit(CarSubkitModel carSubkit) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      String sql = "INSERT INTO car_subkits (name, car_kit_id, gasoline, diesel, gpl, electric) VALUES (?, ?, ?, ?, ?, ?)";
+      statement = connection.prepareStatement(sql);
+      statement.setString(1, carSubkit.getName());
+      statement.setInt(2, carSubkit.getCarKit().getId());
+      statement.setInt(3, carSubkit.isUsedForGasoline() ? 1 : 0);
+      statement.setInt(4, carSubkit.isUsedForDiesel() ? 1 : 0);
+      statement.setInt(5, carSubkit.isUsedForGPL() ? 1 : 0);
+      statement.setInt(6, carSubkit.isUsedForElectric() ? 1 : 0);
+      statement.executeUpdate();
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
 }

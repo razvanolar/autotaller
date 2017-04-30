@@ -76,6 +76,12 @@ public class NodeProvider {
     return combo;
   }
 
+  public static JFXComboBox<CarKitModel> createCarKitCombo(int width) {
+    JFXComboBox<CarKitModel> combo = new JFXComboBox<>();
+    combo.setPrefWidth(width);
+    return combo;
+  }
+
   public static Text createFormTextLabel(String text) {
     return createTextLabel(text, 13, false);
   }
