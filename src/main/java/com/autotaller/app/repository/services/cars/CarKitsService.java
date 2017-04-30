@@ -2,6 +2,7 @@ package com.autotaller.app.repository.services.cars;
 
 import com.autotaller.app.model.CarKitCategoryModel;
 import com.autotaller.app.model.CarKitModel;
+import com.autotaller.app.model.CarSubkitModel;
 import com.autotaller.app.repository.services.GenericService;
 import com.autotaller.app.repository.utils.JDBCUtil;
 
@@ -60,6 +61,38 @@ public class CarKitsService extends GenericService {
                 new CarKitCategoryModel(rs.getInt(3), rs.getString(4))
                 )
         );
+      }
+      return result;
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, rs);
+    }
+  }
+
+  public List<CarSubkitModel> getCarSubkits() throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet rs = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      String query = "SELECT cs.id, cs.name, cs.gasoline, cs.diesel, cs.gpl, cs.electric, k.id, k.name, cc.id, cc.name " +
+              "FROM car_subkits cs INNER JOIN car_kits k ON cs.car_kit_id = k.id INNER JOIN car_kit_categories cc ON k.category = cc.id";
+      statement = connection.prepareStatement(query);
+      rs = statement.executeQuery();
+      List<CarSubkitModel> result = new ArrayList<>();
+      while (rs.next()) {
+        result.add(new CarSubkitModel(
+                rs.getInt(1),
+                rs.getString(2),
+                new CarKitModel(rs.getInt(7), rs.getString(8), new CarKitCategoryModel(rs.getInt(9), rs.getString(10))),
+                rs.getBoolean(3),
+                rs.getBoolean(4),
+                rs.getBoolean(5),
+                rs.getBoolean(6)
+        ));
       }
       return result;
     } catch (Exception e) {

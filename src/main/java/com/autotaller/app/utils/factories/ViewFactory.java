@@ -6,6 +6,7 @@ import com.autotaller.app.components.app_view.admin_view.admin_car_kit_view.Admi
 import com.autotaller.app.components.app_view.admin_view.admin_car_make_view.AddCarMakeDialogView;
 import com.autotaller.app.components.app_view.admin_view.admin_car_make_view.AdminCarMakeView;
 import com.autotaller.app.components.app_view.admin_view.admin_car_model_view.AdminCarModelView;
+import com.autotaller.app.components.app_view.admin_view.admin_car_subkit_view.AdminCarSubkitView;
 import com.autotaller.app.components.login_view.login.LoginView;
 import com.autotaller.app.components.login_view.sign_up.SignUpView;
 import com.autotaller.app.utils.ComponentType;
@@ -34,6 +35,8 @@ public class ViewFactory {
         return new AdminCarModelView();
       case ADMIN_CAR_KIT_VIEW:
         return new AdminCarKitView();
+      case ADMIN_CAR_SUBKIT_VIEW:
+        return new AdminCarSubkitView();
     }
     return null;
   }

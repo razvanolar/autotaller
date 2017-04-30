@@ -2,10 +2,7 @@ package com.autotaller.app.components.app_view.admin_view;
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.admin_view.*;
-import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.AddCarKitEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.AddCarKitEventHandler;
-import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.AdminLoadCarKitCategoriesEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.AdminLoadCarKitsEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.*;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AddCarMakeEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AddCarMakeEventHandler;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLoadCarMakesEvent;
@@ -50,14 +47,16 @@ public class AdminController implements Controller<AdminController.IAdminView> {
     loadCarModels();
     loadCarKitCategories();
     loadCarKits();
+    loadCarSubkits();
   }
 
   private void initToolbarPanes() {
     Component carMakeComponent = ComponentFactory.createComponent(ComponentType.ADMIN_CAR_MAKE_VIEW);
     Component carModelComponent = ComponentFactory.createComponent(ComponentType.ADMIN_CAR_MODEL_VIEW);
     Component carKitComponent = ComponentFactory.createComponent(ComponentType.ADMIN_CAR_KIT_VIEW);
+    Component carSubkitComponent = ComponentFactory.createComponent(ComponentType.ADMIN_CAR_SUBKIT_VIEW);
 
-    if (carMakeComponent == null || carModelComponent == null || carKitComponent == null) {
+    if (carMakeComponent == null || carModelComponent == null || carKitComponent == null || carSubkitComponent == null) {
       //TODO handle exception
       return;
     }
@@ -65,6 +64,7 @@ public class AdminController implements Controller<AdminController.IAdminView> {
     view.addToolbarPane(carMakeComponent.getView().asNode());
     view.addToolbarPane(carModelComponent.getView().asNode());
     view.addToolbarPane(carKitComponent.getView().asNode());
+    view.addToolbarPane(carSubkitComponent.getView().asNode());
   }
 
   private void initRepoHandlers() {
@@ -154,5 +154,9 @@ public class AdminController implements Controller<AdminController.IAdminView> {
 
   private void loadCarKits() {
     EventBus.fireEvent(new GetCarKitsEvent(carKits -> EventBus.fireEvent(new AdminLoadCarKitsEvent(carKits))));
+  }
+
+  private void loadCarSubkits() {
+    EventBus.fireEvent(new GetCarSubkitsEvent(carSubkits -> EventBus.fireEvent(new AdminLoadCarSubkitsEvent(carSubkits))));
   }
 }

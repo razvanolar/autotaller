@@ -1,9 +1,6 @@
 package com.autotaller.app.repository;
 
-import com.autotaller.app.model.CarKitCategoryModel;
-import com.autotaller.app.model.CarKitModel;
-import com.autotaller.app.model.CarMakeModel;
-import com.autotaller.app.model.CarTypeModel;
+import com.autotaller.app.model.*;
 import com.autotaller.app.repository.services.UserService;
 import com.autotaller.app.repository.services.cars.CarKitsService;
 import com.autotaller.app.repository.services.cars.CarMakesService;
@@ -80,9 +77,14 @@ public class Repository {
     return carKitsService.getCarKits();
   }
 
+  public List<CarSubkitModel> getCarSubkits() throws Exception {
+    return carKitsService.getCarSubkits();
+  }
+
   public void addCarKit(CarKitModel carKit) throws Exception {
     carKitsService.addCarKit(carKit);
   }
+
 
   public void testConnection() throws Exception {
     jdbcUtil.testConnection();
