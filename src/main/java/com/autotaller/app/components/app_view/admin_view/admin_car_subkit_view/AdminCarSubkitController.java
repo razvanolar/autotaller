@@ -2,10 +2,8 @@ package com.autotaller.app.components.app_view.admin_view.admin_car_subkit_view;
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.AdminLoadCarKitsEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.AdminLoadCarKitsEventHandler;
-import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.AdminLoadCarSubkitsEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.AdminLoadCarSubkitsEventHandler;
+import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.*;
+import com.autotaller.app.model.CarKitCategoryModel;
 import com.autotaller.app.model.CarKitModel;
 import com.autotaller.app.model.CarSubkitModel;
 import com.autotaller.app.utils.AdminToolbarView;
@@ -27,17 +25,25 @@ public class AdminCarSubkitController implements Controller<AdminCarSubkitContro
     TableView<CarSubkitModel> getCarSubkitModelTable();
   }
 
+  private List<CarKitCategoryModel> carKitCategories;
   private List<CarKitModel> carKits;
   private List<CarSubkitModel> carSubkits;
 
+  private IAdminCarSubkitView view;
+
   @Override
   public void bind(IAdminCarSubkitView view) {
+    this.view = view;
 
     view.getAddButton().setOnAction(event -> {
-      AddCarSubkitDialogController dialogController = new AddCarSubkitDialogController(carKits);
+      AddCarSubkitDialogController dialogController = new AddCarSubkitDialogController(carKitCategories, carKits);
       AddCarSubkitDialogView dialogView = new AddCarSubkitDialogView();
       Component component = new Component(dialogController, dialogView);
       EventBus.fireEvent(new ShowDialogEvent(DialogFactory.createDialog(DialogComponentType.ADD_CAR_SUBKIT_DIALOG, component)));
+    });
+
+    EventBus.addHandler(AdminLoadCarKitCategoriesEvent.TYPE, (AdminLoadCarKitCategoreisEventHandler) event -> {
+      carKitCategories = event.getCarKitCategories();
     });
 
     EventBus.addHandler(AdminLoadCarKitsEvent.TYPE, (AdminLoadCarKitsEventHandler) event -> {

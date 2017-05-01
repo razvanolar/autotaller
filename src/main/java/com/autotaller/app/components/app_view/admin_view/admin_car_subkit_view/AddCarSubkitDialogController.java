@@ -3,16 +3,13 @@ package com.autotaller.app.components.app_view.admin_view.admin_car_subkit_view;
 import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.HideDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.AddCarSubkitEvent;
+import com.autotaller.app.model.CarKitCategoryModel;
 import com.autotaller.app.model.CarKitModel;
 import com.autotaller.app.model.CarSubkitModel;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.DialogController;
 import com.autotaller.app.utils.StringValidator;
-import com.autotaller.app.utils.View;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
 
 import java.util.List;
 
@@ -21,21 +18,18 @@ import java.util.List;
  */
 public class AddCarSubkitDialogController implements Controller<AddCarSubkitDialogController.IAddCarSubkitDialogView>, DialogController {
 
-  public interface IAddCarSubkitDialogView extends View {
-    ComboBox<CarKitModel> getCarKitsCombo();
-    TextField getCarSubkitNameField();
-    CheckBox getGasolineCheckBox();
-    CheckBox getDieselCheckBox();
-    CheckBox getGplCheckBox();
-    CheckBox getElectricCheckBox();
+  public interface IAddCarSubkitDialogView extends IAdminCarSubkitFormView {
+
   }
 
   private IAddCarSubkitDialogView view;
   private Button actionButton;
 
+  private List<CarKitCategoryModel> carKitCategories;
   private List<CarKitModel> carKits;
 
-  public AddCarSubkitDialogController(List<CarKitModel> carKits) {
+  public AddCarSubkitDialogController(List<CarKitCategoryModel> carKitCategories, List<CarKitModel> carKits) {
+    this.carKitCategories = carKitCategories;
     this.carKits = carKits;
   }
 
@@ -43,8 +37,7 @@ public class AddCarSubkitDialogController implements Controller<AddCarSubkitDial
   public void bind(IAddCarSubkitDialogView view) {
     this.view = view;
 
-    view.getCarKitsCombo().getItems().addAll(carKits);
-    view.getCarKitsCombo().setValue(carKits.get(0));
+    view.injectData(carKitCategories, carKits);
 
     view.getGasolineCheckBox().setSelected(true);
     view.getDieselCheckBox().setSelected(true);
