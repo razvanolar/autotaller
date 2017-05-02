@@ -1,4 +1,4 @@
-package com.autotaller.app.components.app_view.admin_view.admin_car_model_view;
+package com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_model_view;
 
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.utils.resources.NodeProvider;

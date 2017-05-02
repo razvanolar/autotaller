@@ -1,4 +1,4 @@
-package com.autotaller.app.components.app_view.admin_view;
+package com.autotaller.app.components.app_view.admin_view.admin_define_model_view;
 
 import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.utils.resources.NodeProvider;

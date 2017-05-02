@@ -1,4 +1,4 @@
-package com.autotaller.app.components.app_view.admin_view.admin_car_subkit_view;
+package com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_subkit_view;
 
 import com.autotaller.app.model.CarKitCategoryModel;
 import com.autotaller.app.model.CarKitModel;

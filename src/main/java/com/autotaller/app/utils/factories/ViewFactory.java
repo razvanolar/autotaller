@@ -1,12 +1,12 @@
 package com.autotaller.app.utils.factories;
 
 import com.autotaller.app.components.app_view.AutoTallerMenuBarView;
-import com.autotaller.app.components.app_view.admin_view.AdminDefineModelView;
-import com.autotaller.app.components.app_view.admin_view.admin_car_kit_view.AdminCarKitView;
-import com.autotaller.app.components.app_view.admin_view.admin_car_make_view.AddCarMakeDialogView;
-import com.autotaller.app.components.app_view.admin_view.admin_car_make_view.AdminCarMakeView;
-import com.autotaller.app.components.app_view.admin_view.admin_car_model_view.AdminCarModelView;
-import com.autotaller.app.components.app_view.admin_view.admin_car_subkit_view.AdminCarSubkitView;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.AdminDefineModelView;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_kit_view.AdminCarKitView;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_make_view.AddCarMakeDialogView;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_make_view.AdminCarMakeView;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_model_view.AdminCarModelView;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_subkit_view.AdminCarSubkitView;
 import com.autotaller.app.components.login_view.login.LoginView;
 import com.autotaller.app.components.login_view.sign_up.SignUpView;
 import com.autotaller.app.utils.ComponentType;
