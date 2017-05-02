@@ -49,7 +49,7 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
     filterPane.add(fromDatePicker, 1, 2);
     filterPane.add(NodeProvider.createFormTextLabel("Pana la: "), 0, 3);
     filterPane.add(toDatePicker, 1, 3);
-    filterPane.add(NodeProvider.createFormTextLabel("Motor: "), 0, 4);
+    filterPane.add(NodeProvider.createFormTextLabel("Sasiu: "), 0, 4);
     filterPane.add(engineTextField, 1, 4);
     filterPane.add(yearsPanelView.asNode(), 0, 5, 2, 1);
   }

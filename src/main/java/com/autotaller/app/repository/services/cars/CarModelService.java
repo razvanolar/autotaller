@@ -32,7 +32,7 @@ public class CarModelService extends GenericService {
       rs = statement.executeQuery();
       List<CarTypeModel> result = new ArrayList<>();
       Set<Integer> ids = new HashSet<>();
-      engineStatement = connection.prepareStatement("SELECT engine_name FROM car_model_engines WHERE car_model_id = ?");
+      engineStatement = connection.prepareStatement("SELECT engine_name FROM car_model_frames WHERE car_model_id = ?");
       while (rs.next()) {
         int id = rs.getInt(1);
         Date toDate = rs.getDate(4);
@@ -90,9 +90,9 @@ public class CarModelService extends GenericService {
       }
       int carModelId = rs.getInt(1);
 
-      List<String> engineNames = carModel.getEngineNames();
+      List<String> engineNames = carModel.getFrameNames();
       if (engineNames != null && !engineNames.isEmpty()) {
-        sql = "INSERT INTO car_model_engines (car_model_id, engine_name) VALUES (?, ?)";
+        sql = "INSERT INTO car_model_frames (car_model_id, engine_name) VALUES (?, ?)";
         engineStatement = connection.prepareStatement(sql);
         engineStatement.setInt(1, carModelId);
         for (String engine : engineNames) {

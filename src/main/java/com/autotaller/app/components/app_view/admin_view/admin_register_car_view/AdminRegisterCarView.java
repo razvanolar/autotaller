@@ -8,7 +8,7 @@ import javafx.scene.Node;
  */
 public class AdminRegisterCarView extends IterableView implements AdminRegisterCarController.IAdminRegisterCarView {
 
-  
+
 
   public AdminRegisterCarView() {
     init();

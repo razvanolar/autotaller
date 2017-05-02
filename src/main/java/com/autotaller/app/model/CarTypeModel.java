@@ -13,18 +13,18 @@ public class CarTypeModel {
   private String name;
   private LocalDate from;
   private LocalDate to;
-  private List<String> engineNames;
+  private List<String> frameNames;
 
-  private String engines;
+  private String frames;
 
-  public CarTypeModel(int id, CarMakeModel carMake, String name, LocalDate from, LocalDate to, List<String> engineNames) {
+  public CarTypeModel(int id, CarMakeModel carMake, String name, LocalDate from, LocalDate to, List<String> frameNames) {
     this.id = id;
     this.carMake = carMake;
     this.name = name;
     this.from = from;
     this.to = to;
-    this.engineNames = engineNames;
-    computeEnginesString();
+    this.frameNames = frameNames;
+    computeFramesString();
   }
 
   public CarMakeModel getCarMake() {
@@ -43,12 +43,12 @@ public class CarTypeModel {
     return to;
   }
 
-  public List<String> getEngineNames() {
-    return engineNames;
+  public List<String> getFrameNames() {
+    return frameNames;
   }
 
-  public String getEngines() {
-    return engines;
+  public String getFrames() {
+    return frames;
   }
 
   public void setCarMake(CarMakeModel carMake) {
@@ -67,20 +67,20 @@ public class CarTypeModel {
     this.to = to;
   }
 
-  public void setEngineNames(List<String> engineNames) {
-    this.engineNames = engineNames;
-    computeEnginesString();
+  public void setFrameNames(List<String> frameNames) {
+    this.frameNames = frameNames;
+    computeFramesString();
   }
 
-  private void computeEnginesString() {
-    if (engineNames == null)
+  private void computeFramesString() {
+    if (frameNames == null)
       return;
     StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < engineNames.size(); i++) {
-      builder.append(engineNames.get(i));
-      if (i < engineNames.size() - 1)
+    for (int i = 0; i < frameNames.size(); i++) {
+      builder.append(frameNames.get(i));
+      if (i < frameNames.size() - 1)
         builder.append(", ");
     }
-    engines = builder.toString();
+    frames = builder.toString();
   }
 }

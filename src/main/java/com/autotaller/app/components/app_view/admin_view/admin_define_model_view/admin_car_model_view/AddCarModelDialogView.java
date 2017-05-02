@@ -58,7 +58,7 @@ public class AddCarModelDialogView implements AddCarModelDialogController.IAddCa
     gridPane.add(fromDatePicker, 1, row_index++);
     gridPane.add(NodeProvider.createTextLabel("Pane la: ", 13, false), 0, row_index);
     gridPane.add(toDatePicker, 1, row_index++);
-    Text textLabel = NodeProvider.createTextLabel("Motor: ", 13, false);
+    Text textLabel = NodeProvider.createTextLabel("Sasiu: ", 13, false);
     gridPane.add(textLabel, 0, row_index);
     gridPane.add(createEngineField(false, textLabel), 1, row_index++);
     gridPane.add(addEngineFieldButton, 0, row_index);

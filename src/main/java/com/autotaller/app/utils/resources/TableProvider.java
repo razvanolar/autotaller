@@ -31,8 +31,8 @@ public class TableProvider {
     nameColumn.setCellValueFactory(p -> {
       CarTypeModel value = p.getValue();
       if (value != null) {
-        if (!StringValidator.isNullOrEmpty(value.getEngines())) {
-          return new SimpleStringProperty(value.getName() + " (" + value.getEngines() + ")");
+        if (!StringValidator.isNullOrEmpty(value.getFrames())) {
+          return new SimpleStringProperty(value.getName() + " (" + value.getFrames() + ")");
         } else {
           return new SimpleStringProperty(value.getName());
         }
