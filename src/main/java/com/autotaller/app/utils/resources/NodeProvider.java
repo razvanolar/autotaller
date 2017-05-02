@@ -126,6 +126,10 @@ public class NodeProvider {
     return createAppMenu(text, icon, 150, 200, StyleProvider.APP_MENU_BOX_CLASS);
   }
 
+  public static Node createAdminAppMenu(String text, Image icon) {
+    return createAppMenu(text, icon, 500, 50, StyleProvider.APP_MENU_BOX_CLASS);
+  }
+
   private static Node createAppMenu(String text, Image icon, int width, int height, String style) {
     VBox vBox = new VBox();
     Text textLabel = new Text(text);

@@ -113,7 +113,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
 
   private void initAppViewHandlers() {
     autoTallerView.getAdminMenu().setOnMouseClicked(event -> {
-      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_DEFINE_MODEL_VIEW);
+      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_VIEW);
       if (component != null) {
         EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
         EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
