@@ -37,6 +37,14 @@ public class AdminController implements Controller<AdminController.IAdminView> {
       }
     });
 
+    view.getAddCarMenu().setOnMouseClicked(event -> {
+      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_REGISTER_CAR_VIEW);
+      if (component != null) {
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
+      }
+    });
+
     EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> this.repository = event.getRepository());
   }
 }
