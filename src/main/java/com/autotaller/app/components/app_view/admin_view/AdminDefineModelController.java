@@ -23,17 +23,17 @@ import javafx.scene.Node;
 /**
  * Created by razvanolar on 18.04.2017
  */
-public class AdminController implements Controller<AdminController.IAdminView> {
+public class AdminDefineModelController implements Controller<AdminDefineModelController.IAdminDefineModelView> {
 
-  public interface IAdminView extends View {
+  public interface IAdminDefineModelView extends View {
     void addToolbarPane(Node toolbarPane);
   }
 
-  private IAdminView view;
+  private IAdminDefineModelView view;
   private Repository repository;
 
   @Override
-  public void bind(IAdminView view) {
+  public void bind(IAdminDefineModelView view) {
     this.view = view;
 
     initToolbarPanes();

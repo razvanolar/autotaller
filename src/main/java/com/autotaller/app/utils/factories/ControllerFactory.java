@@ -1,7 +1,7 @@
 package com.autotaller.app.utils.factories;
 
 import com.autotaller.app.components.app_view.AutoTallerMenuBarController;
-import com.autotaller.app.components.app_view.admin_view.AdminController;
+import com.autotaller.app.components.app_view.admin_view.AdminDefineModelController;
 import com.autotaller.app.components.app_view.admin_view.admin_car_kit_view.AdminCarKitController;
 import com.autotaller.app.components.app_view.admin_view.admin_car_make_view.AddCarMakeDialogController;
 import com.autotaller.app.components.app_view.admin_view.admin_car_make_view.AdminCarMakeController;
@@ -25,8 +25,8 @@ public class ControllerFactory {
         return new SignUpController();
       case APP_MENU_BAR:
         return new AutoTallerMenuBarController();
-      case ADMIN_VIEW:
-        return new AdminController();
+      case ADMIN_DEFINE_MODEL_VIEW:
+        return new AdminDefineModelController();
       case ADMIN_CAR_MAKE_VIEW:
         return new AdminCarMakeController();
       case ADD_CAR_MAKE_VIEW:
