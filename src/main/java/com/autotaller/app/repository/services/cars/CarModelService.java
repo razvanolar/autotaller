@@ -23,7 +23,7 @@ public class CarModelService extends GenericService {
   public List<CarTypeModel> getCarModels() throws Exception {
     Connection connection = null;
     PreparedStatement statement = null;
-    PreparedStatement engineStatement = null;
+    PreparedStatement frameStatement = null;
     ResultSet rs = null;
     try {
       connection = jdbcUtil.getNewConnection();
@@ -32,7 +32,7 @@ public class CarModelService extends GenericService {
       rs = statement.executeQuery();
       List<CarTypeModel> result = new ArrayList<>();
       Set<Integer> ids = new HashSet<>();
-      engineStatement = connection.prepareStatement("SELECT engine_name FROM car_model_frames WHERE car_model_id = ?");
+      frameStatement = connection.prepareStatement("SELECT frame_name FROM car_model_frames WHERE car_model_id = ?");
       while (rs.next()) {
         int id = rs.getInt(1);
         Date toDate = rs.getDate(4);
@@ -42,7 +42,7 @@ public class CarModelService extends GenericService {
                   rs.getString(2),
                   rs.getDate(3).toLocalDate(),
                   toDate != null ? toDate.toLocalDate() : null,
-                  getEnginesForCarModelId(id, engineStatement)
+                  getFramesForCarModelId(id, frameStatement)
                 )
         );
         ids.add(id);
@@ -54,7 +54,7 @@ public class CarModelService extends GenericService {
       throw e;
     } finally {
       jdbcUtil.close(connection, statement, rs);
-      jdbcUtil.closePrepareStatement(engineStatement);
+      jdbcUtil.closePrepareStatement(frameStatement);
     }
   }
 
@@ -62,7 +62,7 @@ public class CarModelService extends GenericService {
     Connection connection = null;
     PreparedStatement carStatement = null;
     PreparedStatement idStatement = null;
-    PreparedStatement engineStatement = null;
+    PreparedStatement frameStatement = null;
     ResultSet rs = null;
     try {
       connection = jdbcUtil.getNewConnection();
@@ -90,14 +90,14 @@ public class CarModelService extends GenericService {
       }
       int carModelId = rs.getInt(1);
 
-      List<String> engineNames = carModel.getFrameNames();
-      if (engineNames != null && !engineNames.isEmpty()) {
-        sql = "INSERT INTO car_model_frames (car_model_id, engine_name) VALUES (?, ?)";
-        engineStatement = connection.prepareStatement(sql);
-        engineStatement.setInt(1, carModelId);
-        for (String engine : engineNames) {
-          engineStatement.setString(2, engine);
-          engineStatement.executeUpdate();
+      List<String> frameNames = carModel.getFrameNames();
+      if (frameNames != null && !frameNames.isEmpty()) {
+        sql = "INSERT INTO car_model_frames (car_model_id, frame_name) VALUES (?, ?)";
+        frameStatement = connection.prepareStatement(sql);
+        frameStatement.setInt(1, carModelId);
+        for (String farame : frameNames) {
+          frameStatement.setString(2, farame);
+          frameStatement.executeUpdate();
         }
       }
 
@@ -112,20 +112,20 @@ public class CarModelService extends GenericService {
       jdbcUtil.close(connection, null, rs);
       jdbcUtil.closePrepareStatement(carStatement);
       jdbcUtil.closePrepareStatement(idStatement);
-      jdbcUtil.closePrepareStatement(engineStatement);
+      jdbcUtil.closePrepareStatement(frameStatement);
     }
   }
 
-  private List<String> getEnginesForCarModelId(int carModelId, PreparedStatement statement) throws Exception {
+  private List<String> getFramesForCarModelId(int carModelId, PreparedStatement statement) throws Exception {
     ResultSet rs = null;
     try {
       statement.setInt(1, carModelId);
       rs = statement.executeQuery();
-      List<String> engines = new ArrayList<>();
+      List<String> frame = new ArrayList<>();
       while (rs.next()) {
-        engines.add(rs.getString(1));
+        frame.add(rs.getString(1));
       }
-      return engines;
+      return frame;
     } finally {
       jdbcUtil.closeResultSet(rs);
     }

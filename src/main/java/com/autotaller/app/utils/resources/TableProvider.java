@@ -1,10 +1,14 @@
 package com.autotaller.app.utils.resources;
 
 import com.autotaller.app.model.CarKitModel;
+import com.autotaller.app.model.CarModel;
 import com.autotaller.app.model.CarSubkitModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.utils.StringValidator;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -144,6 +148,44 @@ public class TableProvider {
     electricColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
 
     table.getColumns().addAll(nameColumn, carKitColumn, gasolineColumn, dieselColumn, gplColumn, electricColumn);
+    return table;
+  }
+
+  @SuppressWarnings("unchecked")
+  public TableView<CarModel> createCarTable() {
+    TableView<CarModel> table = new TableView<>();
+    TableColumn<CarModel, String> nameColumn = new TableColumn<>("Nume");
+    TableColumn<CarModel, String> modelColumn = new TableColumn<>("Model");
+    TableColumn<CarModel, String> fromColumn = new TableColumn<>("De la");
+    TableColumn<CarModel, String> toColumn = new TableColumn<>("Pana la");
+    TableColumn<CarModel, Integer> kwColumn = new TableColumn<>("KW");
+    TableColumn<CarModel, Integer> hpColumn = new TableColumn<>("CP");
+    TableColumn<CarModel, Integer> capacityColumn = new TableColumn<>("Cap. cil.");
+    TableColumn<CarModel, Integer> cilindersColumn = new TableColumn<>("Cilindrii");
+    TableColumn<CarModel, String> enginesColumn = new TableColumn<>("Cod motor");
+
+    nameColumn.prefWidthProperty().bind(table.widthProperty().multiply(.15));
+    modelColumn.prefWidthProperty().bind(table.widthProperty().multiply(.15));
+    DoubleBinding widthProp = table.widthProperty().multiply(.1);
+    fromColumn.prefWidthProperty().bind(widthProp);
+    toColumn.prefWidthProperty().bind(widthProp);
+    kwColumn.prefWidthProperty().bind(widthProp);
+    hpColumn.prefWidthProperty().bind(widthProp);
+    capacityColumn.prefWidthProperty().bind(widthProp);
+    cilindersColumn.prefWidthProperty().bind(widthProp);
+    enginesColumn.prefWidthProperty().bind(widthProp);
+
+    nameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getName()) : new SimpleStringProperty());
+    modelColumn.setCellValueFactory(p -> p.getValue() != null && p.getValue().getCarType() != null ? new SimpleStringProperty(p.getValue().getCarType().getName()) : new SimpleStringProperty());
+    fromColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getFrom().toString()) : new SimpleStringProperty());
+    toColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getTo().toString()) : new SimpleStringProperty());
+    kwColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getKw()) : new SimpleObjectProperty<>());
+    hpColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>((int)((float)p.getValue().getKw() * 1.34102)) : new SimpleObjectProperty<>());
+    capacityColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getCapacity()) : new SimpleObjectProperty<>());
+    cilindersColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getCilinders()) : new SimpleObjectProperty<>());
+    enginesColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getEnginesString()) : new SimpleObjectProperty<>());
+
+    table.getColumns().addAll(nameColumn, modelColumn, fromColumn, toColumn, kwColumn, hpColumn, capacityColumn, cilindersColumn, enginesColumn);
     return table;
   }
 }

@@ -1,16 +1,14 @@
 package com.autotaller.app.utils.resources;
 
 import com.autotaller.app.model.*;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -23,6 +21,8 @@ import javafx.scene.text.Text;
 public class NodeProvider {
 
   public static TableProvider TABLE_PROVIDER = new TableProvider();
+
+  public static int DEFAULT_FIELD_WIDTH = 220;
 
   public static JFXButton createButton(String text) {
     JFXButton button = new JFXButton(text);
@@ -50,6 +50,10 @@ public class NodeProvider {
     return textField;
   }
 
+  public static TextField createTextField() {
+    return createTextField(DEFAULT_FIELD_WIDTH);
+  }
+
   public static TextField createTextField(int width) {
     TextField textField = new TextField();
     textField.setPrefWidth(width);
@@ -64,8 +68,32 @@ public class NodeProvider {
     return textField;
   }
 
+  public static Spinner<Integer> createSpinner(int min, int max, int init, int step) {
+    return createSpinner(DEFAULT_FIELD_WIDTH, min, max, init, step);
+  }
+
+  public static Spinner<Integer> createSpinner(int width, int min, int max, int init, int step) {
+    Spinner<Integer> spinner = new Spinner<>(min, max, init, step);
+    spinner.setPrefWidth(width);
+    return spinner;
+  }
+
+  public static JFXComboBox<CarMakeModel> createCarMakesCombo() {
+    return createCarMakesCombo(DEFAULT_FIELD_WIDTH);
+  }
+
   public static JFXComboBox<CarMakeModel> createCarMakesCombo(int width) {
     JFXComboBox<CarMakeModel> combo = new JFXComboBox<>();
+    combo.setPrefWidth(width);
+    return combo;
+  }
+
+  public static JFXComboBox<CarTypeModel> createCarTypesCombo() {
+    return createCarTypesCombo(DEFAULT_FIELD_WIDTH);
+  }
+
+  public static JFXComboBox<CarTypeModel> createCarTypesCombo(int width) {
+    JFXComboBox<CarTypeModel> combo = new JFXComboBox<>();
     combo.setPrefWidth(width);
     return combo;
   }
@@ -108,6 +136,10 @@ public class NodeProvider {
     ToolBar toolBar = new ToolBar();
     toolBar.getStyleClass().add(StyleProvider.BUTTONS_CONTAINER_CLASS);
     return toolBar;
+  }
+
+  public static DatePicker createDatePicker() {
+    return createDatePicker(DEFAULT_FIELD_WIDTH);
   }
 
   public static DatePicker createDatePicker(int width) {
@@ -164,6 +196,14 @@ public class NodeProvider {
     return scroll;
   }
 
+  public static GridPane createGridPane(Pos pos, int hGap, int vGap) {
+    GridPane gridPane = new GridPane();
+    gridPane.setAlignment(pos);
+    gridPane.setHgap(hGap);
+    gridPane.setVgap(vGap);
+    return gridPane;
+  }
+
   public static TableView<CarTypeModel> createCarModelTable() {
     return TABLE_PROVIDER.createCarModelTable();
   }
@@ -174,5 +214,9 @@ public class NodeProvider {
 
   public static TableView<CarSubkitModel> createCarSubkitModelTable() {
     return TABLE_PROVIDER.createCarSubkitModelTable();
+  }
+
+  public static TableView<CarModel> createCarTable() {
+    return TABLE_PROVIDER.createCarTable();
   }
 }

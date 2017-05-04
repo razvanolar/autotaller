@@ -45,13 +45,14 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
     EventBus.addHandler(TestConnectionEvent.TYPE, (TestConnectionEventHandler) handler -> {
       Thread th = new Thread(() -> {
         try {
-          Thread.sleep(500);
+//          Thread.sleep(500);
           repository = new Repository();
           repository.testConnection();
           Platform.runLater(() -> {
             // remove the handler after the db connection was tested successfully
             EventBus.removeHandlersByType(TestConnectionEvent.TYPE);
             EventBus.fireEvent(new ShowLoginScreenEvent());
+            EventBus.fireEvent(new TestCredentialsEvent("admin", "admin"));
           });
         } catch (Exception e) {
           e.printStackTrace();

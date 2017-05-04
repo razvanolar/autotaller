@@ -5,6 +5,7 @@ import com.autotaller.app.repository.services.UserService;
 import com.autotaller.app.repository.services.cars.CarKitsService;
 import com.autotaller.app.repository.services.cars.CarMakesService;
 import com.autotaller.app.repository.services.cars.CarModelService;
+import com.autotaller.app.repository.services.cars.CarService;
 import com.autotaller.app.repository.utils.JDBCUtil;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class Repository {
   private CarMakesService carMakesService;
   private CarModelService carModelService;
   private CarKitsService carKitsService;
+  private CarService carService;
 
   public Repository() throws Exception {
     try {
@@ -103,5 +105,6 @@ public class Repository {
     carMakesService = new CarMakesService(jdbcUtil);
     carModelService = new CarModelService(jdbcUtil);
     carKitsService = new CarKitsService(jdbcUtil);
+    carService = new CarService(jdbcUtil);
   }
 }
