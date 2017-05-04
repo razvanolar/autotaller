@@ -75,6 +75,7 @@ public class NodeProvider {
   public static Spinner<Integer> createSpinner(int width, int min, int max, int init, int step) {
     Spinner<Integer> spinner = new Spinner<>(min, max, init, step);
     spinner.setPrefWidth(width);
+    spinner.setEditable(true);
     return spinner;
   }
 
@@ -106,6 +107,16 @@ public class NodeProvider {
 
   public static JFXComboBox<CarKitModel> createCarKitCombo(int width) {
     JFXComboBox<CarKitModel> combo = new JFXComboBox<>();
+    combo.setPrefWidth(width);
+    return combo;
+  }
+
+  public static ComboBox<FuelModel> createFuelCombo() {
+    return createFuelCombo(DEFAULT_FIELD_WIDTH);
+  }
+
+  public static ComboBox<FuelModel> createFuelCombo(int width) {
+    JFXComboBox<FuelModel> combo = new JFXComboBox<>();
     combo.setPrefWidth(width);
     return combo;
   }
