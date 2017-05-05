@@ -1,6 +1,6 @@
 package com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_subkit_view;
 
-import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.AdminToolbarPane;
+import com.autotaller.app.components.app_view.admin_view.util.AdminToolbarPane;
 import com.autotaller.app.model.CarSubkitModel;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.scene.Node;

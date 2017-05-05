@@ -1,6 +1,6 @@
 package com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_kit_view;
 
-import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.AdminToolbarPane;
+import com.autotaller.app.components.app_view.admin_view.util.AdminToolbarPane;
 import com.autotaller.app.model.CarKitCategoryModel;
 import com.autotaller.app.model.CarKitModel;
 import com.autotaller.app.utils.resources.NodeProvider;
