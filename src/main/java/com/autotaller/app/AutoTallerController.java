@@ -10,6 +10,7 @@ import com.autotaller.app.events.test_connection.TestConnectionEventHandler;
 import com.autotaller.app.events.test_connection.TestConnectionFailedEvent;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.model.*;
+import com.autotaller.app.model.utils.ModelsDTO;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.Component;
 import com.autotaller.app.utils.ComponentType;
@@ -227,6 +228,30 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
             List<CarSubkitModel> carSubkits = repository.getCarSubkits();
             Platform.runLater(() -> {
               event.getCallback().call(carSubkits);
+              EventBus.fireEvent(new UnmaskViewEvent());
+            });
+          } catch (Exception e) {
+            //TODO show error dialog
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO show error dialog
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
+
+    EventBus.addHandler(GetAllCarDefinedModelsEvent.TYPE, (GetAllCarDefinedModelsEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Incarcare Model"));
+        Thread thread = new Thread(() -> {
+          try {
+            ModelsDTO allDefinedModels = repository.getAllDefinedModels();
+            Platform.runLater(() -> {
+              event.getCallback().call(allDefinedModels);
               EventBus.fireEvent(new UnmaskViewEvent());
             });
           } catch (Exception e) {

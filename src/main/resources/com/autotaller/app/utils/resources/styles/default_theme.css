@@ -89,6 +89,14 @@
     -fx-background-color: rgba(8,52,112,0.3);
 }
 
+.adminSubToolbarPaneBackground {
+    -fx-background-color: rgba(176,174,183,0.45);
+}
+
+.adminSubToolbarPaneBackground:hover {
+    -fx-background-color: rgba(48,92,192,0.5);
+}
+
 .yearViewUnselectedBackground {
     -fx-background-color: rgba(209,209,212,0.46);
 }

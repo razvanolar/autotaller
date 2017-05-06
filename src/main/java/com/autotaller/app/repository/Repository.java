@@ -1,6 +1,7 @@
 package com.autotaller.app.repository;
 
 import com.autotaller.app.model.*;
+import com.autotaller.app.model.utils.ModelsDTO;
 import com.autotaller.app.repository.services.UserService;
 import com.autotaller.app.repository.services.cars.CarKitsService;
 import com.autotaller.app.repository.services.cars.CarMakesService;
@@ -21,6 +22,13 @@ public class Repository {
   private CarModelService carModelService;
   private CarKitsService carKitsService;
   private CarService carService;
+
+  private List<CarMakeModel> carMakesCache;
+  private List<CarTypeModel> carTypesCache;
+
+  private List<CarKitCategoryModel> carKitCategoriesCache;
+  private List<CarKitModel> carKitsCache;
+  private List<CarSubkitModel> carSubkitsCache;
 
   public Repository() throws Exception {
     try {
@@ -46,11 +54,18 @@ public class Repository {
    */
 
   public List<CarMakeModel> getAllCarMakes() throws Exception {
-    return carMakesService.getAllCarMakes();
+    if (carMakesCache == null) {
+      carMakesCache = carMakesService.getAllCarMakes();
+    }
+    return carMakesCache;
   }
 
   public void addCarMake(String name) throws Exception {
     carMakesService.addCarMake(name);
+    if (carMakesCache != null) {
+      carMakesCache.clear();
+      carMakesCache = null;
+    }
   }
 
 
@@ -59,11 +74,18 @@ public class Repository {
    */
 
   public List<CarTypeModel> getCarModels() throws Exception {
-    return carModelService.getCarModels();
+    if (carTypesCache == null) {
+      carTypesCache = carModelService.getCarModels();
+    }
+    return carTypesCache;
   }
 
   public void addCarModel(CarTypeModel carModel) throws Exception {
     carModelService.addCarModel(carModel);
+    if (carTypesCache != null) {
+      carTypesCache.clear();
+      carTypesCache = null;
+    }
   }
 
 
@@ -72,23 +94,52 @@ public class Repository {
    */
 
   public List<CarKitCategoryModel> getCarKitCategories() throws Exception {
-    return carKitsService.getCarKitCategories();
+    if (carKitCategoriesCache == null) {
+      carKitCategoriesCache = carKitsService.getCarKitCategories();
+    }
+    return carKitCategoriesCache;
   }
 
   public List<CarKitModel> getCarKits() throws Exception {
-    return carKitsService.getCarKits();
+    if (carKitsCache == null) {
+      carKitsCache = carKitsService.getCarKits();
+    }
+    return carKitsCache;
   }
 
   public List<CarSubkitModel> getCarSubkits() throws Exception {
-    return carKitsService.getCarSubkits();
+    if (carSubkitsCache == null) {
+      carSubkitsCache = carKitsService.getCarSubkits();
+    }
+    return carSubkitsCache;
   }
 
   public void addCarKit(CarKitModel carKit) throws Exception {
     carKitsService.addCarKit(carKit);
+    if (carKitsCache != null) {
+      carKitsCache.clear();
+      carKitsCache = null;
+    }
   }
 
   public void addCarSubkit(CarSubkitModel carSubkit) throws Exception {
     carKitsService.addCarSubkit(carSubkit);
+    if (carSubkitsCache != null) {
+      carSubkitsCache.clear();
+      carSubkitsCache = null;
+    }
+  }
+
+
+  public ModelsDTO getAllDefinedModels() throws Exception {
+    return new ModelsDTO(
+            getCarKitCategories(),
+            getCarKits(),
+            getCarSubkits(),
+            getAllCarMakes(),
+            getCarModels(),
+            null
+    );
   }
 
 

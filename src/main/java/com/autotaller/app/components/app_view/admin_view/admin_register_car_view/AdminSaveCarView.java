@@ -1,16 +1,19 @@
 package com.autotaller.app.components.app_view.admin_view.admin_register_car_view;
 
 import com.autotaller.app.components.utils.IterableView;
-import com.autotaller.app.model.CarMakeModel;
-import com.autotaller.app.model.CarTypeModel;
-import com.autotaller.app.model.FuelModel;
+import com.autotaller.app.model.*;
 import com.autotaller.app.utils.resources.NodeProvider;
+import com.autotaller.app.utils.resources.StyleProvider;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+
+import java.util.List;
 
 /**
  * Created by razvanolar on 04.05.2017
@@ -19,7 +22,12 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
 
   private SplitPane splitPane;
   private GridPane gridPane;
+
+  private GridPane filterPane;
   private ScrollPane componentsScrollPane;
+  private ComboBox<CarKitCategoryModel> carKitCategoryCombo;
+  private ComboBox<CarKitModel> carKitCombo;
+
   private ComboBox<CarMakeModel> carMakesCombo;
   private ComboBox<CarTypeModel> carTypesCombo;
   private ComboBox<FuelModel> fuelCombo;
@@ -33,6 +41,8 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
   private Text addComponentsLink;
 
   private Button saveCarButton;
+
+  private double lastDividerPosition = .3;
 
   public AdminSaveCarView() {
     init();
@@ -84,22 +94,64 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
 
     splitPane = new SplitPane(gridPane);
     borderPane.setCenter(splitPane);
+
+    carKitCategoryCombo = NodeProvider.createCarKitCategoriesCombo(NodeProvider.DEFAULT_FIELD_WIDTH);
+    carKitCombo = NodeProvider.createCarKitCombo(NodeProvider.DEFAULT_FIELD_WIDTH);
+    filterPane = NodeProvider.createGridPane(Pos.TOP_CENTER, 10, 10);
+    filterPane.setPadding(new Insets(20, 0, 0, 0));
+    componentsScrollPane = NodeProvider.createScrollPane(filterPane, true);
   }
 
   @Override
   public void showComponentsView() {
-    if (componentsScrollPane == null)
-      initComponentsPane();
+    ObservableList<Node> items = splitPane.getItems();
+    if (!items.contains(componentsScrollPane)) {
+      items.add(componentsScrollPane);
+      splitPane.setDividerPosition(0, lastDividerPosition);
+    }
   }
 
   @Override
   public void hideComponentsView() {
-
+    ObservableList<Node> items = splitPane.getItems();
+    if (items.contains(componentsScrollPane)) {
+      double[] dividers = splitPane.getDividerPositions();
+      if (dividers != null && dividers.length > 0) {
+        lastDividerPosition = dividers[0];
+      }
+      items.remove(componentsScrollPane);
+    }
   }
 
-  private void initComponentsPane() {
+  public void updateFilterPane(List<AdminSaveCarController.ComponentRowWrapper> componentRowWrappers) {
+    filterPane.getChildren().clear();
+    filterPane.add(NodeProvider.createFormTextLabel("Categorie: "), 0, 0);
+    filterPane.add(carKitCategoryCombo, 1, 0);
+    filterPane.add(NodeProvider.createFormTextLabel("Ansamblu: "), 2, 0);
+    filterPane.add(carKitCombo, 3, 0);
+    if (componentRowWrappers == null || componentRowWrappers.isEmpty())
+      return;
+    int row = 1;
+    for (AdminSaveCarController.ComponentRowWrapper wrapper : componentRowWrappers) {
+      CarSubkitModel subkit = wrapper.getSubkit();
+      filterPane.add(createFilterFieldHeader(subkit.getCarKit().getName(), subkit.getName()), 0, row, 6, 1);
+      row++;
+      filterPane.add(NodeProvider.createFormTextLabel("Denumire: "), 0, row);
+      filterPane.add(wrapper.getNameField(), 1, row);
+      filterPane.add(NodeProvider.createFormTextLabel("Cod: "), 2, row);
+      filterPane.add(wrapper.getCodeField(), 3, row);
+      filterPane.add(NodeProvider.createFormTextLabel("Stoc: "), 4, row);
+      filterPane.add(wrapper.getStockField(), 5, row);
+      row++;
+    }
+  }
 
-//    componentsScrollPane = NodeProvider.createScrollPane();
+  private HBox createFilterFieldHeader(String category, String subCategory) {
+    HBox hBox = new HBox();
+    hBox.setAlignment(Pos.CENTER_LEFT);
+    hBox.getChildren().add(NodeProvider.createTextLabel(category + " -> " + subCategory, 16, false));
+    hBox.getStyleClass().add(StyleProvider.ADMIN_SUB_TOOLBAR_PANE_CLASS);
+    return hBox;
   }
 
   private HBox createCategoryHBox(String name) {

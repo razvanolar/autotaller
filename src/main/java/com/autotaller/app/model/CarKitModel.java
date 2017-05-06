@@ -28,6 +28,21 @@ public class CarKitModel {
   }
 
   @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof CarKitModel))
+      return false;
+    CarKitModel kit = (CarKitModel) obj;
+    return this.id == kit.id && this.name.equals(kit.name);
+  }
+
+  @Override
+  public int hashCode() {
+    int hash = id;
+    hash = hash * 31 + name.hashCode();
+    return hash;
+  }
+
+  @Override
   public String toString() {
     return name;
   }

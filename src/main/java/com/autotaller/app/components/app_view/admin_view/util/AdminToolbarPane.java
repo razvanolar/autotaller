@@ -49,10 +49,17 @@ public class AdminToolbarPane implements View {
   private double lastDividerPosition = .25;
   protected static int FIELD_WIDTH = 200;
 
+  private boolean showToolButtons;
+
+  public AdminToolbarPane(String title) {
+    this(title, null, null);
+  }
+
   public AdminToolbarPane(String title, String addButtonText, String filterButtonText) {
     this.title = title;
     this.addButtonText = addButtonText;
     this.filterButtonText = filterButtonText;
+    this.showToolButtons = addButtonText != null && filterButtonText != null;
     init();
     initHandlers();
   }
@@ -60,9 +67,6 @@ public class AdminToolbarPane implements View {
   private void init() {
     plusImageView = new ImageView(ImageProvider.plusIcon());
     minusImageView = new ImageView(ImageProvider.minusIcon());
-
-    addButton = new Button(addButtonText);
-    filterButton = new ToggleButton(filterButtonText);
 
     imageContainer = new HBox(plusImageView);
     imageContainer.setAlignment(Pos.CENTER);
@@ -76,7 +80,11 @@ public class AdminToolbarPane implements View {
     textContainer.setAlignment(Pos.CENTER);
 
     toolbarContainer = new HBox(textContainer);
-    toolbarContainer.getChildren().addAll(addButton, filterButton);
+    if (showToolButtons) {
+      addButton = new Button(addButtonText);
+      filterButton = new ToggleButton(filterButtonText);
+      toolbarContainer.getChildren().addAll(addButton, filterButton);
+    }
     toolbarContainer.getChildren().addAll(new FillToolItem(), imageContainer);
     toolbarContainer.setPrefHeight(35);
     toolbarContainer.setAlignment(Pos.CENTER);
@@ -112,13 +120,15 @@ public class AdminToolbarPane implements View {
       }
     });
 
-    filterButton.setOnAction(event -> {
-      if (filterButton.isSelected()) {
-        showFilterPane();
-      } else {
-        hideFilterPane();
-      }
-    });
+    if (showToolButtons) {
+      filterButton.setOnAction(event -> {
+        if (filterButton.isSelected()) {
+          showFilterPane();
+        } else {
+          hideFilterPane();
+        }
+      });
+    }
   }
 
   public void showFilterPane() {
