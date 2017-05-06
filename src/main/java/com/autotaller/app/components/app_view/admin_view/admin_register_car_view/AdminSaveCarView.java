@@ -169,6 +169,18 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     return carTypesCombo;
   }
 
+  public ComboBox<FuelModel> getFuelCombo() {
+    return fuelCombo;
+  }
+
+  public ComboBox<CarKitCategoryModel> getCarKitCategoryCombo() {
+    return carKitCategoryCombo;
+  }
+
+  public ComboBox<CarKitModel> getCarKitCombo() {
+    return carKitCombo;
+  }
+
   public TextField getCarNameField() {
     return carNameField;
   }

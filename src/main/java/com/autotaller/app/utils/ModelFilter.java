@@ -1,8 +1,6 @@
 package com.autotaller.app.utils;
 
-import com.autotaller.app.model.CarKitCategoryModel;
-import com.autotaller.app.model.CarKitModel;
-import com.autotaller.app.model.CarSubkitModel;
+import com.autotaller.app.model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +19,17 @@ public class ModelFilter {
     for (CarKitModel carKit : carKits) {
       if (carKitCategory.equals(carKit.getKitCategory()))
         result.add(carKit);
+    }
+    return result;
+  }
+
+  public static List<CarTypeModel> filterCarTypesByMake(List<CarTypeModel> carTypes, CarMakeModel carMake) {
+    if (carTypes == null || carTypes.isEmpty() || carMake == null)
+      return new ArrayList<>(1);
+    List<CarTypeModel> result = new ArrayList<>();
+    for (CarTypeModel carType : carTypes) {
+      if (carType.getCarMake().equals(carMake))
+        result.add(carType);
     }
     return result;
   }

@@ -83,4 +83,9 @@ public class CarTypeModel {
     }
     frames = builder.toString();
   }
+
+  @Override
+  public String toString() {
+    return name + (frames != null && !frames.isEmpty() ? " (" + frames + ")" : "");
+  }
 }

@@ -3,10 +3,7 @@ package com.autotaller.app.repository;
 import com.autotaller.app.model.*;
 import com.autotaller.app.model.utils.ModelsDTO;
 import com.autotaller.app.repository.services.UserService;
-import com.autotaller.app.repository.services.cars.CarKitsService;
-import com.autotaller.app.repository.services.cars.CarMakesService;
-import com.autotaller.app.repository.services.cars.CarModelService;
-import com.autotaller.app.repository.services.cars.CarService;
+import com.autotaller.app.repository.services.cars.*;
 import com.autotaller.app.repository.utils.JDBCUtil;
 
 import java.util.List;
@@ -22,6 +19,7 @@ public class Repository {
   private CarModelService carModelService;
   private CarKitsService carKitsService;
   private CarService carService;
+  private CarUtilsService carUtilsService;
 
   private List<CarMakeModel> carMakesCache;
   private List<CarTypeModel> carTypesCache;
@@ -29,6 +27,7 @@ public class Repository {
   private List<CarKitCategoryModel> carKitCategoriesCache;
   private List<CarKitModel> carKitsCache;
   private List<CarSubkitModel> carSubkitsCache;
+  private List<FuelModel> carFuelsCache;
 
   public Repository() throws Exception {
     try {
@@ -131,6 +130,18 @@ public class Repository {
   }
 
 
+  /*
+    CarUtilsService
+   */
+
+  public List<FuelModel> getCarFuels() throws Exception {
+    if (carFuelsCache == null) {
+      carFuelsCache = carUtilsService.getCarFuels();
+    }
+    return carFuelsCache;
+  }
+
+
   public ModelsDTO getAllDefinedModels() throws Exception {
     return new ModelsDTO(
             getCarKitCategories(),
@@ -138,7 +149,7 @@ public class Repository {
             getCarSubkits(),
             getAllCarMakes(),
             getCarModels(),
-            null
+            getCarFuels()
     );
   }
 
@@ -157,5 +168,6 @@ public class Repository {
     carModelService = new CarModelService(jdbcUtil);
     carKitsService = new CarKitsService(jdbcUtil);
     carService = new CarService(jdbcUtil);
+    carUtilsService = new CarUtilsService(jdbcUtil);
   }
 }
