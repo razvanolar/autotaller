@@ -1,15 +1,10 @@
 package com.autotaller.app.utils.resources;
 
-import com.autotaller.app.model.CarKitModel;
-import com.autotaller.app.model.CarModel;
-import com.autotaller.app.model.CarSubkitModel;
-import com.autotaller.app.model.CarTypeModel;
+import com.autotaller.app.model.*;
+import com.autotaller.app.utils.ModelFilter;
 import com.autotaller.app.utils.StringValidator;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -186,6 +181,35 @@ public class TableProvider {
     enginesColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getEnginesString()) : new SimpleObjectProperty<>());
 
     table.getColumns().addAll(nameColumn, modelColumn, fromColumn, toColumn, kwColumn, hpColumn, capacityColumn, cilindersColumn, enginesColumn);
+    return table;
+  }
+
+  @SuppressWarnings("unchecked")
+  public TableView<CarComponentModel> createCarComponentTable() {
+    TableView<CarComponentModel> table = new TableView<>();
+    TableColumn<CarComponentModel, String> nameColumn = new TableColumn<>("Nume");
+    TableColumn<CarComponentModel, String> codeCoulmn = new TableColumn<>("Cod");
+    TableColumn<CarComponentModel, String> stockColumn = new TableColumn<>("Stoc");
+    TableColumn<CarComponentModel, String> subkitColumn = new TableColumn<>("Sub-ansamblu");
+
+    DoubleBinding widthProperty = table.widthProperty().multiply(.25);
+    nameColumn.prefWidthProperty().bind(widthProperty);
+    codeCoulmn.prefWidthProperty().bind(widthProperty);
+    stockColumn.prefWidthProperty().bind(widthProperty);
+    subkitColumn.prefWidthProperty().bind(widthProperty);
+
+    nameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getName()) : new SimpleStringProperty());
+    codeCoulmn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getCode()) : new SimpleStringProperty());
+    stockColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getStock()) : new SimpleStringProperty());
+    subkitColumn.setCellValueFactory(p -> {
+      if (p.getValue() != null) {
+        CarSubkitModel carSubkit = ModelFilter.getCarSubkitModelById(p.getValue().getCarSubkitId());
+        return carSubkit != null ? new SimpleStringProperty(carSubkit.getName()) : new SimpleStringProperty();
+      }
+      return new SimpleStringProperty();
+    });
+
+    table.getColumns().addAll(nameColumn, codeCoulmn, stockColumn, subkitColumn);
     return table;
   }
 }

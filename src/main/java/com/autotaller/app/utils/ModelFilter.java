@@ -1,5 +1,7 @@
 package com.autotaller.app.utils;
 
+import com.autotaller.app.EventBus;
+import com.autotaller.app.events.app_view.admin_view.GetCarSubkitsEvent;
 import com.autotaller.app.model.*;
 
 import java.util.ArrayList;
@@ -11,6 +13,14 @@ import java.util.Map;
  * Created by razvanolar on 01.05.2017
  */
 public class ModelFilter {
+
+  private static List<CarSubkitModel> carSubkits;
+
+  public static void init() {
+    EventBus.fireEvent(new GetCarSubkitsEvent(result -> carSubkits = result));
+
+    //TODO add event listener for carSubkits list changes
+  }
 
   public static List<CarKitModel> filterCarKitsByCategory(List<CarKitModel> carKits, CarKitCategoryModel carKitCategory) {
     if (carKits == null || carKits.isEmpty() || carKitCategory == null)
@@ -51,5 +61,15 @@ public class ModelFilter {
       }
     }
     return map;
+  }
+
+  public static CarSubkitModel getCarSubkitModelById(int id) {
+    if (carSubkits != null) {
+      for (CarSubkitModel carSubkit : carSubkits) {
+        if (carSubkit.getId() == id)
+          return carSubkit;
+      }
+    }
+    return null;
   }
 }

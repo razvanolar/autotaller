@@ -5,10 +5,7 @@ import com.autotaller.app.events.app_view.admin_view.GetAllCarDefinedModelsEvent
 import com.autotaller.app.model.*;
 import com.autotaller.app.model.utils.ModelsDTO;
 import com.autotaller.app.utils.Controller;
-import com.autotaller.app.utils.DialogController;
-import com.autotaller.app.utils.ModelFilter;
 import com.autotaller.app.utils.View;
-import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
@@ -18,7 +15,7 @@ import java.util.List;
 /**
  * Created by razvanolar on 04.05.2017
  */
-public class AdminSaveCarController implements Controller<AdminSaveCarController.IAdminSaveCarView>, DialogController {
+public class AdminSaveCarController implements Controller<AdminSaveCarController.IAdminSaveCarView> {
 
   public interface IAdminSaveCarView extends View {
     ComboBox<CarMakeModel> getCarMakesCombo();
@@ -34,48 +31,25 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     Spinner<Integer> getCilindersSpinner();
     TextField getEngineField();
     Text getAddComponentsLink();
+    TableView<CarComponentModel> getComponentsTable();
+    TextField getComponentNameTextField();
+    TextField getComponentCodeTextField();
+    TextField getComponentStockTextField();
+    TextArea getComponentDescriptionTextArea();
+    TextField getComponentImageTextField();
+    Button getComponentImageAddButton();
+    Button getComponentAddButton();
+
     void showComponentsView();
     void hideComponentsView();
-    void updateFilterPane(List<AdminSaveCarController.ComponentRowWrapper> componentRowWrappers);
-  }
-
-  public class ComponentRowWrapper {
-
-    private CarSubkitModel subkit;
-
-    private TextField nameField;
-    private TextField codeField;
-    private TextField stockField;
-
-    public ComponentRowWrapper(CarSubkitModel subkit, TextField nameField, TextField codeField, TextField stockField) {
-      this.subkit = subkit;
-      this.nameField = nameField;
-      this.codeField = codeField;
-      this.stockField = stockField;
-    }
-
-    public CarSubkitModel getSubkit() {
-      return subkit;
-    }
-
-    public TextField getNameField() {
-      return nameField;
-    }
-
-    public TextField getCodeField() {
-      return codeField;
-    }
-
-    public TextField getStockField() {
-      return stockField;
-    }
   }
 
   private IAdminSaveCarView view;
-  private Button actionButton;
 
   private ModelsDTO modelsDTO;
-  private List<ComponentRowWrapper> componentRowWrappers;
+
+  private CarKitCategoryModel allCarKitCategory = new CarKitCategoryModel(-1, "--Toate--");
+  private CarKitModel allCarKit = new CarKitModel(-1, "--Toate--", allCarKitCategory);
 
   @Override
   public void bind(IAdminSaveCarView view) {
@@ -89,19 +63,12 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
 
     view.getCarKitCategoryCombo().valueProperty().addListener((observable, oldValue, newValue) -> populateCarKitsCombo(newValue));
 
+    view.getFuelCombo().valueProperty().addListener((observable, oldValue, newValue) -> fuelSelectionChanged(newValue));
+
     EventBus.fireEvent(new GetAllCarDefinedModelsEvent(models -> {
       modelsDTO = models;
       if (models.getCarSubkits() != null) {
-        componentRowWrappers = new ArrayList<>();
-        for (CarSubkitModel subKit : models.getCarSubkits()) {
-          componentRowWrappers.add(new ComponentRowWrapper(
-                  subKit,
-                  NodeProvider.createTextField(),
-                  NodeProvider.createTextField(),
-                  NodeProvider.createTextField()
-          ));
-        }
-        view.updateFilterPane(componentRowWrappers);
+
       }
 
       List<CarMakeModel> carMakes = models.getCarMakes();
@@ -112,23 +79,26 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
       }
 
       List<CarKitCategoryModel> carKitCategories = models.getCarKitCategories();
-      if (carKitCategories != null && !carKitCategories.isEmpty()) {
-        view.getCarKitCategoryCombo().getItems().addAll(carKitCategories);
-        view.getCarKitCategoryCombo().setValue(carKitCategories.get(0));
-        populateCarKitsCombo(carKitCategories.get(0));
+      if (carKitCategories == null) {
+        carKitCategories = new ArrayList<>();
       }
+      carKitCategories.add(0, allCarKitCategory);
+      view.getCarKitCategoryCombo().getItems().addAll(carKitCategories);
+      view.getCarKitCategoryCombo().setValue(carKitCategories.get(0));
+      populateCarKitsCombo(carKitCategories.get(0));
 
       List<FuelModel> fuels = models.getFuels();
       if (fuels != null && !fuels.isEmpty()) {
         view.getFuelCombo().getItems().addAll(fuels);
         view.getFuelCombo().setValue(fuels.get(0));
+        fuelSelectionChanged(fuels.get(0));
       }
     }));
   }
 
   private void populateCarModelsCombo(CarMakeModel carMake) {
     if (carMake != null && modelsDTO != null) {
-      List<CarTypeModel> carTypes = ModelFilter.filterCarTypesByMake(modelsDTO.getCarTypes(), carMake);
+      List<CarTypeModel> carTypes = modelsDTO.getCarTypesByMake(carMake);
       view.getCarTypesCombo().getItems().clear();
       if (!carTypes.isEmpty()) {
         view.getCarTypesCombo().getItems().addAll(carTypes);
@@ -141,7 +111,13 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
 
   private void populateCarKitsCombo(CarKitCategoryModel carKitCategory) {
     if (carKitCategory != null && modelsDTO != null) {
-      List<CarKitModel> carKits = ModelFilter.filterCarKitsByCategory(modelsDTO.getCarKits(), carKitCategory);
+      List<CarKitModel> carKits;
+      if (carKitCategory.getId() == -1) {
+        carKits = new ArrayList<>(modelsDTO.getCarKits());
+        carKits.add(0, allCarKit);
+      } else {
+        carKits = modelsDTO.getCarKitByCategory(carKitCategory);
+      }
       view.getCarKitCombo().getItems().clear();
       if (!carKits.isEmpty()) {
         view.getCarKitCombo().getItems().addAll(carKits);
@@ -152,8 +128,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     }
   }
 
-  @Override
-  public void injectActionButton(Button actionButton) {
-    this.actionButton = actionButton;
+  private void fuelSelectionChanged(FuelModel fuel) {
+
   }
 }

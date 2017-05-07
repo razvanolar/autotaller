@@ -12,10 +12,7 @@ import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.model.*;
 import com.autotaller.app.model.utils.ModelsDTO;
 import com.autotaller.app.repository.Repository;
-import com.autotaller.app.utils.Component;
-import com.autotaller.app.utils.ComponentType;
-import com.autotaller.app.utils.Controller;
-import com.autotaller.app.utils.View;
+import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.factories.ComponentFactory;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -107,6 +104,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
     try {
       autoTallerView = new AutoTallerView();
       initAppViewHandlers();
+      initAutotallerUtilities();
     } catch (Exception e) {
       System.out.println("Exception when trying to init App View");
       e.printStackTrace();
@@ -267,5 +265,9 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         EventBus.fireEvent(new UnmaskViewEvent());
       }
     });
+  }
+
+  private void initAutotallerUtilities() {
+    ModelFilter.init();
   }
 }

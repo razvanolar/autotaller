@@ -230,4 +230,8 @@ public class NodeProvider {
   public static TableView<CarModel> createCarTable() {
     return TABLE_PROVIDER.createCarTable();
   }
+
+  public static TableView<CarComponentModel> createCarComponentTable() {
+    return TABLE_PROVIDER.createCarComponentTable();
+  }
 }
