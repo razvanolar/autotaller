@@ -7,21 +7,20 @@ import javafx.scene.Node;
 import javafx.scene.text.Text;
 
 /**
- * Created by razvanolar on 19.04.2017
+ * Created by razvanolar on 07.05.2017
  */
-public class JFXOkCancelDialog extends JFXDialogLayout {
+public class JFXOkDialog extends JFXDialogLayout {
 
   private JFXButton okButton;
-  private JFXButton cancelButton;
 
   private String confirmText;
   private String title;
   private JFXDialog dialog;
 
-  public JFXOkCancelDialog(String title, String confirmText, JFXDialog dialog) {
+  public JFXOkDialog(String confirmText, String title, JFXDialog dialog) {
     super();
-    this.title = title;
     this.confirmText = confirmText;
+    this.title = title;
     this.dialog = dialog;
     init();
     setActionNodes();
@@ -30,16 +29,15 @@ public class JFXOkCancelDialog extends JFXDialogLayout {
 
   protected void init() {
     okButton = new JFXButton(confirmText);
-    cancelButton = new JFXButton("Renunta");
     setHeading(new Text(title));
   }
 
   private void setActionNodes() {
-    setActions(okButton, cancelButton);
+    setActions(okButton);
   }
 
   private void addListeners() {
-    cancelButton.setOnAction(event -> {
+    okButton.setOnAction(event -> {
       if (dialog != null)
         dialog.close();
     });
