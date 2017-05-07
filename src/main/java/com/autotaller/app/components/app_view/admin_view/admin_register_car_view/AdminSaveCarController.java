@@ -7,6 +7,7 @@ import com.autotaller.app.events.app_view.admin_view.GetAllCarDefinedModelsEvent
 import com.autotaller.app.model.*;
 import com.autotaller.app.model.utils.ModelsDTO;
 import com.autotaller.app.utils.Controller;
+import com.autotaller.app.utils.ModelFilter;
 import com.autotaller.app.utils.StringValidator;
 import com.autotaller.app.utils.View;
 import javafx.scene.control.*;
@@ -26,6 +27,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     ComboBox<FuelModel> getFuelCombo();
     ComboBox<CarKitCategoryModel> getCarKitCategoryCombo();
     ComboBox<CarKitModel> getCarKitCombo();
+    ComboBox<CarSubkitModel> getCarSubkitCombo();
     TextField getCarNameField();
     DatePicker getFromDatePicker();
     DatePicker getToDatePicker();
@@ -51,6 +53,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
   private ModelsDTO modelsDTO;
 
   private CarKitCategoryModel allCarKitCategory = new CarKitCategoryModel(-1, "--Toate--");
+  private CarKitModel allCarKit = new CarKitModel(-1, "--Toate--", allCarKitCategory);
 
   @Override
   public void bind(IAdminSaveCarView view) {
@@ -66,6 +69,9 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     // Car Kit Category selection
     view.getCarKitCategoryCombo().valueProperty().addListener((observable, oldValue, newValue) -> populateCarKitsCombo(newValue));
 
+    // Car Kit selection
+    view.getCarKitCombo().valueProperty().addListener((observable, oldValue, newValue) -> populateCarSubkitsCombo(newValue));
+
     // Car Fuel selection
     view.getFuelCombo().valueProperty().addListener((observable, oldValue, newValue) -> fuelSelectionChanged(newValue));
 
@@ -73,7 +79,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     view.getComponentAddButton().setOnAction(event -> {
       CarComponentModel carComponent = collectComponent();
       if (carComponent != null) {
-
+        view.getComponentsTable().getItems().add(carComponent);
       } else {
         EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Unele campuri obligatorii nu sunt completate")));
       }
@@ -81,9 +87,6 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
 
     EventBus.fireEvent(new GetAllCarDefinedModelsEvent(models -> {
       modelsDTO = models;
-      if (models.getCarSubkits() != null) {
-
-      }
 
       List<CarMakeModel> carMakes = models.getCarMakes();
       if (carMakes != null && !carMakes.isEmpty()) {
@@ -111,15 +114,15 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
   }
 
   private CarComponentModel collectComponent() {
-    CarKitModel carKit = view.getCarKitCombo().getValue();
+    CarSubkitModel carSubkit = view.getCarSubkitCombo().getValue();
     String componentName = view.getComponentNameTextField().getText();
     String componentCode = view.getComponentCodeTextField().getText();
     String componentStock = view.getComponentStockTextField().getText();
-    if (carKit == null || StringValidator.isNullOrEmpty(componentName) || StringValidator.isNullOrEmpty(componentCode)
+    if (carSubkit == null || StringValidator.isNullOrEmpty(componentName) || StringValidator.isNullOrEmpty(componentCode)
             || StringValidator.isNullOrEmpty(componentStock)) {
       return null;
     }
-    return new CarComponentModel(-1, -1, carKit.getId(), componentName, componentCode, componentStock);
+    return new CarComponentModel(-1, -1, carSubkit.getId(), componentName, componentCode, componentStock);
   }
 
   private void populateCarModelsCombo(CarMakeModel carMake) {
@@ -140,6 +143,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
       List<CarKitModel> carKits;
       if (carKitCategory.getId() == -1) {
         carKits = new ArrayList<>(modelsDTO.getCarKits());
+        carKits.add(0, allCarKit);
       } else {
         carKits = modelsDTO.getCarKitByCategory(carKitCategory);
       }
@@ -149,6 +153,24 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
         view.getCarKitCombo().setValue(carKits.get(0));
       } else {
         view.getCarKitCombo().setValue(null);
+      }
+    }
+  }
+
+  private void populateCarSubkitsCombo(CarKitModel carKit) {
+    if (carKit != null && modelsDTO != null) {
+      List<CarSubkitModel> carSubkits;
+      if (carKit.getId() == -1) {
+        carSubkits = new ArrayList<>(modelsDTO.getCarSubkits());
+      } else {
+        carSubkits = ModelFilter.filterCarSubkitsByKit(carKit);
+      }
+      view.getCarSubkitCombo().getItems().clear();
+      if (!carSubkits.isEmpty()) {
+        view.getCarSubkitCombo().getItems().addAll(carSubkits);
+        view.getCarSubkitCombo().setValue(carSubkits.get(0));
+      } else {
+        view.getCarSubkitCombo().setValue(null);
       }
     }
   }

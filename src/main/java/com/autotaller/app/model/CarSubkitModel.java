@@ -50,4 +50,9 @@ public class CarSubkitModel {
   public boolean isUsedForElectric() {
     return isUsedForElectric;
   }
+
+  @Override
+  public String toString() {
+    return name;
+  }
 }

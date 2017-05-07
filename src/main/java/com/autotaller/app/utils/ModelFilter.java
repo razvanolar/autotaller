@@ -33,6 +33,17 @@ public class ModelFilter {
     return result;
   }
 
+  public static List<CarSubkitModel> filterCarSubkitsByKit(CarKitModel carKit) {
+    if (carSubkits == null || carSubkits.isEmpty() || carKit == null)
+      return new ArrayList<>(1);
+    List<CarSubkitModel> result = new ArrayList<>();
+    for (CarSubkitModel carSubkit : carSubkits) {
+      if (carSubkit.getCarKit().equals(carKit))
+        result.add(carSubkit);
+    }
+    return result;
+  }
+
   public static List<CarTypeModel> filterCarTypesByMake(List<CarTypeModel> carTypes, CarMakeModel carMake) {
     if (carTypes == null || carTypes.isEmpty() || carMake == null)
       return new ArrayList<>(1);

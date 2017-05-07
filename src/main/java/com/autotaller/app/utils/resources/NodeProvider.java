@@ -111,6 +111,12 @@ public class NodeProvider {
     return combo;
   }
 
+  public static JFXComboBox<CarSubkitModel> createCarSubkitCombo(int width) {
+    JFXComboBox<CarSubkitModel> combo = new JFXComboBox<>();
+    combo.setPrefWidth(width);
+    return combo;
+  }
+
   public static ComboBox<FuelModel> createFuelCombo() {
     return createFuelCombo(DEFAULT_FIELD_WIDTH);
   }

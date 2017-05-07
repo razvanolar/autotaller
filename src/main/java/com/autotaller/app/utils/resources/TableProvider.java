@@ -209,6 +209,11 @@ public class TableProvider {
       return new SimpleStringProperty();
     });
 
+    nameColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    codeCoulmn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    stockColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    subkitColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+
     table.getColumns().addAll(nameColumn, codeCoulmn, stockColumn, subkitColumn);
     return table;
   }

@@ -35,10 +35,12 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
   private Spinner<Integer> capCilSpinner;
   private Spinner<Integer> cilindersSpinner;
   private TextField engineField;
+  private TextArea carDescriptionTextArea;
   private Text addComponentsLink;
 
   private ComboBox<CarKitCategoryModel> carKitCategoryCombo;
   private ComboBox<CarKitModel> carKitCombo;
+  private ComboBox<CarSubkitModel> carSubkitCombo;
   private TextField componentNameTextField;
   private TextField componentCodeTextField;
   private TextField componentStockTextField;
@@ -67,7 +69,10 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     cilindersSpinner = NodeProvider.createSpinner(1, 50, 4, 1);
     engineField = NodeProvider.createTextField();
     addComponentsLink = NodeProvider.createTextLabel("Adauga Componente", 16, true);
+    carDescriptionTextArea = new TextArea();
     saveCarButton = new Button("Salveaza");
+
+    carDescriptionTextArea.setPrefSize(300, 100);
 
     toolBar.getItems().addAll(new Separator(), saveCarButton);
 
@@ -98,6 +103,8 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     mainGridPane.add(engineField, 1, row++);
     mainGridPane.add(NodeProvider.createFormTextLabel("*Combustibil: "), 0, row);
     mainGridPane.add(fuelCombo, 1, row++);
+    mainGridPane.add(createCategoryHBox("Descriere Masina"), 0, row++, 2, 1);
+    mainGridPane.add(carDescriptionTextArea, 0, row++, 2, 1);
     mainGridPane.add(addComponentsLabelContainer, 0, row, 2, 1);
 
     mainSplitPane = new SplitPane(mainGridPane);
@@ -105,6 +112,7 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
 
     carKitCategoryCombo = NodeProvider.createCarKitCategoriesCombo(NodeProvider.DEFAULT_FIELD_WIDTH);
     carKitCombo = NodeProvider.createCarKitCombo(NodeProvider.DEFAULT_FIELD_WIDTH);
+    carSubkitCombo = NodeProvider.createCarSubkitCombo(NodeProvider.DEFAULT_FIELD_WIDTH);
     componentNameTextField = NodeProvider.createTextField();
     componentCodeTextField = NodeProvider.createTextField();
     componentStockTextField = NodeProvider.createTextField();
@@ -113,7 +121,7 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     componentImageAddButton = NodeProvider.createButton("Adauga Imagine");
     componentAddButton = NodeProvider.createButton("Adauga Componenta");
 
-    componentDescriptionTextArea.setPrefSize(340, 80);
+    componentDescriptionTextArea.setPrefSize(340, 70);
 
     GridPane componentsGridPane = NodeProvider.createGridPane(Pos.TOP_CENTER, 10, 10);
     componentsGridPane.setPadding(new Insets(10, 0, 0, 0));
@@ -122,25 +130,28 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     componentsGridPane.add(createCategoryHBox("Atribute Componenta"), 0, row++, 2, 1);
     componentsGridPane.add(NodeProvider.createFormTextLabel("Categorie Ans.: "), 0, row);
     componentsGridPane.add(carKitCategoryCombo, 1, row++);
-    componentsGridPane.add(NodeProvider.createFormTextLabel("*Ansamblu: "), 0, row);
+    componentsGridPane.add(NodeProvider.createFormTextLabel("Ansamblu: "), 0, row);
     componentsGridPane.add(carKitCombo, 1, row++);
+    componentsGridPane.add(NodeProvider.createFormTextLabel("*Sub-Ansamblu:"), 0, row);
+    componentsGridPane.add(carSubkitCombo, 1, row++);
     componentsGridPane.add(NodeProvider.createFormTextLabel("*Nume: "), 0, row);
     componentsGridPane.add(componentNameTextField, 1, row++);
     componentsGridPane.add(NodeProvider.createFormTextLabel("*Cod: "), 0, row);
     componentsGridPane.add(componentCodeTextField, 1, row++);
     componentsGridPane.add(NodeProvider.createFormTextLabel("*Stoc: "), 0, row);
-    componentsGridPane.add(componentStockTextField, 1, row++);
-    componentsGridPane.add(createCategoryHBox("Descriere Componenta"), 0, row++, 2, 1);
-    componentsGridPane.add(componentDescriptionTextArea, 0, row, 2, 1);
-    // add component image fields
-    componentsGridPane.add(createCategoryHBox("Imagini"), 3, 0, 2,1);
-    componentsGridPane.add(componentImageTextField, 3, 1);
-    componentsGridPane.add(componentImageAddButton, 4, 1);
+    componentsGridPane.add(componentStockTextField, 1, row);
     // add 'Add' component button
     HBox addComponentButtonContainer = new HBox(componentAddButton);
     addComponentButtonContainer.setAlignment(Pos.BOTTOM_CENTER);
     componentAddButton.prefWidthProperty().bind(addComponentButtonContainer.widthProperty());
     componentsGridPane.add(addComponentButtonContainer, 3, row, 2, 1);
+    // add Description fields
+    componentsGridPane.add(createCategoryHBox("Descriere Componenta"), 3, 0, 2, 1);
+    componentsGridPane.add(componentDescriptionTextArea, 3, 1, 2, 3);
+    // add component image fields
+    componentsGridPane.add(createCategoryHBox("Imagini"), 3, 4, 2,1);
+    componentsGridPane.add(componentImageTextField, 3, 5);
+    componentsGridPane.add(componentImageAddButton, 4, 5);
 
     componentsScrollPane = NodeProvider.createScrollPane(componentsGridPane, true);
 
@@ -198,6 +209,10 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
 
   public ComboBox<CarKitModel> getCarKitCombo() {
     return carKitCombo;
+  }
+
+  public ComboBox<CarSubkitModel> getCarSubkitCombo() {
+    return carSubkitCombo;
   }
 
   public TextField getCarNameField() {
