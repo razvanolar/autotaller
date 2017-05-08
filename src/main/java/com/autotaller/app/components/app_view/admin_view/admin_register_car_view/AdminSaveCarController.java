@@ -11,14 +11,12 @@ import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.ModelFilter;
 import com.autotaller.app.utils.StringValidator;
 import com.autotaller.app.utils.View;
-import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by razvanolar on 04.05.2017
@@ -141,10 +139,10 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     String carEngineCode = view.getEngineField().getText();
     FuelModel carFuel = view.getFuelCombo().getValue();
 
-//    if (carType == null || carFrom == null || carTo == null || carKW == null || carCapacity == null || carCilinders == null
-//            || carFuel == null || StringValidator.isNullOrEmpty(carName) || StringValidator.isNullOrEmpty(carEngineCode)) {
-//      return null;
-//    }
+    if (carType == null || carFrom == null || carTo == null || carKW == null || carCapacity == null || carCilinders == null
+            || carFuel == null || StringValidator.isNullOrEmpty(carName) || StringValidator.isNullOrEmpty(carEngineCode)) {
+      return null;
+    }
 
     String[] split = carEngineCode.trim().split(",");
     List<String> engines = new ArrayList<>(split.length);

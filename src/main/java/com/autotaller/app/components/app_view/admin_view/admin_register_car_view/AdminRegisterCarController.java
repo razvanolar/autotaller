@@ -1,6 +1,7 @@
 package com.autotaller.app.components.app_view.admin_view.admin_register_car_view;
 
 import com.autotaller.app.EventBus;
+import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEventHandler;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEvent;
@@ -75,11 +76,14 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
             repository.addCar(event.getCar(), event.getCarComponents());
             Platform.runLater(() -> {
               EventBus.fireEvent(new UnmaskViewEvent());
+              NotificationsUtil.showInfoNotification("Notificare", "Masina a fost adaugata cu succes", 3);
               loadCars();
             });
           } catch (Exception e) {
             //TODO handle exception
             e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+            NotificationsUtil.showErrorNotification("Eroare", "Masina nu a putut fi inregistrata", -1);
           }
         });
         thread.start();
@@ -87,6 +91,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
         //TODO handle exception
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
+        NotificationsUtil.showErrorNotification("Eroare", "Masina nu a putut fi inregistrata", -1);
       }
     });
   }

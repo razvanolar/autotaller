@@ -1,5 +1,6 @@
 package com.autotaller.app;
 
+import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.events.app_view.admin_view.*;
 import com.autotaller.app.events.app_view.ShowAppViewEvent;
 import com.autotaller.app.events.login_view.*;
@@ -15,10 +16,7 @@ import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.factories.ComponentFactory;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.util.Duration;
-import org.controlsfx.control.Notifications;
 
 import java.util.Date;
 import java.util.List;
@@ -76,15 +74,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
               // init autoTallerView
               initAppView();
               EventBus.fireEvent(new ShowAppViewEvent(autoTallerView));
-              Notifications notification = Notifications.create()
-                      .title("Notificare")
-                      .text("Autentificat la: " + (new Date(System.currentTimeMillis())).toLocaleString())
-                      .hideAfter(Duration.seconds(4))
-                      .position(Pos.BOTTOM_RIGHT)
-                      .graphic(null)
-                      .materiaDesignStyle()
-                      .setHeaderCheck();
-              notification.show();
+              NotificationsUtil.showInfoNotification("Notificare", "Autentificat la: " + (new Date(System.currentTimeMillis())).toLocaleString(), 4);
             });
           } catch (Exception e) {
             //TODO handle exception
