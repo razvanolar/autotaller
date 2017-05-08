@@ -12,13 +12,19 @@ public class GetCarSubkitsEvent extends Event<GetCarSubkitsEventHandler> {
   public static EventType<GetCarSubkitsEventHandler> TYPE = new EventType<>();
 
   private LoadCarSubkitsCallback callback;
+  private boolean maskView;
 
-  public GetCarSubkitsEvent(LoadCarSubkitsCallback callback) {
+  public GetCarSubkitsEvent(LoadCarSubkitsCallback callback, boolean maskView) {
     this.callback = callback;
+    this.maskView = maskView;
   }
 
   public LoadCarSubkitsCallback getCallback() {
     return callback;
+  }
+
+  public boolean isMaskView() {
+    return maskView;
   }
 
   @Override

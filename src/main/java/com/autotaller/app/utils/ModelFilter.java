@@ -17,7 +17,7 @@ public class ModelFilter {
   private static List<CarSubkitModel> carSubkits;
 
   public static void init() {
-    EventBus.fireEvent(new GetCarSubkitsEvent(result -> carSubkits = result));
+    EventBus.fireEvent(new GetCarSubkitsEvent(result -> carSubkits = result, false));
 
     //TODO add event listener for carSubkits list changes
   }

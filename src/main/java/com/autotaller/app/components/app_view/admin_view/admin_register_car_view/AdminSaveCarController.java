@@ -141,10 +141,10 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     String carEngineCode = view.getEngineField().getText();
     FuelModel carFuel = view.getFuelCombo().getValue();
 
-    if (carType == null || carFrom == null || carTo == null || carKW == null || carCapacity == null || carCilinders == null
-            || carFuel == null || StringValidator.isNullOrEmpty(carName) || StringValidator.isNullOrEmpty(carEngineCode)) {
-      return null;
-    }
+//    if (carType == null || carFrom == null || carTo == null || carKW == null || carCapacity == null || carCilinders == null
+//            || carFuel == null || StringValidator.isNullOrEmpty(carName) || StringValidator.isNullOrEmpty(carEngineCode)) {
+//      return null;
+//    }
 
     String[] split = carEngineCode.trim().split(",");
     List<String> engines = new ArrayList<>(split.length);

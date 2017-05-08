@@ -1,9 +1,14 @@
 package com.autotaller.app;
 
 import com.autotaller.app.components.loading_view.LoadingView;
+import com.autotaller.app.components.utils.MaskableView;
 import com.autotaller.app.events.app_view.*;
 import com.autotaller.app.events.login_view.ShowLoginScreenEvent;
 import com.autotaller.app.events.login_view.ShowLoginScreenEventHandler;
+import com.autotaller.app.events.mask_view.MaskViewEvent;
+import com.autotaller.app.events.mask_view.MaskViewEventHandler;
+import com.autotaller.app.events.mask_view.UnmaskViewEvent;
+import com.autotaller.app.events.mask_view.UnmaskViewEventHandler;
 import com.autotaller.app.events.test_connection.TestConnectionEvent;
 import com.autotaller.app.events.test_connection.TestConnectionFailedEvent;
 import com.autotaller.app.events.test_connection.TestConnectionFailedEventHandler;
@@ -143,6 +148,26 @@ public class AutoTallerApplication extends Application {
     Component menuBar = ComponentFactory.createComponent(ComponentType.APP_MENU_BAR);
     if (menuBar != null)
       primaryContainer.setTop(menuBar.getView().asNode());
+
+    EventBus.addHandler(MaskViewEvent.TYPE, (MaskViewEventHandler) event -> {
+      if (!viewStack.isEmpty()) {
+        View view = viewStack.peek();
+        if (view instanceof MaskableView) {
+          MaskableView maskableView = (MaskableView) view;
+          maskableView.maskView(event.getMessage());
+        }
+      }
+    });
+
+    EventBus.addHandler(UnmaskViewEvent.TYPE, (UnmaskViewEventHandler) event -> {
+      if (!viewStack.isEmpty()) {
+        View view = viewStack.peek();
+        if (view instanceof MaskableView) {
+          MaskableView maskableView = (MaskableView) view;
+          maskableView.unmaskView();
+        }
+      }
+    });
   }
 
   public static void main(String[] args) {

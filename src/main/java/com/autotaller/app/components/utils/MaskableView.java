@@ -1,10 +1,5 @@
 package com.autotaller.app.components.utils;
 
-import com.autotaller.app.EventBus;
-import com.autotaller.app.events.mask_view.MaskViewEvent;
-import com.autotaller.app.events.mask_view.MaskViewEventHandler;
-import com.autotaller.app.events.mask_view.UnmaskViewEvent;
-import com.autotaller.app.events.mask_view.UnmaskViewEventHandler;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
@@ -19,7 +14,6 @@ public class MaskableView {
 
   protected MaskableView() {
     init();
-    addHandlers();
   }
 
   private void init() {
@@ -27,7 +21,7 @@ public class MaskableView {
     maskView = new MaskView();
   }
 
-  protected void maskView(String message) {
+  public void maskView(String message) {
     maskView.setTextMessage(message);
     ObservableList<Node> children = mainContainer.getChildren();
     Node node = maskView.asNode();
@@ -37,17 +31,11 @@ public class MaskableView {
     children.add(node);
   }
 
-  protected void unmaskView() {
+  public void unmaskView() {
     ObservableList<Node> children = mainContainer.getChildren();
     Node node = maskView.asNode();
     if (children.contains(node)) {
       children.remove(node);
     }
-  }
-
-  private void addHandlers() {
-    EventBus.addHandler(MaskViewEvent.TYPE, (MaskViewEventHandler) event -> maskView(event.getMessage()));
-
-    EventBus.addHandler(UnmaskViewEvent.TYPE, (UnmaskViewEventHandler) event -> unmaskView());
   }
 }

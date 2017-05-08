@@ -181,6 +181,6 @@ public class AdminDefineModelController implements Controller<AdminDefineModelCo
   }
 
   private void loadCarSubkits() {
-    EventBus.fireEvent(new GetCarSubkitsEvent(carSubkits -> EventBus.fireEvent(new AdminLoadCarSubkitsEvent(carSubkits))));
+    EventBus.fireEvent(new GetCarSubkitsEvent(carSubkits -> EventBus.fireEvent(new AdminLoadCarSubkitsEvent(carSubkits)), true));
   }
 }

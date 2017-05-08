@@ -289,6 +289,6 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
 
   @Override
   public Node asNode() {
-    return borderPane;
+    return mainContainer;
   }
 }

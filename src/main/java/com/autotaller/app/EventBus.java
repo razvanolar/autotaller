@@ -1,5 +1,6 @@
 package com.autotaller.app;
 
+import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.utils.event.Event;
 import com.autotaller.app.utils.event.EventHandler;
 import com.autotaller.app.utils.event.EventType;
@@ -49,6 +50,9 @@ public class EventBus {
       handlers.forEach(event::dispatch);
     } else {
       System.out.println("No handler found for " + event.getClass().getName());
+      if (event instanceof MaskViewEvent) {
+        System.out.println("message: " + ((MaskViewEvent) event).getMessage());
+      }
     }
   }
 }

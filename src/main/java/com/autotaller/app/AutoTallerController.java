@@ -220,25 +220,31 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
 
     EventBus.addHandler(GetCarSubkitsEvent.TYPE, (GetCarSubkitsEventHandler) event -> {
       try {
-        EventBus.fireEvent(new MaskViewEvent("Incarcare Sub-Ansamble"));
+        if (event.isMaskView())
+          EventBus.fireEvent(new MaskViewEvent("Incarcare Sub-Ansamble"));
         Thread thread = new Thread(() -> {
           try {
             List<CarSubkitModel> carSubkits = repository.getCarSubkits();
             Platform.runLater(() -> {
               event.getCallback().call(carSubkits);
-              EventBus.fireEvent(new UnmaskViewEvent());
+              if (event.isMaskView())
+                EventBus.fireEvent(new UnmaskViewEvent());
             });
           } catch (Exception e) {
             //TODO show error dialog
             e.printStackTrace();
-            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+            Platform.runLater(() -> {
+              if (event.isMaskView())
+                EventBus.fireEvent(new UnmaskViewEvent());
+            });
           }
         });
         thread.start();
       } catch (Exception e) {
         //TODO show error dialog
         e.printStackTrace();
-        EventBus.fireEvent(new UnmaskViewEvent());
+        if (event.isMaskView())
+          EventBus.fireEvent(new UnmaskViewEvent());
       }
     });
 
