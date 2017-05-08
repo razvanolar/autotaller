@@ -17,10 +17,13 @@ public class CarModel {
   private int capacity;
   private int cilinders;
   private List<String> enginesList;
+  private FuelModel fuel;
+  private String description;
 
   private String enginesString;
 
-  public CarModel(int id, CarTypeModel carType, String name, LocalDate from, LocalDate to, int kw, int capacity, int cilinders, List<String> enginesList) {
+  public CarModel(int id, CarTypeModel carType, String name, LocalDate from, LocalDate to, int kw, int capacity,
+                  int cilinders, List<String> enginesList, FuelModel fuel, String description) {
     this.id = id;
     this.carType = carType;
     this.name = name;
@@ -30,6 +33,10 @@ public class CarModel {
     this.capacity = capacity;
     this.cilinders = cilinders;
     this.enginesList = enginesList;
+    this.fuel = fuel;
+    this.description = description;
+
+    computeEnginesString();
   }
 
   public int getId() {
@@ -70,6 +77,14 @@ public class CarModel {
 
   public String getEnginesString() {
     return enginesString;
+  }
+
+  public FuelModel getFuel() {
+    return fuel;
+  }
+
+  public String getDescription() {
+    return description;
   }
 
   private void computeEnginesString() {

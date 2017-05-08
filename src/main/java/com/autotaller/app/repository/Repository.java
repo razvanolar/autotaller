@@ -131,6 +131,14 @@ public class Repository {
 
 
   /*
+    CarService
+   */
+  public void addCar(CarModel car, List<CarComponentModel> components) throws Exception {
+    carService.addCar(car, components);
+  }
+
+
+  /*
     CarUtilsService
    */
 

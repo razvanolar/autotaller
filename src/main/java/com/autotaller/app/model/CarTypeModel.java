@@ -27,6 +27,10 @@ public class CarTypeModel {
     computeFramesString();
   }
 
+  public int getId() {
+    return id;
+  }
+
   public CarMakeModel getCarMake() {
     return carMake;
   }

@@ -86,7 +86,7 @@ public class CarModelService extends GenericService {
       rs = idStatement.executeQuery();
       if (!rs.next()) {
         connection.rollback();
-        return;
+        throw new Exception("Unable to determine car model id");
       }
       int carModelId = rs.getInt(1);
 

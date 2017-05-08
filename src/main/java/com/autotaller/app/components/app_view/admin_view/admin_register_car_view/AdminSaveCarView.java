@@ -83,7 +83,7 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     mainGridPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
     mainGridPane.setPadding(new Insets(10, 0, 0, 0));
     mainGridPane.add(createCategoryHBox("Atribute Masina"), 0, row++, 2, 1);
-    mainGridPane.add(NodeProvider.createFormTextLabel("*Marca: "), 0, row);
+    mainGridPane.add(NodeProvider.createFormTextLabel("Marca: "), 0, row);
     mainGridPane.add(carMakesCombo, 1, row++);
     mainGridPane.add(NodeProvider.createFormTextLabel("*Model: "), 0, row);
     mainGridPane.add(carTypesCombo, 1, row++);
@@ -191,6 +191,10 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     return hBox;
   }
 
+  public Button getSaveCarButton() {
+    return saveCarButton;
+  }
+
   public ComboBox<CarMakeModel> getCarMakesCombo() {
     return carMakesCombo;
   }
@@ -241,6 +245,10 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
 
   public TextField getEngineField() {
     return engineField;
+  }
+
+  public TextArea getCarDescriptionTextArea() {
+    return carDescriptionTextArea;
   }
 
   public Text getAddComponentsLink() {

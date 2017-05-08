@@ -4,17 +4,21 @@ import com.autotaller.app.EventBus;
 import com.autotaller.app.components.utils.SimpleDialog;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetAllCarDefinedModelsEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEvent;
 import com.autotaller.app.model.*;
 import com.autotaller.app.model.utils.ModelsDTO;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.ModelFilter;
 import com.autotaller.app.utils.StringValidator;
 import com.autotaller.app.utils.View;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by razvanolar on 04.05.2017
@@ -22,6 +26,7 @@ import java.util.List;
 public class AdminSaveCarController implements Controller<AdminSaveCarController.IAdminSaveCarView> {
 
   public interface IAdminSaveCarView extends View {
+    Button getSaveCarButton();
     ComboBox<CarMakeModel> getCarMakesCombo();
     ComboBox<CarTypeModel> getCarTypesCombo();
     ComboBox<FuelModel> getFuelCombo();
@@ -35,6 +40,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     Spinner<Integer> getCapCilSpinner();
     Spinner<Integer> getCilindersSpinner();
     TextField getEngineField();
+    TextArea getCarDescriptionTextArea();
     Text getAddComponentsLink();
     TableView<CarComponentModel> getComponentsTable();
     TextField getComponentNameTextField();
@@ -85,6 +91,17 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
       }
     });
 
+    // Save Car selection
+    view.getSaveCarButton().setOnAction(event -> {
+      CarModel car = collectCar();
+      if (car != null) {
+        ArrayList<CarComponentModel> components = new ArrayList<>(view.getComponentsTable().getItems());
+        EventBus.fireEvent(new AddCarEvent(car, components));
+      } else {
+        EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Unele campuri obligatorii nu sunt completate")));
+      }
+    });
+
     EventBus.fireEvent(new GetAllCarDefinedModelsEvent(models -> {
       modelsDTO = models;
 
@@ -113,6 +130,30 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     }));
   }
 
+  private CarModel collectCar() {
+    CarTypeModel carType = view.getCarTypesCombo().getValue();
+    String carName = view.getCarNameField().getText();
+    LocalDate carFrom = view.getFromDatePicker().getValue();
+    LocalDate carTo = view.getToDatePicker().getValue();
+    Integer carKW = view.getKwSpinner().getValue();
+    Integer carCapacity = view.getCapCilSpinner().getValue();
+    Integer carCilinders = view.getCilindersSpinner().getValue();
+    String carEngineCode = view.getEngineField().getText();
+    FuelModel carFuel = view.getFuelCombo().getValue();
+
+    if (carType == null || carFrom == null || carTo == null || carKW == null || carCapacity == null || carCilinders == null
+            || carFuel == null || StringValidator.isNullOrEmpty(carName) || StringValidator.isNullOrEmpty(carEngineCode)) {
+      return null;
+    }
+
+    String[] split = carEngineCode.trim().split(",");
+    List<String> engines = new ArrayList<>(split.length);
+    for (String s : split)
+      engines.add(s.trim());
+    return new CarModel(-1, carType, carName, carFrom, carTo, carKW, carCapacity, carCilinders, engines, carFuel,
+            view.getCarDescriptionTextArea().getText());
+  }
+
   private CarComponentModel collectComponent() {
     CarSubkitModel carSubkit = view.getCarSubkitCombo().getValue();
     String componentName = view.getComponentNameTextField().getText();
@@ -122,7 +163,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
             || StringValidator.isNullOrEmpty(componentStock)) {
       return null;
     }
-    return new CarComponentModel(-1, -1, carSubkit.getId(), componentName, componentCode, componentStock);
+    return new CarComponentModel(-1, -1, carSubkit.getId(), componentName, componentCode, componentStock, view.getComponentDescriptionTextArea().getText());
   }
 
   private void populateCarModelsCombo(CarMakeModel carMake) {

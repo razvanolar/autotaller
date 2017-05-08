@@ -11,14 +11,16 @@ public class CarComponentModel {
   private String name;
   private String code;
   private String stock;
+  private String description;
 
-  public CarComponentModel(int id, int carModelId, int carSubkitId, String name, String code, String stock) {
+  public CarComponentModel(int id, int carModelId, int carSubkitId, String name, String code, String stock, String description) {
     this.id = id;
     this.carModelId = carModelId;
     this.carSubkitId = carSubkitId;
     this.name = name;
     this.code = code;
     this.stock = stock;
+    this.description = description;
   }
 
   public int getId() {
@@ -43,5 +45,9 @@ public class CarComponentModel {
 
   public String getStock() {
     return stock;
+  }
+
+  public String getDescription() {
+    return description;
   }
 }
