@@ -261,6 +261,29 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         EventBus.fireEvent(new UnmaskViewEvent());
       }
     });
+
+    EventBus.addHandler(GetCarsEvent.TYPE, (GetCarsEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Incarcare Masini"));
+        Thread thread = new Thread(() -> {
+          try {
+            Platform.runLater(() -> {
+//              event.getCallback().call();
+              EventBus.fireEvent(new UnmaskViewEvent());
+            });
+          } catch (Exception e) {
+            //TODO show error dialog
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO show error dialog
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
   }
 
   private void initAutotallerUtilities() {

@@ -17,6 +17,25 @@ public class CarService extends GenericService {
     super(jdbcUtil);
   }
 
+  public List<CarModel> getCars() throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet rs = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      String query = "SELECT * FROM cars c";
+      statement = connection.prepareStatement(query);
+
+      return null;
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, rs);
+    }
+  }
+
   public void addCar(CarModel car, List<CarComponentModel> components) throws Exception {
     Connection connection = null;
     PreparedStatement addCarStatement = null;

@@ -2,6 +2,8 @@ package com.autotaller.app.components.app_view.admin_view.admin_register_car_vie
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.components.utils.SimpleDialog;
+import com.autotaller.app.events.app_view.BindLastViewEvent;
+import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetAllCarDefinedModelsEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEvent;
@@ -100,7 +102,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
       }
     });
 
-    EventBus.fireEvent(new GetAllCarDefinedModelsEvent(models -> {
+    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> EventBus.fireEvent(new GetAllCarDefinedModelsEvent(models -> {
       modelsDTO = models;
 
       List<CarMakeModel> carMakes = models.getCarMakes();
@@ -125,7 +127,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
         view.getFuelCombo().setValue(fuels.get(0));
         fuelSelectionChanged(fuels.get(0));
       }
-    }));
+    })), true);
   }
 
   private CarModel collectCar() {

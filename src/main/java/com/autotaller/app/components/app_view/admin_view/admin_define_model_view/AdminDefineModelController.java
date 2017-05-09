@@ -1,6 +1,8 @@
 package com.autotaller.app.components.app_view.admin_view.admin_define_model_view;
 
 import com.autotaller.app.EventBus;
+import com.autotaller.app.events.app_view.BindLastViewEvent;
+import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.admin_view.*;
 import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.*;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AddCarMakeEvent;
@@ -43,11 +45,13 @@ public class AdminDefineModelController implements Controller<AdminDefineModelCo
       initRepoHandlers();
     });
 
-    loadCarMakes();
-    loadCarModels();
-    loadCarKitCategories();
-    loadCarKits();
-    loadCarSubkits();
+    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> {
+      loadCarMakes();
+      loadCarModels();
+      loadCarKitCategories();
+      loadCarKits();
+      loadCarSubkits();
+    }, true);
   }
 
   private void initToolbarPanes() {

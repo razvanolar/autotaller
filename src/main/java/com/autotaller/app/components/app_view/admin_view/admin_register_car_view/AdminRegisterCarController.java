@@ -2,6 +2,8 @@ package com.autotaller.app.components.app_view.admin_view.admin_register_car_vie
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.components.utils.NotificationsUtil;
+import com.autotaller.app.events.app_view.BindLastViewEvent;
+import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEventHandler;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEvent;
@@ -42,6 +44,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_SAVE_CAR_VIEW);
       if (component != null) {
         EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new BindLastViewEvent());
       }
     });
 
@@ -65,6 +68,8 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
       this.repository = event.getRepository();
       initHandlers();
     });
+
+    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> loadCars(), true);
   }
 
   private void initHandlers() {
