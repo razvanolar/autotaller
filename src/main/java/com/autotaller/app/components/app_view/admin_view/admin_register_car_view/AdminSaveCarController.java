@@ -81,6 +81,10 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     // Car Fuel selection
     view.getFuelCombo().valueProperty().addListener((observable, oldValue, newValue) -> fuelSelectionChanged(newValue));
 
+    setSpinnerValueListener(view.getKwSpinner());
+    setSpinnerValueListener(view.getCapCilSpinner());
+    setSpinnerValueListener(view.getCilindersSpinner());
+
     // Add Car Component Selection
     view.getComponentAddButton().setOnAction(event -> {
       CarComponentModel carComponent = collectComponent();
@@ -112,10 +116,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
         populateCarModelsCombo(carMakes.get(0));
       }
 
-      List<CarKitCategoryModel> carKitCategories = models.getCarKitCategories();
-      if (carKitCategories == null) {
-        carKitCategories = new ArrayList<>();
-      }
+      List<CarKitCategoryModel> carKitCategories = new ArrayList<>(models.getCarKitCategories());
       carKitCategories.add(0, allCarKitCategory);
       view.getCarKitCategoryCombo().getItems().addAll(carKitCategories);
       view.getCarKitCategoryCombo().setValue(carKitCategories.get(0));
@@ -218,5 +219,13 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
 
   private void fuelSelectionChanged(FuelModel fuel) {
 
+  }
+
+  private void setSpinnerValueListener(Spinner<Integer> spinner) {
+    spinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+      if (StringValidator.isPositiveInteger(newValue)) {
+        spinner.getValueFactory().setValue(Integer.parseInt(newValue));
+      }
+    });
   }
 }

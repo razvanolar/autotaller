@@ -8,4 +8,8 @@ public class StringValidator {
   public static boolean isNullOrEmpty(String value) {
     return value == null || value.trim().isEmpty();
   }
+
+  public static boolean isPositiveInteger(String value) {
+    return !isNullOrEmpty(value) && value.matches("^\\d+$");
+  }
 }
