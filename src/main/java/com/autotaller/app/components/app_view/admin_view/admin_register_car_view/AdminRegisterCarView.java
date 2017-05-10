@@ -1,13 +1,13 @@
 package com.autotaller.app.components.app_view.admin_view.admin_register_car_view;
 
 import com.autotaller.app.components.utils.IterableView;
+import com.autotaller.app.components.utils.filter_views.DefaultCarFilterView;
 import com.autotaller.app.model.CarModel;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 
 /**
  * Created by razvanolar on 02.05.2017
@@ -15,7 +15,7 @@ import javafx.scene.layout.GridPane;
 public class AdminRegisterCarView extends IterableView implements AdminRegisterCarController.IAdminRegisterCarView {
 
   private SplitPane splitPane;
-  private GridPane filterPane;
+  private DefaultCarFilterView filterView;
   private TableView<CarModel> carTable;
   private ScrollPane filterScrollPane;
   private Button addCarButton;
@@ -47,8 +47,8 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
             carDetailsButton
     );
 
-    filterPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
-    filterScrollPane = NodeProvider.createScrollPane(filterPane, true);
+    filterView = new DefaultCarFilterView();
+    filterScrollPane = NodeProvider.createScrollPane(filterView.asRegion(), true);
 
     carTable = NodeProvider.createCarTable();
     splitPane = new SplitPane(carTable);

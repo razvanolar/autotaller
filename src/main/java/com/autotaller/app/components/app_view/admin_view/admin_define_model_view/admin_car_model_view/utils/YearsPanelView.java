@@ -27,7 +27,8 @@ public class YearsPanelView implements View {
     flowPane.setAlignment(Pos.TOP_CENTER);
     flowPane.setHgap(5);
     flowPane.setVgap(5);
-    flowPane.setPrefWidth(flowPaneWidth);
+    if (flowPaneWidth > 0)
+      flowPane.setPrefWidth(flowPaneWidth);
 
     yearViews = new ArrayList<>();
   }
