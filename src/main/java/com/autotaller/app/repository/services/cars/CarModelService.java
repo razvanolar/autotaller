@@ -7,14 +7,14 @@ import com.autotaller.app.repository.utils.JDBCUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by razvanolar on 28.04.2017
  */
 public class CarModelService extends GenericService {
+
+  private String GET_CAR_MODELS = "SELECT c1.id, c1.name, c1.production_from, c1.production_to, c2.id, c2.name FROM car_models c1 INNER JOIN car_makes c2 ON c1.make_id = c2.id";
 
   public CarModelService(JDBCUtil jdbcUtil) {
     super(jdbcUtil);
@@ -27,25 +27,13 @@ public class CarModelService extends GenericService {
     ResultSet rs = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = "SELECT c1.id, c1.name, c1.production_from, c1.production_to, c2.id, c2.name FROM car_models c1 INNER JOIN car_makes c2 ON c1.make_id = c2.id";
+      String query = GET_CAR_MODELS;
       statement = connection.prepareStatement(query);
       rs = statement.executeQuery();
       List<CarTypeModel> result = new ArrayList<>();
-      Set<Integer> ids = new HashSet<>();
       frameStatement = connection.prepareStatement("SELECT frame_name FROM car_model_frames WHERE car_model_id = ?");
       while (rs.next()) {
-        int id = rs.getInt(1);
-        Date toDate = rs.getDate(4);
-        result.add(new CarTypeModel(
-                  id,
-                  new CarMakeModel(rs.getInt(5), rs.getString(6)),
-                  rs.getString(2),
-                  rs.getDate(3).toLocalDate(),
-                  toDate != null ? toDate.toLocalDate() : null,
-                  getFramesForCarModelId(id, frameStatement)
-                )
-        );
-        ids.add(id);
+        result.add(collect(rs, frameStatement));
       }
       return result;
     } catch (Exception e) {
@@ -55,6 +43,40 @@ public class CarModelService extends GenericService {
     } finally {
       jdbcUtil.close(connection, statement, rs);
       jdbcUtil.closePrepareStatement(frameStatement);
+    }
+  }
+
+  public CarTypeModel getCarModelById(int carModelId) throws Exception {
+    Connection connection = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      return getCarModelById(connection, carModelId);
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.closeConnection(connection);
+    }
+  }
+
+  public CarTypeModel getCarModelById(Connection connection, int carModelId) throws Exception {
+    Statement statement = null;
+    PreparedStatement frameStatement = null;
+    ResultSet rs = null;
+    try {
+      statement = connection.createStatement();
+      frameStatement = connection.prepareStatement("SELECT frame_name FROM car_model_frames WHERE car_model_id = ?");
+      rs = statement.executeQuery(GET_CAR_MODELS + " WHERE c1.id = " + carModelId);
+      return rs.next() ? collect(rs, frameStatement) : null;
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.closeResultSet(rs);
+      jdbcUtil.closePrepareStatement(frameStatement);
+      jdbcUtil.closeStatement(statement);
     }
   }
 
@@ -114,6 +136,19 @@ public class CarModelService extends GenericService {
       jdbcUtil.closePrepareStatement(idStatement);
       jdbcUtil.closePrepareStatement(frameStatement);
     }
+  }
+
+  private CarTypeModel collect(ResultSet rs, PreparedStatement frameStatement) throws Exception {
+    int id = rs.getInt(1);
+    Date toDate = rs.getDate(4);
+    return new CarTypeModel(
+            id,
+            new CarMakeModel(rs.getInt(5), rs.getString(6)),
+            rs.getString(2),
+            rs.getDate(3).toLocalDate(),
+            toDate != null ? toDate.toLocalDate() : null,
+            getFramesForCarModelId(id, frameStatement)
+    );
   }
 
   private List<String> getFramesForCarModelId(int carModelId, PreparedStatement statement) throws Exception {

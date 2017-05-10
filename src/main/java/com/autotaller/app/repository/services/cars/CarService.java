@@ -2,10 +2,12 @@ package com.autotaller.app.repository.services.cars;
 
 import com.autotaller.app.model.CarComponentModel;
 import com.autotaller.app.model.CarModel;
+import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.services.GenericService;
 import com.autotaller.app.repository.utils.JDBCUtil;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,16 +19,30 @@ public class CarService extends GenericService {
     super(jdbcUtil);
   }
 
-  public List<CarModel> getCars() throws Exception {
+  public List<CarModel> getCars(SystemModelsDTO systemModelsDTO) throws Exception {
     Connection connection = null;
     PreparedStatement statement = null;
     ResultSet rs = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = "SELECT * FROM cars c";
+      // Retrieving all the cars without engine and car type information; car type info will be retrieved from systemModelsDTO
+      //  and engines info will be retrieved by separate calls for each car
+      String query = "SELECT c.id, c.model_id, c.name, c.produced_from, c.produced_to, c.kw, c.cilindrical_capacity, " +
+              "c.cilinders, c.description, cf.id, cf.name FROM cars c INNER JOIN car_fuels cf ON c.fuel_id = cf.id";
       statement = connection.prepareStatement(query);
+      rs = statement.executeQuery();
 
-      return null;
+      List<CarModel> result = new ArrayList<>();
+      while (rs.next()) {
+        int carId = rs.getInt(1);
+        List<String> engines = getCarEnginesList(carId, connection);
+        result.add(new CarModel(carId, systemModelsDTO.getCarTypeModelById(rs.getInt(2)),
+                rs.getString(3), rs.getDate(4).toLocalDate(),
+                rs.getDate(5).toLocalDate(), rs.getInt(6), rs.getInt(7),
+                rs.getInt(8), engines, systemModelsDTO.getFuelById(rs.getInt(10)),
+                rs.getString(9)));
+      }
+      return result;
     } catch (Exception e) {
       //TODO handle exception
       e.printStackTrace();
@@ -110,6 +126,23 @@ public class CarService extends GenericService {
       jdbcUtil.closePrepareStatement(addEnginesStatement);
       jdbcUtil.closePrepareStatement(addComponentsStatement);
       jdbcUtil.closeResultSet(rs);
+    }
+  }
+
+  private List<String> getCarEnginesList(int carId, Connection connection) throws Exception {
+    Statement statement = null;
+    ResultSet rs = null;
+    try {
+      statement = connection.createStatement();
+      rs = statement.executeQuery("SELECT engine_name FROM car_engines WHERE car_id = " + carId);
+      List<String> result = new ArrayList<>();
+      while (rs.next()) {
+        result.add(rs.getString(1));
+      }
+      return result;
+    } finally {
+      jdbcUtil.closeResultSet(rs);
+      jdbcUtil.closeStatement(statement);
     }
   }
 }

@@ -11,7 +11,7 @@ import com.autotaller.app.events.test_connection.TestConnectionEventHandler;
 import com.autotaller.app.events.test_connection.TestConnectionFailedEvent;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.model.*;
-import com.autotaller.app.model.utils.ModelsDTO;
+import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.factories.ComponentFactory;
@@ -243,7 +243,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         EventBus.fireEvent(new MaskViewEvent("Incarcare Model"));
         Thread thread = new Thread(() -> {
           try {
-            ModelsDTO allDefinedModels = repository.getAllDefinedModels();
+            SystemModelsDTO allDefinedModels = repository.getAllDefinedModels();
             Platform.runLater(() -> {
               event.getCallback().call(allDefinedModels);
               EventBus.fireEvent(new UnmaskViewEvent());
@@ -267,8 +267,9 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         EventBus.fireEvent(new MaskViewEvent("Incarcare Masini"));
         Thread thread = new Thread(() -> {
           try {
+            List<CarModel> cars = repository.getCars();
             Platform.runLater(() -> {
-//              event.getCallback().call();
+              event.getCallback().call(cars);
               EventBus.fireEvent(new UnmaskViewEvent());
             });
           } catch (Exception e) {

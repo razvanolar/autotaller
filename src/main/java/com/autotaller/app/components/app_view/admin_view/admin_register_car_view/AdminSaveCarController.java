@@ -8,7 +8,7 @@ import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetAllCarDefinedModelsEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEvent;
 import com.autotaller.app.model.*;
-import com.autotaller.app.model.utils.ModelsDTO;
+import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.ModelFilter;
 import com.autotaller.app.utils.StringValidator;
@@ -56,7 +56,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
 
   private IAdminSaveCarView view;
 
-  private ModelsDTO modelsDTO;
+  private SystemModelsDTO systemModelsDTO;
 
   private CarKitCategoryModel allCarKitCategory = new CarKitCategoryModel(-1, "--Toate--");
   private CarKitModel allCarKit = new CarKitModel(-1, "--Toate--", allCarKitCategory);
@@ -103,7 +103,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     });
 
     EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> EventBus.fireEvent(new GetAllCarDefinedModelsEvent(models -> {
-      modelsDTO = models;
+      systemModelsDTO = models;
 
       List<CarMakeModel> carMakes = models.getCarMakes();
       if (carMakes != null && !carMakes.isEmpty()) {
@@ -167,8 +167,8 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
   }
 
   private void populateCarModelsCombo(CarMakeModel carMake) {
-    if (carMake != null && modelsDTO != null) {
-      List<CarTypeModel> carTypes = modelsDTO.getCarTypesByMake(carMake);
+    if (carMake != null && systemModelsDTO != null) {
+      List<CarTypeModel> carTypes = systemModelsDTO.getCarTypesByMake(carMake);
       view.getCarTypesCombo().getItems().clear();
       if (!carTypes.isEmpty()) {
         view.getCarTypesCombo().getItems().addAll(carTypes);
@@ -180,13 +180,13 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
   }
 
   private void populateCarKitsCombo(CarKitCategoryModel carKitCategory) {
-    if (carKitCategory != null && modelsDTO != null) {
+    if (carKitCategory != null && systemModelsDTO != null) {
       List<CarKitModel> carKits;
       if (carKitCategory.getId() == -1) {
-        carKits = new ArrayList<>(modelsDTO.getCarKits());
+        carKits = new ArrayList<>(systemModelsDTO.getCarKits());
         carKits.add(0, allCarKit);
       } else {
-        carKits = modelsDTO.getCarKitByCategory(carKitCategory);
+        carKits = systemModelsDTO.getCarKitByCategory(carKitCategory);
       }
       view.getCarKitCombo().getItems().clear();
       if (!carKits.isEmpty()) {
@@ -199,10 +199,10 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
   }
 
   private void populateCarSubkitsCombo(CarKitModel carKit) {
-    if (carKit != null && modelsDTO != null) {
+    if (carKit != null && systemModelsDTO != null) {
       List<CarSubkitModel> carSubkits;
       if (carKit.getId() == -1) {
-        carSubkits = new ArrayList<>(modelsDTO.getCarSubkits());
+        carSubkits = new ArrayList<>(systemModelsDTO.getCarSubkits());
       } else {
         carSubkits = ModelFilter.filterCarSubkitsByKit(carKit);
       }

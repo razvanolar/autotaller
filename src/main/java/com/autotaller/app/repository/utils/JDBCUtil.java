@@ -73,6 +73,29 @@ public class JDBCUtil {
     }
   }
 
+  public void closeStatement(Statement statement) {
+    closeStatement(statement, retry);
+  }
+
+  public void closeStatement(Statement statement, int attemptsLeft) {
+    if (statement == null)
+      return;
+    if (attemptsLeft <= 0) {
+      // TODO Handle exception when unable to close statement
+      return;
+    }
+
+    try {
+      if (!statement.isClosed())
+        statement.close();
+    } catch (SQLException e) {
+      //TODO Handle exception when trying to close connection
+      attemptsLeft--;
+      System.out.println("Unable to close statement. Attempts left: " + attemptsLeft);
+      closeStatement(statement, attemptsLeft);
+    }
+  }
+
   public void closePrepareStatement(PreparedStatement statement) {
     closePrepareStatement(statement, retry);
   }

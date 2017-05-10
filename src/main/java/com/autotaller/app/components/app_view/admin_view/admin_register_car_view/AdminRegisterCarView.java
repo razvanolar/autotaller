@@ -63,6 +63,10 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
     SplitPane.setResizableWithParent(detailScrollPane, false);
   }
 
+  public TableView<CarModel> getCarTable() {
+    return carTable;
+  }
+
   public Button getAddCarButton() {
     return addCarButton;
   }

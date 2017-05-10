@@ -1,7 +1,7 @@
 package com.autotaller.app.repository;
 
 import com.autotaller.app.model.*;
-import com.autotaller.app.model.utils.ModelsDTO;
+import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.services.UserService;
 import com.autotaller.app.repository.services.cars.*;
 import com.autotaller.app.repository.utils.JDBCUtil;
@@ -133,6 +133,10 @@ public class Repository {
   /*
     CarService
    */
+  public List<CarModel> getCars() throws Exception {
+    return carService.getCars(getAllDefinedModels());
+  }
+
   public void addCar(CarModel car, List<CarComponentModel> components) throws Exception {
     carService.addCar(car, components);
   }
@@ -150,8 +154,8 @@ public class Repository {
   }
 
 
-  public ModelsDTO getAllDefinedModels() throws Exception {
-    return new ModelsDTO(
+  public SystemModelsDTO getAllDefinedModels() throws Exception {
+    return new SystemModelsDTO(
             getCarKitCategories(),
             getCarKits(),
             getCarSubkits(),
@@ -175,7 +179,10 @@ public class Repository {
     carMakesService = new CarMakesService(jdbcUtil);
     carModelService = new CarModelService(jdbcUtil);
     carKitsService = new CarKitsService(jdbcUtil);
-    carService = new CarService(jdbcUtil);
     carUtilsService = new CarUtilsService(jdbcUtil);
+    carService = new CarService(jdbcUtil);
+
+    //init all the caches
+    getAllDefinedModels();
   }
 }

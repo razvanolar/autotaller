@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Created by razvanolar on 05.05.2017
  */
-public class ModelsDTO {
+public class SystemModelsDTO {
 
   private List<CarKitCategoryModel> carKitCategories;
   private List<CarKitModel> carKits;
@@ -20,12 +20,12 @@ public class ModelsDTO {
   private Map<CarKitCategoryModel, List<CarKitModel>> carCategoryKitMap;
   private Map<CarKitModel, List<CarSubkitModel>> carKitSubkitMap;
 
-  public ModelsDTO(List<CarKitCategoryModel> carKitCategories,
-                   List<CarKitModel> carKits,
-                   List<CarSubkitModel> carSubkits,
-                   List<CarMakeModel> carMakes,
-                   List<CarTypeModel> carTypes,
-                   List<FuelModel> fuels) {
+  public SystemModelsDTO(List<CarKitCategoryModel> carKitCategories,
+                         List<CarKitModel> carKits,
+                         List<CarSubkitModel> carSubkits,
+                         List<CarMakeModel> carMakes,
+                         List<CarTypeModel> carTypes,
+                         List<FuelModel> fuels) {
     this.carKitCategories = carKitCategories;
     this.carKits = carKits;
     this.carSubkits = carSubkits;
@@ -76,6 +76,22 @@ public class ModelsDTO {
 
   public List<CarSubkitModel> getCarSubkitByKit(CarKitModel carKit) {
     return carKitSubkitMap.get(carKit);
+  }
+
+  public CarTypeModel getCarTypeModelById(int carTypeId) {
+    for (CarTypeModel carType : carTypes) {
+      if (carType.getId() == carTypeId)
+        return carType;
+    }
+    return null;
+  }
+
+  public FuelModel getFuelById(int fuelId) {
+    for (FuelModel fuel : fuels) {
+      if (fuel.getId() == fuelId)
+        return fuel;
+    }
+    return null;
   }
 
   private void computeCarMakeTypeMap() {
