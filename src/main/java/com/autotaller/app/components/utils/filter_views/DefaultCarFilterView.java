@@ -120,6 +120,70 @@ public class DefaultCarFilterView implements View {
     return hBox;
   }
 
+  public YearsPanelView getYearsPanelView() {
+    return yearsPanelView;
+  }
+
+  public ComboBox<CarMakeModel> getMakeCombo() {
+    return makeCombo;
+  }
+
+  public ComboBox<CarTypeModel> getTypeCombo() {
+    return typeCombo;
+  }
+
+  public TextField getNameField() {
+    return nameField;
+  }
+
+  public Spinner<Integer> getKwFromSpinner() {
+    return kwFromSpinner;
+  }
+
+  public Spinner<Integer> getKwToSpinner() {
+    return kwToSpinner;
+  }
+
+  public Spinner<Integer> getCapacityFromSpinner() {
+    return capacityFromSpinner;
+  }
+
+  public Spinner<Integer> getCapacityToSpinner() {
+    return capacityToSpinner;
+  }
+
+  public Spinner<Integer> getCilindersSpinner() {
+    return cilindersSpinner;
+  }
+
+  public ComboBox<FuelModel> getFuelCombo() {
+    return fuelCombo;
+  }
+
+  public Button getResetFiltersButton() {
+    return resetFiltersButton;
+  }
+
+  public Button getSearchButton() {
+    return searchButton;
+  }
+
+  public TextField getEngineTextField() {
+    return engineTextField;
+  }
+
+  public Button getEngineButton() {
+    return engineButton;
+  }
+
+  public TextField getFrameTextField() {
+    return frameTextField;
+  }
+
+  public Button getFrameButton() {
+    return frameButton;
+  }
+
   public Region asRegion() {
     return gridPane;
   }

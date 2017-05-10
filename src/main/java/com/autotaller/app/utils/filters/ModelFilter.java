@@ -1,4 +1,4 @@
-package com.autotaller.app.utils;
+package com.autotaller.app.utils.filters;
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.admin_view.GetCarSubkitsEvent;

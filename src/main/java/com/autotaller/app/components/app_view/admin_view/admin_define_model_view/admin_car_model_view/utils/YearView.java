@@ -16,11 +16,13 @@ public class YearView implements View {
 
   private HBox panel;
   private int year;
+  private YearsPanelView listener;
 
   private boolean isSelected;
 
-  public YearView(int year) {
+  public YearView(int year, YearsPanelView listener) {
     this.year = year;
+    this.listener = listener;
     init();
     initHandlers();
   }
@@ -38,6 +40,7 @@ public class YearView implements View {
     panel.setOnMouseClicked(event -> {
       isSelected = !isSelected;
       setStyle();
+      listener.onYearSelectionChanged(year, isSelected);
     });
   }
 

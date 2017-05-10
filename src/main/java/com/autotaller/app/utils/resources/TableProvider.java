@@ -1,7 +1,7 @@
 package com.autotaller.app.utils.resources;
 
 import com.autotaller.app.model.*;
-import com.autotaller.app.utils.ModelFilter;
+import com.autotaller.app.utils.filters.ModelFilter;
 import com.autotaller.app.utils.StringValidator;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.*;

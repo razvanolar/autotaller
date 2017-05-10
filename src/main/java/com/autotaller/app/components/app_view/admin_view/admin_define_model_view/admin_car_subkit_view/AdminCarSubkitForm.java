@@ -2,7 +2,7 @@ package com.autotaller.app.components.app_view.admin_view.admin_define_model_vie
 
 import com.autotaller.app.model.CarKitCategoryModel;
 import com.autotaller.app.model.CarKitModel;
-import com.autotaller.app.utils.ModelFilter;
+import com.autotaller.app.utils.filters.ModelFilter;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.geometry.Pos;
 import javafx.scene.Node;

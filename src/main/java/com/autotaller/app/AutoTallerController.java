@@ -15,6 +15,7 @@ import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.factories.ComponentFactory;
+import com.autotaller.app.utils.filters.ModelFilter;
 import javafx.application.Platform;
 import javafx.scene.Node;
 

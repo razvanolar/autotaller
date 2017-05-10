@@ -10,7 +10,7 @@ import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEvent;
 import com.autotaller.app.model.*;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.utils.Controller;
-import com.autotaller.app.utils.ModelFilter;
+import com.autotaller.app.utils.filters.ModelFilter;
 import com.autotaller.app.utils.StringValidator;
 import com.autotaller.app.utils.View;
 import javafx.scene.control.*;

@@ -61,6 +61,10 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
     return carTable;
   }
 
+  public DefaultCarFilterView getFilterView() {
+    return filterView;
+  }
+
   public Button getAddCarButton() {
     return addCarButton;
   }

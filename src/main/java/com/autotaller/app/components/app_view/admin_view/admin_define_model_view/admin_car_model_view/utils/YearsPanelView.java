@@ -2,6 +2,7 @@ package com.autotaller.app.components.app_view.admin_view.admin_define_model_vie
 
 import com.autotaller.app.model.utils.YearsRange;
 import com.autotaller.app.utils.View;
+import com.autotaller.app.utils.filters.car_model_filters.CarModelYearFilter;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -17,6 +18,7 @@ public class YearsPanelView implements View {
 
   private FlowPane flowPane;
   private List<YearView> yearViews;
+  private CarModelYearFilter yearFilter;
 
   public YearsPanelView(int width) {
     init(width);
@@ -39,10 +41,25 @@ public class YearsPanelView implements View {
     yearViews.clear();
 
     for (int i = range.getMinYear(); i <= range.getMaxYear(); i++) {
-      YearView yearView = new YearView(i);
+      YearView yearView = new YearView(i, this);
       children.add(yearView.asNode());
       yearViews.add(yearView);
     }
+  }
+
+  public void onYearSelectionChanged(int year, boolean isSelected) {
+    ObservableList<Integer> years = yearFilter.getYears();
+    if (isSelected && !years.contains(year)) {
+      years.add(year);
+    } else if (!isSelected) {
+      int index = years.indexOf(year);
+      if (index >= 0)
+        years.remove(index);
+    }
+  }
+
+  public void setFilterObject(CarModelYearFilter filter) {
+    this.yearFilter = filter;
   }
 
   @Override

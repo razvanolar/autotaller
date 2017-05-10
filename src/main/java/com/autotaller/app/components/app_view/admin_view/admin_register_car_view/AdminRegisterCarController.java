@@ -2,6 +2,7 @@ package com.autotaller.app.components.app_view.admin_view.admin_register_car_vie
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.components.utils.NotificationsUtil;
+import com.autotaller.app.components.utils.filter_views.DefaultCarFilterView;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.admin_view.GetCarsEvent;
@@ -16,11 +17,15 @@ import com.autotaller.app.model.CarModel;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.factories.ComponentFactory;
+import com.autotaller.app.utils.filters.car_model_filters.CarModelYearFilter;
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
+
+import java.util.List;
 
 /**
  * Created by razvanolar on 02.05.2017
@@ -29,6 +34,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
 
   public interface IAdminRegisterCarView extends View {
     TableView<CarModel> getCarTable();
+    DefaultCarFilterView getFilterView();
     Button getAddCarButton();
     Button getEditCarButton();
     Button getDeleteCarButton();
@@ -40,10 +46,17 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
 
   private IAdminRegisterCarView view;
   private Repository repository;
+  private List<CarModel> allCars;
 
   @Override
   public void bind(IAdminRegisterCarView view) {
     this.view = view;
+
+    CarModelYearFilter carModelYearFilter = new CarModelYearFilter();
+    view.getFilterView().getYearsPanelView().setFilterObject(carModelYearFilter);
+    carModelYearFilter.getYears().addListener((ListChangeListener<Integer>) c -> {
+      loadCars(carModelYearFilter.filter(allCars));
+    });
 
     view.getAddCarButton().setOnAction(event -> {
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_SAVE_CAR_VIEW);
@@ -99,10 +112,15 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
   }
 
   private void loadCars() {
-    EventBus.fireEvent(new GetCarsEvent(cars ->  {
-      ObservableList<CarModel> items = view.getCarTable().getItems();
-      items.clear();
-      items.addAll(cars);
+    EventBus.fireEvent(new GetCarsEvent(cars -> {
+      this.allCars = cars;
+      loadCars(cars);
     }));
+  }
+
+  private void loadCars(List<CarModel> cars) {
+    ObservableList<CarModel> items = view.getCarTable().getItems();
+    items.clear();
+    items.addAll(cars);
   }
 }
