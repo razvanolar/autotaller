@@ -69,6 +69,12 @@
     -fx-background-color: rgba(204,10,7,0.46);
 }
 
+.generalPaneBackground {
+    -fx-background-color: #eeeeee;
+    /*-fx-background-image: url("rep_bg.png");*/
+    /*-fx-background-repeat: repeat;*/
+}
+
 .maskViewBackground {
     -fx-background-color: rgba(50, 100, 100, 0.4);
 }
@@ -90,7 +96,7 @@
 }
 
 .adminSubToolbarPaneBackground {
-    -fx-background-color: rgba(176,174,183,0.45);
+    -fx-background-color: rgba(13,106,141,0.81);
 }
 
 .adminSubToolbarPaneBackground:hover {

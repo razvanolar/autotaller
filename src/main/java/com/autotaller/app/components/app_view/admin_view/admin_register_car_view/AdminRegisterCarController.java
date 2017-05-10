@@ -36,8 +36,6 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     ToggleButton getCarDetailsButton();
     void showFilterPane();
     void hideFilterPane();
-    void showDetailsPane();
-    void hideDetailsPane();
   }
 
   private IAdminRegisterCarView view;
@@ -60,14 +58,6 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
         view.showFilterPane();
       } else {
         view.hideFilterPane();
-      }
-    });
-
-    view.getCarDetailsButton().setOnAction(event -> {
-      if (view.getCarDetailsButton().isSelected()) {
-        view.showDetailsPane();
-      } else {
-        view.hideDetailsPane();
       }
     });
 

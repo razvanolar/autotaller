@@ -79,40 +79,40 @@ public class NodeProvider {
     return spinner;
   }
 
-  public static JFXComboBox<CarMakeModel> createCarMakesCombo() {
+  public static ComboBox<CarMakeModel> createCarMakesCombo() {
     return createCarMakesCombo(DEFAULT_FIELD_WIDTH);
   }
 
-  public static JFXComboBox<CarMakeModel> createCarMakesCombo(int width) {
-    JFXComboBox<CarMakeModel> combo = new JFXComboBox<>();
+  public static ComboBox<CarMakeModel> createCarMakesCombo(int width) {
+    ComboBox<CarMakeModel> combo = new ComboBox<>();
     combo.setPrefWidth(width);
     return combo;
   }
 
-  public static JFXComboBox<CarTypeModel> createCarTypesCombo() {
+  public static ComboBox<CarTypeModel> createCarTypesCombo() {
     return createCarTypesCombo(DEFAULT_FIELD_WIDTH);
   }
 
-  public static JFXComboBox<CarTypeModel> createCarTypesCombo(int width) {
-    JFXComboBox<CarTypeModel> combo = new JFXComboBox<>();
+  public static ComboBox<CarTypeModel> createCarTypesCombo(int width) {
+    ComboBox<CarTypeModel> combo = new ComboBox<>();
     combo.setPrefWidth(width);
     return combo;
   }
 
-  public static JFXComboBox<CarKitCategoryModel> createCarKitCategoriesCombo(int width) {
-    JFXComboBox<CarKitCategoryModel> combo = new JFXComboBox<>();
+  public static ComboBox<CarKitCategoryModel> createCarKitCategoriesCombo(int width) {
+    ComboBox<CarKitCategoryModel> combo = new ComboBox<>();
     combo.setPrefWidth(width);
     return combo;
   }
 
-  public static JFXComboBox<CarKitModel> createCarKitCombo(int width) {
-    JFXComboBox<CarKitModel> combo = new JFXComboBox<>();
+  public static ComboBox<CarKitModel> createCarKitCombo(int width) {
+    ComboBox<CarKitModel> combo = new ComboBox<>();
     combo.setPrefWidth(width);
     return combo;
   }
 
-  public static JFXComboBox<CarSubkitModel> createCarSubkitCombo(int width) {
-    JFXComboBox<CarSubkitModel> combo = new JFXComboBox<>();
+  public static ComboBox<CarSubkitModel> createCarSubkitCombo(int width) {
+    ComboBox<CarSubkitModel> combo = new ComboBox<>();
     combo.setPrefWidth(width);
     return combo;
   }
@@ -122,7 +122,7 @@ public class NodeProvider {
   }
 
   public static ComboBox<FuelModel> createFuelCombo(int width) {
-    JFXComboBox<FuelModel> combo = new JFXComboBox<>();
+    ComboBox<FuelModel> combo = new ComboBox<>();
     combo.setPrefWidth(width);
     return combo;
   }
@@ -218,6 +218,7 @@ public class NodeProvider {
     gridPane.setAlignment(pos);
     gridPane.setHgap(hGap);
     gridPane.setVgap(vGap);
+    gridPane.getStyleClass().add(StyleProvider.GENERAL_PANE_BACKGROUND_CLASS);
     return gridPane;
   }
 

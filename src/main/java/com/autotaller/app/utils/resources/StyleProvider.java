@@ -19,6 +19,7 @@ public class StyleProvider {
   public static final String ADMIN_SUB_TOOLBAR_PANE_CLASS = "adminSubToolbarPaneBackground";
   public static final String YEAR_VIEW_UNSELECTED_CLASS = "yearViewUnselectedBackground";
   public static final String YEAR_VIEW_SELECTED_CLASS = "yearViewSelectedBackground";
+  public static final String GENERAL_PANE_BACKGROUND_CLASS = "generalPaneBackground";
 
   public static final String CENTERED_TABLE_CELL_TEXT_CSS = "-fx-alignment: CENTER;";
 

@@ -16,18 +16,15 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
 
   private SplitPane splitPane;
   private GridPane filterPane;
-  private GridPane detailPane;
   private TableView<CarModel> carTable;
   private ScrollPane filterScrollPane;
-  private ScrollPane detailScrollPane;
   private Button addCarButton;
   private Button editCarButton;
   private Button deleteCarButton;
   private ToggleButton showFilterCarButton;
   private ToggleButton carDetailsButton;
 
-  private double lastFilterDividerPosition = 0.2;
-  private double lastDetailsDividerPosition = 0.8;
+  private double lastFilterDividerPosition = 0.30;
 
   public AdminRegisterCarView() {
     init();
@@ -51,16 +48,13 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
     );
 
     filterPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
-    detailPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
     filterScrollPane = NodeProvider.createScrollPane(filterPane, true);
-    detailScrollPane = NodeProvider.createScrollPane(detailPane, true);
 
     carTable = NodeProvider.createCarTable();
     splitPane = new SplitPane(carTable);
     borderPane.setCenter(splitPane);
 
     SplitPane.setResizableWithParent(filterScrollPane, false);
-    SplitPane.setResizableWithParent(detailScrollPane, false);
   }
 
   public TableView<CarModel> getCarTable() {
@@ -102,28 +96,6 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
       if (dividers != null && dividers.length > 0)
         lastFilterDividerPosition = dividers[0];
       items.remove(filterScrollPane);
-    }
-  }
-
-  public void showDetailsPane() {
-    ObservableList<Node> items = splitPane.getItems();
-    if (!items.contains(detailScrollPane)) {
-      items.add(detailScrollPane);
-      splitPane.setDividerPosition(items.size() > 2 ? 1 : 0 , lastDetailsDividerPosition);
-    }
-  }
-
-  public void hideDetailsPane() {
-    ObservableList<Node> items = splitPane.getItems();
-    if (items.contains(detailScrollPane)) {
-      double[] dividers = splitPane.getDividerPositions();
-      if (dividers != null && dividers.length > 0) {
-        if (dividers.length > 1)
-          lastDetailsDividerPosition = dividers[1];
-        else
-          lastDetailsDividerPosition = dividers[0];
-      }
-      items.remove(detailScrollPane);
     }
   }
 
