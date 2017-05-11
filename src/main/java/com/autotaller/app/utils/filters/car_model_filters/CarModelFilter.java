@@ -1,4 +1,4 @@
-package com.autotaller.app.utils.filters;
+package com.autotaller.app.utils.filters.car_model_filters;
 
 import com.autotaller.app.model.CarModel;
 

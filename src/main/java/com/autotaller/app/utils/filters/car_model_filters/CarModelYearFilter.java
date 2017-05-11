@@ -1,7 +1,6 @@
 package com.autotaller.app.utils.filters.car_model_filters;
 
 import com.autotaller.app.model.CarModel;
-import com.autotaller.app.utils.filters.CarModelFilter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

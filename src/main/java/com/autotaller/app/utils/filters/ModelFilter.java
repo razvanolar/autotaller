@@ -3,6 +3,7 @@ package com.autotaller.app.utils.filters;
 import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.admin_view.GetCarSubkitsEvent;
 import com.autotaller.app.model.*;
+import com.autotaller.app.utils.filters.car_model_filters.CarModelFilter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,5 +83,15 @@ public class ModelFilter {
       }
     }
     return null;
+  }
+
+  public static List<CarModel> filterCars(List<CarModel> cars, CarModelFilter... filters) {
+    if (filters == null || filters.length == 0)
+      return cars;
+    List<CarModel> result = cars;
+    for (CarModelFilter filter : filters) {
+      result = filter.filter(result);
+    }
+    return result;
   }
 }
