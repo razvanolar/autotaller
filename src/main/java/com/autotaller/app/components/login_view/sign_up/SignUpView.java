@@ -2,7 +2,6 @@ package com.autotaller.app.components.login_view.sign_up;
 
 import com.autotaller.app.utils.resources.ImageProvider;
 import com.autotaller.app.utils.resources.NodeProvider;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.geometry.Pos;
@@ -27,7 +26,7 @@ public class SignUpView implements SignUpController.ISignUpView {
   private JFXPasswordField passwordField;
   private JFXPasswordField re_passwordField;
   private Text backLabel;
-  private JFXButton signUpButton;
+  private Button signUpButton;
 
   public SignUpView() {
     init();

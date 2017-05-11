@@ -10,7 +10,6 @@ import com.autotaller.app.events.mask_view.UnmaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEventHandler;
 import com.autotaller.app.utils.resources.ImageProvider;
 import com.autotaller.app.utils.resources.NodeProvider;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.geometry.Pos;
@@ -30,7 +29,7 @@ public class LoginView extends MaskableView implements LoginController.ILoginVie
   private GridPane gridPane;
   private JFXTextField usernameTextField;
   private JFXPasswordField passwordField;
-  private JFXButton loginButton;
+  private Button loginButton;
   private Text signUpLabel;
   private Text forgotPasswordLabel;
 

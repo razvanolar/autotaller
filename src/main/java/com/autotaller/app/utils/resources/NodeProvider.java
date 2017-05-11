@@ -24,15 +24,29 @@ public class NodeProvider {
 
   public static int DEFAULT_FIELD_WIDTH = 220;
 
-  public static JFXButton createButton(String text) {
+  public static Button createButton(String text) {
     JFXButton button = new JFXButton(text);
     button.getStyleClass().add(StyleProvider.DEFAULT_BUTTON_CLASS);
     return button;
   }
 
-  public static JFXButton createRemoveButton(String text) {
+  public static Button createRemoveButton(String text) {
     JFXButton button = new JFXButton(text);
     button.getStyleClass().add(StyleProvider.REMOVE_BUTTON_CLASS);
+    return button;
+  }
+
+  public static Button createToolbarButton(String text, Image image) {
+    Button button = new Button(text);
+    if (image != null)
+      button.setGraphic(new ImageView(image));
+    return button;
+  }
+
+  public static ToggleButton createToolbarToggleButton(String text, Image image) {
+    ToggleButton button = new ToggleButton(text);
+    if (image != null)
+      button.setGraphic(new ImageView(image));
     return button;
   }
 

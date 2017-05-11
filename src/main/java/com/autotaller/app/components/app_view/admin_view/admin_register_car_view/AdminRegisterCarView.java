@@ -3,6 +3,7 @@ package com.autotaller.app.components.app_view.admin_view.admin_register_car_vie
 import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.components.utils.filter_views.DefaultCarFilterView;
 import com.autotaller.app.model.CarModel;
+import com.autotaller.app.utils.resources.ImageProvider;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -22,7 +23,7 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
   private Button editCarButton;
   private Button deleteCarButton;
   private ToggleButton showFilterCarButton;
-  private ToggleButton carDetailsButton;
+  private Button carDetailsButton;
 
   private double lastFilterDividerPosition = 0.30;
 
@@ -31,11 +32,11 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
   }
 
   private void init() {
-    addCarButton = new Button("Adauga");
-    editCarButton = new Button("Editeaza");
-    deleteCarButton = new Button("Sterge");
-    showFilterCarButton = new ToggleButton("Filtreaza");
-    carDetailsButton = new ToggleButton("Detalii");
+    addCarButton = NodeProvider.createToolbarButton("Adauga", ImageProvider.addIcon());
+    editCarButton = NodeProvider.createToolbarButton("Editeaza", ImageProvider.editIcon());
+    deleteCarButton = NodeProvider.createToolbarButton("Sterge", ImageProvider.deleteIcon());
+    showFilterCarButton = NodeProvider.createToolbarToggleButton("Filtreaza", ImageProvider.filterIcon());
+    carDetailsButton = NodeProvider.createToolbarButton("Detalii", ImageProvider.detailsIcon());
 
     toolBar.getItems().addAll(
             new Separator(),
@@ -81,7 +82,7 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
     return showFilterCarButton;
   }
 
-  public ToggleButton getCarDetailsButton() {
+  public Button getCarDetailsButton() {
     return carDetailsButton;
   }
 

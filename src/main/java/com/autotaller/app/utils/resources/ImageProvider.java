@@ -52,6 +52,34 @@ public class ImageProvider {
     return getImage("icons/minus.png");
   }
 
+  public static Image backIcon() {
+    return getImage("icons/back.png");
+  }
+
+  public static Image exitIcon() {
+    return getImage("icons/exit.png");
+  }
+
+  public static Image addIcon() {
+    return getImage("icons/add.png");
+  }
+
+  public static Image editIcon() {
+    return getImage("icons/edit.png");
+  }
+
+  public static Image deleteIcon() {
+    return getImage("icons/delete.png");
+  }
+
+  public static Image filterIcon() {
+    return getImage("icons/filter.png");
+  }
+
+  public static Image detailsIcon() {
+    return getImage("icons/details.png");
+  }
+
   private static Image getImage(String file) {
     String path = ImageProvider.class.getResource(file).getPath();
     if (path.contains("!")) {

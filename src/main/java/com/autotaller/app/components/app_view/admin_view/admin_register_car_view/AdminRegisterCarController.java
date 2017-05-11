@@ -55,7 +55,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     Button getEditCarButton();
     Button getDeleteCarButton();
     ToggleButton getShowFilterCarButton();
-    ToggleButton getCarDetailsButton();
+    Button getCarDetailsButton();
     void showFilterPane();
     void hideFilterPane();
   }
