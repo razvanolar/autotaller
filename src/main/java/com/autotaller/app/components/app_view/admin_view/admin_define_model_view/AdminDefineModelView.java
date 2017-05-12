@@ -2,6 +2,7 @@ package com.autotaller.app.components.app_view.admin_view.admin_define_model_vie
 
 import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.utils.resources.NodeProvider;
+import com.autotaller.app.utils.resources.StyleProvider;
 import javafx.scene.Node;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
@@ -27,6 +28,8 @@ public class AdminDefineModelView extends IterableView implements AdminDefineMod
 
     borderPane.setCenter(NodeProvider.createScrollPane(vBox));
     vBox.prefWidthProperty().bind(borderPane.widthProperty());
+    mainContainer.getStyleClass().add(StyleProvider.GENERAL_PANE_BACKGROUND_CLASS);
+    vBox.getStyleClass().add(StyleProvider.GENERAL_PANE_BACKGROUND_CLASS);
   }
 
   @Override

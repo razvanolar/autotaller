@@ -16,7 +16,7 @@ public class AdminCarSubkitView extends AdminToolbarPane implements AdminCarSubk
   private TableView<CarSubkitModel> carSubkitModelTable;
 
   public AdminCarSubkitView() {
-    super("Sub-Ansamble", "Adauga Sub-Ansamblu", "Filtrare");
+    super("Sub-Ansamble", true, true);
     init();
   }
 

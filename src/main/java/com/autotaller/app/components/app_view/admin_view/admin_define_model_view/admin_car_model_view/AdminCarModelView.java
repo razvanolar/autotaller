@@ -23,7 +23,7 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
   private YearsPanelView yearsPanelView;
 
   public AdminCarModelView() {
-    super("Model", "Adauga Model", "Filtrare");
+    super("Model", true, true);
     init();
   }
 

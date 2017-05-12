@@ -9,12 +9,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
@@ -31,6 +29,8 @@ public class AdminToolbarPane implements View {
   protected SplitPane content;
 
   protected Button addButton;
+  protected Button editButton;
+  protected Button deleteButton;
   protected ToggleButton filterButton;
   private HBox imageContainer;
   private ImageView plusImageView;
@@ -40,8 +40,6 @@ public class AdminToolbarPane implements View {
   protected GridPane filterPane;
 
   private String title;
-  private String addButtonText;
-  private String filterButtonText;
 
   private Timeline showContentTimeline;
   private Timeline hideContentTimeline;
@@ -51,17 +49,18 @@ public class AdminToolbarPane implements View {
 
   private boolean showToolButtons;
 
-  public AdminToolbarPane(String title) {
-    this(title, null, null);
-  }
-
-  public AdminToolbarPane(String title, String addButtonText, String filterButtonText) {
+  public AdminToolbarPane(String title, boolean showToolButtons, boolean expandedByDefault) {
     this.title = title;
-    this.addButtonText = addButtonText;
-    this.filterButtonText = filterButtonText;
-    this.showToolButtons = addButtonText != null && filterButtonText != null;
+    this.showToolButtons = showToolButtons;
     init();
     initHandlers();
+
+    if (expandedByDefault) {
+      imageContainer.getChildren().clear();
+      mainContainer.getChildren().add(content);
+      imageContainer.getChildren().add(minusImageView);
+      getShowContentTimeline().play();
+    }
   }
 
   private void init() {
@@ -77,13 +76,20 @@ public class AdminToolbarPane implements View {
     Text textLabel = NodeProvider.createTextLabel(title, 16, false);
     HBox textContainer = new HBox(textLabel);
     textContainer.setPadding(new Insets(0, 0, 0, 20));
-    textContainer.setAlignment(Pos.CENTER);
+    textContainer.setAlignment(Pos.CENTER_LEFT);
+    textContainer.setPrefWidth(150);
 
     toolbarContainer = new HBox(textContainer);
     if (showToolButtons) {
-      addButton = new Button(addButtonText);
-      filterButton = new ToggleButton(filterButtonText);
-      toolbarContainer.getChildren().addAll(addButton, filterButton);
+      addButton = NodeProvider.createToolbarButton("Adauga", ImageProvider.addIcon());
+      editButton = NodeProvider.createToolbarButton("Editeaza", ImageProvider.editIcon());
+      deleteButton = NodeProvider.createToolbarButton("Sterge", ImageProvider.deleteIcon());
+      filterButton = NodeProvider.createToolbarToggleButton("Filtreaza", ImageProvider.filterIcon());
+      Separator separator1 = new Separator(Orientation.VERTICAL);
+      separator1.setPadding(new Insets(3, 0, 3, 0));
+      Separator separator2 = new Separator(Orientation.VERTICAL);
+      separator2.setPadding(new Insets(3, 0, 3, 0));
+      toolbarContainer.getChildren().addAll(separator1, addButton, editButton, deleteButton, separator2, filterButton);
     }
     toolbarContainer.getChildren().addAll(new FillToolItem(), imageContainer);
     toolbarContainer.setPrefHeight(35);
@@ -97,10 +103,7 @@ public class AdminToolbarPane implements View {
 
     mainContainer.setPadding(new Insets(5));
 
-    filterPane = new GridPane();
-    filterPane.setAlignment(Pos.CENTER);
-    filterPane.setVgap(10);
-    filterPane.setHgap(10);
+    filterPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
     StackPane content = new StackPane(filterPane);
     filterScrollPane = NodeProvider.createScrollPane(content, true);
   }

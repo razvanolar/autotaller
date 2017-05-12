@@ -20,7 +20,7 @@ public class AdminCarMakeView extends AdminToolbarPane implements AdminCarMakeCo
   private ScrollPane scrollPane;
 
   public AdminCarMakeView() {
-    super("Marca", "Adauga Marca", "Filtrare");
+    super("Marca", true, false);
     init();
   }
 

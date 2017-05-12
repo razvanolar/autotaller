@@ -215,6 +215,7 @@ public class NodeProvider {
   public static ScrollPane createScrollPane(Region content) {
     ScrollPane scrollPane = new ScrollPane(content) {public void requestFocus() {}};
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollPane.getStyleClass().add(StyleProvider.GENERAL_SCROLL_PANE_BACKGROUND_CLASS);
     return scrollPane;
   }
 

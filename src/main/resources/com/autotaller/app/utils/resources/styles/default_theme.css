@@ -75,6 +75,10 @@
     /*-fx-background-repeat: repeat;*/
 }
 
+.generalScrollPaneBackground > .viewport {
+    -fx-background-color: #eeeeee;
+}
+
 .maskViewBackground {
     -fx-background-color: rgba(50, 100, 100, 0.4);
 }
@@ -88,7 +92,8 @@
 }
 
 .adminToolbarPaneBackground {
-    -fx-background-color: rgba(8,52,112,0.5);
+    /*-fx-background-color: rgba(8,52,112,0.5);*/
+    -fx-background-color: rgba(8,52,112,0.4);
 }
 
 .adminToolbarPaneBackground:hover {

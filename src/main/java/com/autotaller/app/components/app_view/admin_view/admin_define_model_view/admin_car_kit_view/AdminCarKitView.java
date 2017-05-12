@@ -17,7 +17,7 @@ public class AdminCarKitView extends AdminToolbarPane implements AdminCarKitCont
   private TextField carKitNameField;
 
   public AdminCarKitView() {
-    super("Ansamble", "Adauga Ansamblu", "Filtrare");
+    super("Ansamble",true, true);
     init();
   }
 
