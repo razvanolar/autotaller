@@ -15,6 +15,11 @@ import java.util.List;
  */
 public class CarService extends GenericService {
 
+  private String ALL_CARS_QUERY = "SELECT c.id, c.model_id, c.name, c.produced_from, c.produced_to, c.kw, c.cilindrical_capacity, " +
+          "c.cilinders, c.description, cf.id, cf.name FROM cars c INNER JOIN car_fuels cf ON c.fuel_id = cf.id";
+
+  private String CARS_BY_CAR_TYPE_QUERY = ALL_CARS_QUERY + " WHERE c.model_id = ?";
+
   public CarService(JDBCUtil jdbcUtil) {
     super(jdbcUtil);
   }
@@ -22,16 +27,42 @@ public class CarService extends GenericService {
   public List<CarModel> getCars(SystemModelsDTO systemModelsDTO) throws Exception {
     Connection connection = null;
     PreparedStatement statement = null;
-    ResultSet rs = null;
     try {
       connection = jdbcUtil.getNewConnection();
       // Retrieving all the cars without engine and car type information; car type info will be retrieved from systemModelsDTO
       //  and engines info will be retrieved by separate calls for each car
-      String query = "SELECT c.id, c.model_id, c.name, c.produced_from, c.produced_to, c.kw, c.cilindrical_capacity, " +
-              "c.cilinders, c.description, cf.id, cf.name FROM cars c INNER JOIN car_fuels cf ON c.fuel_id = cf.id";
-      statement = connection.prepareStatement(query);
-      rs = statement.executeQuery();
+      statement = connection.prepareStatement(ALL_CARS_QUERY);
+      return getCarsFromStatement(connection, statement, systemModelsDTO);
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
 
+  public List<CarModel> getCarsByTypeId(int carTypeId, SystemModelsDTO systemModelsDTO) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      statement = connection.prepareStatement(CARS_BY_CAR_TYPE_QUERY);
+      statement.setInt(1, carTypeId);
+      return getCarsFromStatement(connection, statement, systemModelsDTO);
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
+
+  private List<CarModel> getCarsFromStatement(Connection connection, PreparedStatement statement, SystemModelsDTO systemModelsDTO) throws Exception {
+    ResultSet rs = null;
+    try {
+      rs = statement.executeQuery();
       List<CarModel> result = new ArrayList<>();
       while (rs.next()) {
         int carId = rs.getInt(1);
@@ -43,12 +74,8 @@ public class CarService extends GenericService {
                 rs.getString(9)));
       }
       return result;
-    } catch (Exception e) {
-      //TODO handle exception
-      e.printStackTrace();
-      throw e;
     } finally {
-      jdbcUtil.close(connection, statement, rs);
+      jdbcUtil.closeResultSet(rs);
     }
   }
 

@@ -140,6 +140,10 @@ public class Repository {
     return carService.getCars(getAllDefinedModels());
   }
 
+  public List<CarModel> getCarsByTypeId(int carTypeId) throws Exception {
+    return carService.getCarsByTypeId(carTypeId, getAllDefinedModels());
+  }
+
   public void addCar(CarModel car, List<CarComponentModel> components) throws Exception {
     carService.addCar(car, components);
   }

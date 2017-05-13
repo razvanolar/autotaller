@@ -294,9 +294,33 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         EventBus.fireEvent(new MaskViewEvent("Incarcare Componente"));
         Thread thread = new Thread(() -> {
           try {
-            List<CarComponentModel> result = repository.getCarComponentsByCarId(event.getCarId());
+            List<CarComponentModel> result = repository.getCarComponentsByCarId(event.getCarTypeId());
             Platform.runLater(() -> {
               event.getCallback().call(result);
+              EventBus.fireEvent(new UnmaskViewEvent());
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
+
+    EventBus.addHandler(GetCarsByTypeIdEvent.TYPE, (GetCarsByTypeIdEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Incarcare Masini"));
+        Thread thread = new Thread(() -> {
+          try {
+            List<CarModel> cars = repository.getCarsByTypeId(event.getCarTypeId());
+            Platform.runLater(() -> {
+              event.getCallback().call(cars);
               EventBus.fireEvent(new UnmaskViewEvent());
             });
           } catch (Exception e) {

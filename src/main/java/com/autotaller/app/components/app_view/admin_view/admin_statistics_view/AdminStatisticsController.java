@@ -6,6 +6,7 @@ import com.autotaller.app.components.utils.statistics.CarTypeStatisticsModel;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.admin_view.GetAllCarDefinedModelsEvent;
+import com.autotaller.app.events.app_view.admin_view.GetCarsByTypeIdEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEventHandler;
 import com.autotaller.app.events.app_view.admin_view.admin_statistics_view.GetCarTypeStatistics;
@@ -13,6 +14,7 @@ import com.autotaller.app.events.app_view.admin_view.admin_statistics_view.GetCa
 import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
 import com.autotaller.app.model.CarMakeModel;
+import com.autotaller.app.model.CarModel;
 import com.autotaller.app.model.simple_models.SimpleCarTypeModel;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.Repository;
@@ -21,8 +23,13 @@ import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.filters.car_model_filters.MultiCarModelMakeFilter;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 
 import java.util.Map;
 
@@ -32,6 +39,7 @@ import java.util.Map;
 public class AdminStatisticsController implements Controller<AdminStatisticsController.IAdminStatisticsView> {
 
   public interface IAdminStatisticsView extends View {
+    TableView<CarModel> getCarTable();
     FilterPanelView<CarMakeModel> getCarMakeFilter();
     BarChart<String, Number> getCarMakeBarChart();
   }
@@ -79,7 +87,7 @@ public class AdminStatisticsController implements Controller<AdminStatisticsCont
             series.setName(carMake.getName());
             Map<SimpleCarTypeModel, Integer> typesMap = map.get(carMakeId);
             for (SimpleCarTypeModel simpleType : typesMap.keySet()) {
-              XYChart.Data value = new XYChart.Data(simpleType.getCarTypeName(), typesMap.get(simpleType));
+              XYChart.Data value = new XYChart.Data(simpleType.getCarTypeName(), typesMap.get(simpleType), simpleType.getCarTypeId());
               series.getData().add(value);
             }
             data.add(series);
@@ -87,6 +95,35 @@ public class AdminStatisticsController implements Controller<AdminStatisticsCont
           }
         }
       }
+
+      EventHandler<MouseEvent> mouseEvent = event -> {
+        if (event.getSource() instanceof Node) {
+          Node node = (Node) event.getSource();
+          int carTypeId = (Integer) node.getUserData();
+          loadCarsByCarType(carTypeId);
+        }
+      };
+
+      for (XYChart.Series<String, Number> series : data) {
+        ObservableList<XYChart.Data<String, Number>> dt = series.getData();
+        for (XYChart.Data<String, Number> d : dt) {
+          Node node = d.getNode();
+          if (node != null) {
+            node.setUserData(d.getExtraValue());
+            node.setOnMouseClicked(mouseEvent);
+            Tooltip t = new Tooltip(d.getXValue() + "\n" + d.getYValue().intValue() + " inregistrari");
+            Tooltip.install(node, t);
+          }
+        }
+      }
+    }));
+  }
+
+  private void loadCarsByCarType(int carTypeId) {
+    EventBus.fireEvent(new GetCarsByTypeIdEvent(carTypeId, cars -> {
+      ObservableList<CarModel> items = view.getCarTable().getItems();
+      items.clear();
+      items.addAll(cars);
     }));
   }
 

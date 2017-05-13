@@ -11,16 +11,16 @@ public class GetCarComponentsByCarIdEvent extends Event<GetCarComponentsByCarIdE
 
   public static EventType<GetCarComponentsByCarIdEventHandler> TYPE = new EventType<>();
 
-  private int carId;
+  private int carTypeId;
   private LoadCarComponentsCallback callback;
 
-  public GetCarComponentsByCarIdEvent(int carId, LoadCarComponentsCallback callback) {
-    this.carId = carId;
+  public GetCarComponentsByCarIdEvent(int carTypeId, LoadCarComponentsCallback callback) {
+    this.carTypeId = carTypeId;
     this.callback = callback;
   }
 
-  public int getCarId() {
-    return carId;
+  public int getCarTypeId() {
+    return carTypeId;
   }
 
   public LoadCarComponentsCallback getCallback() {
