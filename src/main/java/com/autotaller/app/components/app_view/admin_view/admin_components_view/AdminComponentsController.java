@@ -3,6 +3,7 @@ package com.autotaller.app.components.app_view.admin_view.admin_components_view;
 import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
+import com.autotaller.app.events.app_view.admin_view.GetCarComponentsEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEventHandler;
@@ -30,7 +31,7 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     TableView<CarComponentModel> getCarComponentsTable();
   }
 
-  private int injectedCarId;
+  private int injectedCarId = -1;
   private IAdminComponentsView view;
 
   private List<CarComponentModel> carComponents;
@@ -47,11 +48,17 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
   }
 
   private void loadComponents() {
-    EventBus.fireEvent(new GetCarComponentsByCarIdEvent(injectedCarId, carComponents -> {
-      this.carComponents = carComponents;
-      ObservableList<CarComponentModel> items = view.getCarComponentsTable().getItems();
-      items.clear();
-      items.addAll(carComponents);
-    }));
+    if (injectedCarId <= 0) {
+      EventBus.fireEvent(new GetCarComponentsEvent(this::loadComponents));
+    } else {
+      EventBus.fireEvent(new GetCarComponentsByCarIdEvent(injectedCarId, this::loadComponents));
+    }
+  }
+
+  private void loadComponents(List<CarComponentModel> carComponents) {
+    this.carComponents = carComponents;
+    ObservableList<CarComponentModel> items = view.getCarComponentsTable().getItems();
+    items.clear();
+    items.addAll(carComponents);
   }
 }

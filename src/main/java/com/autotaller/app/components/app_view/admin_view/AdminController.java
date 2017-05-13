@@ -4,6 +4,7 @@ import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEventHandler;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEvent;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.Component;
@@ -46,6 +47,14 @@ public class AdminController implements Controller<AdminController.IAdminView> {
         EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
         EventBus.fireEvent(new BindLastViewEvent());
         EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
+      }
+    });
+
+    view.getAddComponentMenu().setOnMouseClicked(event -> {
+      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_COMPONENTS_VIEW);
+      if (component != null) {
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new BindLastViewEvent());
       }
     });
 

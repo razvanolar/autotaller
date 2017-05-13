@@ -19,15 +19,44 @@ public class CarComponentsService extends GenericService {
     super(jdbcUtil);
   }
 
+  public List<CarComponentModel> getCarComponents() throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      String query = "SELECT id, car_id, subkit_id, component_name, code, stock, description FROM car_components";
+      statement = connection.prepareStatement(query);
+      return getCarComponentsFromStatement(statement);
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
+
   public List<CarComponentModel> getComponentsByCarId(int carId) throws Exception {
     Connection connection = null;
     PreparedStatement statement = null;
-    ResultSet rs = null;
     try {
       connection = jdbcUtil.getNewConnection();
       String query = "SELECT id, car_id, subkit_id, component_name, code, stock, description FROM car_components WHERE car_id = ?";
       statement = connection.prepareStatement(query);
       statement.setInt(1, carId);
+      return getCarComponentsFromStatement(statement);
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
+
+  private List<CarComponentModel> getCarComponentsFromStatement(PreparedStatement statement) throws Exception {
+    ResultSet rs = null;
+    try {
       rs = statement.executeQuery();
       List<CarComponentModel> result = new ArrayList<>();
       while (rs.next()) {
@@ -36,12 +65,8 @@ public class CarComponentsService extends GenericService {
                 rs.getString(7)));
       }
       return result;
-    } catch (Exception e) {
-      //TODO handle exception
-      e.printStackTrace();
-      throw e;
     } finally {
-      jdbcUtil.close(connection, statement, rs);
+      jdbcUtil.closeResultSet(rs);
     }
   }
 }
