@@ -199,7 +199,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
         EventBus.fireEvent(new UnmaskViewEvent());
         NotificationsUtil.showErrorNotification("Eroare", "Masina nu a putut fi inregistrata", -1);
       }
-    });
+    }, true);
   }
 
   private void filterCars() {

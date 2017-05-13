@@ -50,6 +50,12 @@ public class JDBCUtil {
     closeConnection(connection);
   }
 
+  public void close(Connection connection, Statement statement, ResultSet resultSet) {
+    closeResultSet(resultSet);
+    closeStatement(statement);
+    closeConnection(connection);
+  }
+
   public void closeConnection(Connection connection) {
     closeConnection(connection, retry);
   }

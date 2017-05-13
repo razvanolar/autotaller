@@ -18,9 +18,17 @@ public class FilterPanelView<T> implements View {
   private FlowPane flowPane;
   private List<FilterView<T>> filterViews;
   private Filter<T> filter;
+  private int filterWidth = -1;
+  private int filterHeight = -1;
 
   public FilterPanelView(int width) {
     init(width);
+  }
+
+  public FilterPanelView(int width, int filterWidth, int filterHeight) {
+    this(width);
+    this.filterWidth = filterWidth;
+    this.filterHeight = filterHeight;
   }
 
   private void init(int flowPaneWidth) {
@@ -40,7 +48,7 @@ public class FilterPanelView<T> implements View {
     filterViews.clear();
 
     for (T value : values) {
-      FilterView<T> filterView = new FilterView<>(value, this);
+      FilterView<T> filterView = new FilterView<>(value, this, filterWidth, filterHeight);
       children.add(filterView.asNode());
       filterViews.add(filterView);
     }

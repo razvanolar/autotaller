@@ -20,19 +20,22 @@ public class FilterView<T> implements View {
 
   private boolean isSelected;
 
-  public FilterView(T value, FilterPanelView<T> listener) {
+  public FilterView(T value, FilterPanelView<T> listener, int width, int height) {
     this.value = value;
     this.listener = listener;
-    init();
+    init(width, height);
     initHandlers();
   }
 
-  private void init() {
+  private void init(int width, int height) {
     Text text = NodeProvider.createTextLabel(value.toString(), 11, false);
     panel = new HBox(text);
     panel.setAlignment(Pos.CENTER);
     panel.setPadding(new Insets(0, 5, 0, 5));
-
+    if (width > 0)
+      panel.setPrefWidth(width);
+    if (height > 0)
+      panel.setPrefHeight(height);
     setStyle();
   }
 

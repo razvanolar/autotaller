@@ -1,5 +1,6 @@
 package com.autotaller.app.repository;
 
+import com.autotaller.app.components.utils.statistics.CarTypeStatisticsModel;
 import com.autotaller.app.model.*;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.services.UserService;
@@ -19,6 +20,7 @@ public class Repository {
   private CarModelService carModelService;
   private CarKitsService carKitsService;
   private CarService carService;
+  private CarStatisticsService carStatisticsService;
   private CarUtilsService carUtilsService;
 
   private List<CarMakeModel> carMakesCache;
@@ -143,6 +145,15 @@ public class Repository {
 
 
   /*
+    CarStatisticsService
+   */
+  public CarTypeStatisticsModel getCarTypeStatistics() throws Exception {
+    return carStatisticsService.getCarTypeStatistics();
+  }
+
+
+
+  /*
     CarUtilsService
    */
 
@@ -180,6 +191,7 @@ public class Repository {
     carModelService = new CarModelService(jdbcUtil);
     carKitsService = new CarKitsService(jdbcUtil);
     carUtilsService = new CarUtilsService(jdbcUtil);
+    carStatisticsService = new CarStatisticsService(jdbcUtil);
     carService = new CarService(jdbcUtil);
 
     //init all the caches
