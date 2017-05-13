@@ -52,7 +52,7 @@ public class AdminStatisticsController implements Controller<AdminStatisticsCont
 
     EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> {
       loadDefinedModels();
-    });
+    }, true);
 
     initStatisticsHandlers();
   }

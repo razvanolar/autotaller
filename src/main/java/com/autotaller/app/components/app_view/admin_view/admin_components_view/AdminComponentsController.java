@@ -43,7 +43,7 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
 
     EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> {
       loadComponents();
-    });
+    }, true);
   }
 
   private void loadComponents() {

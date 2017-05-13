@@ -44,8 +44,8 @@ public class AdminStatisticsView extends IterableView implements AdminStatistics
     yAxis.setLabel("Masini inregistrate");
     carMakeFilter = new FilterPanelView<>(NodeProvider.DEFAULT_FIELD_WIDTH, 120, 40);
     carMakeBarChart = new BarChart<>(xAxis, yAxis);
-//    carMakeBarChart.setBarGap(3);
-//    carMakeBarChart.setCategoryGap(20);
+    carMakeBarChart.setBarGap(3);
+    carMakeBarChart.setCategoryGap(3);
 
     chartSplitPane = new SplitPane(carMakeFilter.asNode(), carMakeBarChart);
     chartSplitPane.setDividerPosition(0, chartSplitPaneLastDividerPosition);
