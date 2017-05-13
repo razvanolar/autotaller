@@ -76,6 +76,10 @@ public class ImageProvider {
     return getImage("icons/filter.png");
   }
 
+  public static Image componentsIcon() {
+    return getImage("icons/components.png");
+  }
+
   public static Image detailsIcon() {
     return getImage("icons/details.png");
   }

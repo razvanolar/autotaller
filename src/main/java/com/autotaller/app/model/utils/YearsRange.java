@@ -1,5 +1,8 @@
 package com.autotaller.app.model.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by razvanolar on 29.04.2017
  */
@@ -19,5 +22,12 @@ public class YearsRange {
 
   public int getMaxYear() {
     return maxYear;
+  }
+
+  public List<Integer> toList() {
+    List<Integer> result = new ArrayList<>();
+    for (int i = minYear; i <= maxYear; i++)
+      result.add(i);
+    return result;
   }
 }

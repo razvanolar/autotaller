@@ -1,7 +1,7 @@
 package com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_model_view;
 
 import com.autotaller.app.components.app_view.admin_view.util.AdminToolbarPane;
-import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_model_view.utils.YearsPanelView;
+import com.autotaller.app.components.app_view.admin_view.util.FilterPanelView;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.utils.resources.NodeProvider;
@@ -20,7 +20,7 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
   private DatePicker fromDatePicker;
   private DatePicker toDatePicker;
   private TextField engineTextField;
-  private YearsPanelView yearsPanelView;
+  private FilterPanelView<Integer> filterPanelView;
 
   public AdminCarModelView() {
     super("Model", true, true);
@@ -39,7 +39,7 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
     fromDatePicker = NodeProvider.createDatePicker(FIELD_WIDTH);
     toDatePicker = NodeProvider.createDatePicker(FIELD_WIDTH);
     engineTextField = NodeProvider.createTextField(FIELD_WIDTH);
-    yearsPanelView = new YearsPanelView(FIELD_WIDTH);
+    filterPanelView = new FilterPanelView<>(FIELD_WIDTH);
 
     filterPane.add(NodeProvider.createFormTextLabel("Marca: "), 0, 0);
     filterPane.add(carMakeCombo, 1, 0);
@@ -51,7 +51,7 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
     filterPane.add(toDatePicker, 1, 3);
     filterPane.add(NodeProvider.createFormTextLabel("Sasiu: "), 0, 4);
     filterPane.add(engineTextField, 1, 4);
-    filterPane.add(yearsPanelView.asNode(), 0, 5, 2, 1);
+    filterPane.add(filterPanelView.asNode(), 0, 5, 2, 1);
   }
 
   public Button getAddButton() {
@@ -86,8 +86,8 @@ public class AdminCarModelView extends AdminToolbarPane implements AdminCarModel
     return engineTextField;
   }
 
-  public YearsPanelView getYearsPanelView() {
-    return yearsPanelView;
+  public FilterPanelView<Integer> getFilterPanelView() {
+    return filterPanelView;
   }
 
   @Override

@@ -1,6 +1,7 @@
 package com.autotaller.app.utils.filters.car_model_filters;
 
 import com.autotaller.app.model.CarModel;
+import com.autotaller.app.utils.filters.Filter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,15 +11,16 @@ import java.util.List;
 /**
  * Created by razvanolar on 10.05.2017
  */
-public class CarModelYearFilter implements CarModelFilter {
+public class CarModelYearsFilter implements CarModelFilter, Filter<Integer> {
 
   private ObservableList<Integer> years;
 
-  public CarModelYearFilter() {
+  public CarModelYearsFilter() {
     years = FXCollections.observableList(new ArrayList<>());
   }
 
-  public ObservableList<Integer> getYears() {
+  @Override
+  public ObservableList<Integer> getFields() {
     return years;
   }
 

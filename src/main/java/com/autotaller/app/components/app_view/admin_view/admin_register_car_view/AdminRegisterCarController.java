@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class AdminRegisterCarController implements Controller<AdminRegisterCarController.IAdminRegisterCarView> {
 
-  private CarModelYearFilter carModelYearFilter;
+  private CarModelYearsFilter carModelYearsFilter;
   private CarModelMakeFilter carModelMakeFilter;
   private CarModelTypeFilter carModelTypeFilter;
   private CarModelNameFilter carModelNameFilter;
@@ -73,7 +73,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
   public void bind(IAdminRegisterCarView view) {
     this.view = view;
 
-    carModelYearFilter = new CarModelYearFilter();
+    carModelYearsFilter = new CarModelYearsFilter();
     carModelMakeFilter = new CarModelMakeFilter();
     carModelTypeFilter = new CarModelTypeFilter();
     carModelNameFilter = new CarModelNameFilter();
@@ -82,8 +82,8 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     carModelCilindersFilter = new CarModelCilindersFilter();
     carModelFuelFilter = new CarModelFuelFilter();
 
-    view.getFilterView().getYearsPanelView().setFilterObject(carModelYearFilter);
-    carModelYearFilter.getYears().addListener((ListChangeListener<Integer>) c -> filterCars());
+    view.getFilterView().getFilterPanelView().setFilterObject(carModelYearsFilter);
+    carModelYearsFilter.getFields().addListener((ListChangeListener<Integer>) c -> filterCars());
 
     view.getAddCarButton().setOnAction(event -> {
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_SAVE_CAR_VIEW);
@@ -146,7 +146,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> {
       this.repository = event.getRepository();
       initHandlers();
-    });
+    }, true);
 
     EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> {
       loadCars();
@@ -203,7 +203,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
   }
 
   private void filterCars() {
-    List<CarModel> cars = ModelFilter.filterCars(allCars, carModelYearFilter, carModelMakeFilter, carModelTypeFilter,
+    List<CarModel> cars = ModelFilter.filterCars(allCars, carModelYearsFilter, carModelMakeFilter, carModelTypeFilter,
             carModelNameFilter, carModelKWFilter, carModelCapacityFilter, carModelCilindersFilter, carModelFuelFilter);
     loadCars(cars);
   }

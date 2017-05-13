@@ -1,7 +1,7 @@
 package com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_model_view;
 
 import com.autotaller.app.EventBus;
-import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_model_view.utils.YearsPanelView;
+import com.autotaller.app.components.app_view.admin_view.util.FilterPanelView;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLoadCarMakesEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLoadCarMakesEventHandler;
@@ -30,7 +30,7 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
     DatePicker getFromDatePicker();
     DatePicker getToDatePicker();
     TextField getEngineTextField();
-    YearsPanelView getYearsPanelView();
+    FilterPanelView<Integer> getFilterPanelView();
   }
 
   private IAdminCarModelView view;
@@ -77,7 +77,7 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
     view.getCarMakeCombo().setValue(selectedCarMake != null ? selectedCarMake : allCarMakesItem);
 
 
-    view.getYearsPanelView().showYearPanels(getYearsRange());
+    view.getFilterPanelView().showFilterPanels(getYearsRange().toList());
   }
 
   private YearsRange getYearsRange() {

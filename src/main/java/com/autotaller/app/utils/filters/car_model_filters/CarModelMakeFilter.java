@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Used when we have to filter only by one car make. (i.e. in a combo box)
  * Created by razvanolar on 11.05.2017
  */
 public class CarModelMakeFilter implements CarModelFilter {

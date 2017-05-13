@@ -43,7 +43,7 @@ public class AdminDefineModelController implements Controller<AdminDefineModelCo
     EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> {
       this.repository = event.getRepository();
       initRepoHandlers();
-    });
+    }, true);
 
     EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> {
       loadCarMakes();

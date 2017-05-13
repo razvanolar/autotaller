@@ -10,6 +10,7 @@ import com.autotaller.app.components.app_view.admin_view.admin_define_model_view
 import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_subkit_view.AdminCarSubkitController;
 import com.autotaller.app.components.app_view.admin_view.admin_register_car_view.AdminRegisterCarController;
 import com.autotaller.app.components.app_view.admin_view.admin_register_car_view.AdminSaveCarController;
+import com.autotaller.app.components.app_view.admin_view.admin_statistics_view.AdminStatisticsController;
 import com.autotaller.app.components.login_view.login.LoginController;
 import com.autotaller.app.components.login_view.sign_up.SignUpController;
 import com.autotaller.app.utils.ComponentType;
@@ -46,6 +47,8 @@ public class ControllerFactory {
         return new AdminRegisterCarController();
       case ADMIN_SAVE_CAR_VIEW:
         return new AdminSaveCarController();
+      case ADMIN_STATISTICS_VIEW:
+        return new AdminStatisticsController();
     }
     return null;
   }

@@ -6,7 +6,6 @@ import com.autotaller.app.model.CarModel;
 import com.autotaller.app.utils.resources.ImageProvider;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 
@@ -24,6 +23,7 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
   private Button deleteCarButton;
   private ToggleButton showFilterCarButton;
   private Button carDetailsButton;
+  private Button componentsButton;
 
   private double lastFilterDividerPosition = 0.30;
 
@@ -37,6 +37,7 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
     deleteCarButton = NodeProvider.createToolbarButton("Sterge", ImageProvider.deleteIcon());
     showFilterCarButton = NodeProvider.createToolbarToggleButton("Filtreaza", ImageProvider.filterIcon());
     carDetailsButton = NodeProvider.createToolbarButton("Detalii", ImageProvider.detailsIcon());
+    componentsButton = NodeProvider.createToolbarButton("Componente", ImageProvider.componentsIcon());
 
     toolBar.getItems().addAll(
             new Separator(),
@@ -45,7 +46,8 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
             deleteCarButton,
             new Separator(),
             showFilterCarButton,
-            carDetailsButton
+            carDetailsButton,
+            componentsButton
     );
 
     filterView = new DefaultCarFilterView();

@@ -22,6 +22,7 @@ public class AdminController implements Controller<AdminController.IAdminView> {
     Node getDefineModelMenu();
     Node getAddCarMenu();
     Node getAddComponentMenu();
+    Node getStatisticsComponentMenu();
     Node getManageUsersMenu();
   }
 
@@ -48,6 +49,13 @@ public class AdminController implements Controller<AdminController.IAdminView> {
       }
     });
 
-    EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> this.repository = event.getRepository());
+    view.getStatisticsComponentMenu().setOnMouseClicked(event -> {
+      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_STATISTICS_VIEW);
+      if (component != null) {
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+      }
+    });
+
+    EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> this.repository = event.getRepository(), true);
   }
 }
