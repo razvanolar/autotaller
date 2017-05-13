@@ -3,6 +3,8 @@ package com.autotaller.app;
 import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.events.app_view.admin_view.*;
 import com.autotaller.app.events.app_view.ShowAppViewEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEventHandler;
 import com.autotaller.app.events.login_view.*;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
@@ -282,6 +284,30 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         thread.start();
       } catch (Exception e) {
         //TODO show error dialog
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
+
+    EventBus.addHandler(GetCarComponentsByCarIdEvent.TYPE, (GetCarComponentsByCarIdEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Incarcare Componente"));
+        Thread thread = new Thread(() -> {
+          try {
+            List<CarComponentModel> result = repository.getCarComponentsByCarId(event.getCarId());
+            Platform.runLater(() -> {
+              event.getCallback().call(result);
+              EventBus.fireEvent(new UnmaskViewEvent());
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }

@@ -9,6 +9,7 @@ import com.autotaller.app.events.app_view.admin_view.GetAllCarDefinedModelsEvent
 import com.autotaller.app.events.app_view.admin_view.GetCarsEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEventHandler;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEventHandler;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
@@ -56,6 +57,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     Button getDeleteCarButton();
     ToggleButton getShowFilterCarButton();
     Button getCarDetailsButton();
+    Button getComponentsButton();
     void showFilterPane();
     void hideFilterPane();
   }
@@ -89,6 +91,18 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_SAVE_CAR_VIEW);
       if (component != null) {
         EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new BindLastViewEvent());
+      }
+    });
+
+    view.getComponentsButton().setOnAction(event -> {
+      CarModel selectedCar = view.getCarTable().getSelectionModel().getSelectedItem();
+      if (selectedCar == null)
+        return;
+      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_COMPONENTS_VIEW);
+      if (component != null) {
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new InjectCarInformationEvent(selectedCar.getId()));
         EventBus.fireEvent(new BindLastViewEvent());
       }
     });

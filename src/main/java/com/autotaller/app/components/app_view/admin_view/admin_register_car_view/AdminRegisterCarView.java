@@ -88,6 +88,10 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
     return carDetailsButton;
   }
 
+  public Button getComponentsButton() {
+    return componentsButton;
+  }
+
   public void showFilterPane() {
     ObservableList<Node> items = splitPane.getItems();
     if (!items.contains(filterScrollPane)) {

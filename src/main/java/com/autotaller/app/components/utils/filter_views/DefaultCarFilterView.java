@@ -5,6 +5,7 @@ import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.model.FuelModel;
 import com.autotaller.app.model.utils.YearsRange;
+import com.autotaller.app.utils.StringValidator;
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.resources.NodeProvider;
 import com.autotaller.app.utils.resources.StyleProvider;
@@ -43,6 +44,7 @@ public class DefaultCarFilterView implements View {
 
   public DefaultCarFilterView() {
     init();
+    initHandlers();
   }
 
   private void init() {
@@ -113,6 +115,24 @@ public class DefaultCarFilterView implements View {
     gridPane.add(frameButtonContainer, 0, row++, 2, 1);
   }
 
+  private void initHandlers() {
+    addSpinnerHandler(kwFromSpinner, 0, 1000);
+    addSpinnerHandler(kwToSpinner, 0, 1000);
+    addSpinnerHandler(capacityFromSpinner, 0, 10000);
+    addSpinnerHandler(capacityToSpinner, 0, 10000);
+    addSpinnerHandler(cilindersSpinner, 0, 50);
+  }
+
+  private void addSpinnerHandler(Spinner<Integer> spinner, int from, int to) {
+    spinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+      if (StringValidator.isPositiveInteger(newValue)) {
+        int val = Integer.parseInt(newValue);
+        if (from <= val && val <= to)
+          spinner.getValueFactory().setValue(val);
+      }
+    });
+  }
+
   private HBox createSeparator() {
     HBox hBox = new HBox();
     hBox.setPrefHeight(8);
@@ -120,7 +140,7 @@ public class DefaultCarFilterView implements View {
     return hBox;
   }
 
-  public FilterPanelView getFilterPanelView() {
+  public FilterPanelView<Integer> getFilterPanelView() {
     return filterPanelView;
   }
 

@@ -20,6 +20,7 @@ public class Repository {
   private CarModelService carModelService;
   private CarKitsService carKitsService;
   private CarService carService;
+  private CarComponentsService carComponentsService;
   private CarStatisticsService carStatisticsService;
   private CarUtilsService carUtilsService;
 
@@ -145,6 +146,15 @@ public class Repository {
 
 
   /*
+    CarComponentsService
+   */
+  public List<CarComponentModel> getCarComponentsByCarId(int carId) throws Exception {
+    return carComponentsService.getComponentsByCarId(carId);
+  }
+
+
+
+  /*
     CarStatisticsService
    */
   public CarTypeStatisticsModel getCarTypeStatistics() throws Exception {
@@ -193,6 +203,7 @@ public class Repository {
     carUtilsService = new CarUtilsService(jdbcUtil);
     carStatisticsService = new CarStatisticsService(jdbcUtil);
     carService = new CarService(jdbcUtil);
+    carComponentsService = new CarComponentsService(jdbcUtil);
 
     //init all the caches
     getAllDefinedModels();
