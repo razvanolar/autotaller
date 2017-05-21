@@ -15,6 +15,21 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 public class TableProvider {
 
   @SuppressWarnings("unchecked")
+  public TableView<CarMakeModel> createCarMakeTable() {
+    TableView<CarMakeModel> table = new TableView<>();
+    TableColumn<CarMakeModel, String> nameColumn = new TableColumn<>("Nume Marca");
+
+    nameColumn.prefWidthProperty().bind(table.widthProperty());
+
+    nameColumn.setCellValueFactory(p -> new SimpleStringProperty(p.getValue() != null ? p.getValue().getName() : ""));
+
+    nameColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+
+    table.getColumns().add(nameColumn);
+    return table;
+  }
+
+  @SuppressWarnings("unchecked")
   public TableView<CarTypeModel> createCarModelTable() {
     TableView<CarTypeModel> table = new TableView<>();
     TableColumn<CarTypeModel, String> nameColumn = new TableColumn<>("Nume Model");

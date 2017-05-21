@@ -25,6 +25,7 @@ import com.jfoenix.controls.JFXDialog;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -41,6 +42,7 @@ public class AutoTallerApplication extends Application {
   private Scene primaryScene;
   private StackPane stackContainer;
   private BorderPane primaryContainer;
+  private HBox footerPane;
 
   private Stack<View> viewStack;
 
@@ -56,6 +58,9 @@ public class AutoTallerApplication extends Application {
     loadingScreenScene.getStylesheets().add(defaultThemePath);
 
     primaryContainer = new BorderPane();
+    footerPane = new HBox();
+    footerPane.setPrefHeight(25);
+    primaryContainer.setBottom(footerPane);
     stackContainer = new StackPane(primaryContainer);
     primaryScene = new Scene(stackContainer, 700, 400);
     primaryScene.getStylesheets().add(defaultThemePath);

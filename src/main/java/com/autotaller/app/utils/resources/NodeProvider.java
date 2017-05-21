@@ -156,7 +156,7 @@ public class NodeProvider {
   public static Text createTextLabel(String text, int fontSize, boolean isLink) {
     Text textLabel = new Text(text);
     if (fontSize >= 0)
-      textLabel.setFont(new Font(15));
+      textLabel.setFont(new Font(fontSize));
     textLabel.getStyleClass().add(StyleProvider.DEFAULT_TEXT_COLOR_CLASS);
     if (isLink)
       textLabel.getStyleClass().add(StyleProvider.DEFAULT_LINK_HOVER_CLASS);
@@ -235,6 +235,10 @@ public class NodeProvider {
     gridPane.setVgap(vGap);
     gridPane.getStyleClass().add(StyleProvider.GENERAL_PANE_BACKGROUND_CLASS);
     return gridPane;
+  }
+
+  public static TableView<CarMakeModel> createCarMakeTable() {
+    return TABLE_PROVIDER.createCarMakeTable();
   }
 
   public static TableView<CarTypeModel> createCarModelTable() {

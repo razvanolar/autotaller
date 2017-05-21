@@ -1,23 +1,23 @@
 package com.autotaller.app.events.app_view.admin_view;
 
-import com.autotaller.app.utils.callbacks.LoadAllDefinedModelsCallback;
+import com.autotaller.app.utils.callbacks.LoadAllCarDefinedModelsCallback;
 import com.autotaller.app.utils.event.Event;
 import com.autotaller.app.utils.event.EventType;
 
 /**
- * Created by razvanolar on 05.05.2017
+ * Created by razvanolar on 14.05.2017
  */
 public class GetAllCarDefinedModelsEvent extends Event<GetAllCarDefinedModelsEventHandler> {
 
   public static EventType<GetAllCarDefinedModelsEventHandler> TYPE = new EventType<>();
 
-  private LoadAllDefinedModelsCallback callback;
+  private LoadAllCarDefinedModelsCallback callback;
 
-  public GetAllCarDefinedModelsEvent(LoadAllDefinedModelsCallback callback) {
+  public GetAllCarDefinedModelsEvent(LoadAllCarDefinedModelsCallback callback) {
     this.callback = callback;
   }
 
-  public LoadAllDefinedModelsCallback getCallback() {
+  public LoadAllCarDefinedModelsCallback getCallback() {
     return callback;
   }
 
@@ -28,6 +28,6 @@ public class GetAllCarDefinedModelsEvent extends Event<GetAllCarDefinedModelsEve
 
   @Override
   public void dispatch(GetAllCarDefinedModelsEventHandler handler) {
-    handler.onGetAlCarDefinedModelsEvent(this);
+    handler.onGetAllCarDefinedModelsEvent(this);
   }
 }

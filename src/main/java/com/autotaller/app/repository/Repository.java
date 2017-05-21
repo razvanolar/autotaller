@@ -2,6 +2,7 @@ package com.autotaller.app.repository;
 
 import com.autotaller.app.components.utils.statistics.CarTypeStatisticsModel;
 import com.autotaller.app.model.*;
+import com.autotaller.app.model.utils.CarDefinedModelsDTO;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.services.UserService;
 import com.autotaller.app.repository.services.cars.*;
@@ -192,6 +193,10 @@ public class Repository {
             getCarModels(),
             getCarFuels()
     );
+  }
+
+  public CarDefinedModelsDTO getCarDefinedModels() throws Exception {
+    return new CarDefinedModelsDTO(getAllCarMakes(), getCarModels(), getCarFuels());
   }
 
 

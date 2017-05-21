@@ -13,6 +13,7 @@ import com.autotaller.app.events.test_connection.TestConnectionEventHandler;
 import com.autotaller.app.events.test_connection.TestConnectionFailedEvent;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.model.*;
+import com.autotaller.app.model.utils.CarDefinedModelsDTO;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.*;
@@ -241,7 +242,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
       }
     });
 
-    EventBus.addHandler(GetAllCarDefinedModelsEvent.TYPE, (GetAllCarDefinedModelsEventHandler) event -> {
+    EventBus.addHandler(GetAllSystemDefinedModelsEvent.TYPE, (GetAllSystemDefinedModelsEventHandler) event -> {
       try {
         EventBus.fireEvent(new MaskViewEvent("Incarcare Model"));
         Thread thread = new Thread(() -> {
@@ -260,6 +261,29 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         thread.start();
       } catch (Exception e) {
         //TODO show error dialog
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
+
+    EventBus.addHandler(GetAllCarDefinedModelsEvent.TYPE, (GetAllCarDefinedModelsEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Incarcare metrici sistem"));
+        Thread thread = new Thread(() -> {
+          try {
+            CarDefinedModelsDTO carDefinedModels = repository.getCarDefinedModels();
+            Platform.runLater(() -> {
+              event.getCallback().call(carDefinedModels);
+              EventBus.fireEvent(new UnmaskViewEvent());
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }

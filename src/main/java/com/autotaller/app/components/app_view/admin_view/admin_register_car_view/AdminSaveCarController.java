@@ -7,17 +7,21 @@ import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetAllCarDefinedModelsEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEvent;
-import com.autotaller.app.model.*;
-import com.autotaller.app.model.utils.SystemModelsDTO;
+import com.autotaller.app.events.view_stack.BackToPreviousViewEvent;
+import com.autotaller.app.model.CarMakeModel;
+import com.autotaller.app.model.CarModel;
+import com.autotaller.app.model.CarTypeModel;
+import com.autotaller.app.model.FuelModel;
+import com.autotaller.app.model.utils.CarDefinedModelsDTO;
 import com.autotaller.app.utils.Controller;
-import com.autotaller.app.utils.filters.ModelFilter;
 import com.autotaller.app.utils.StringValidator;
 import com.autotaller.app.utils.View;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,206 +30,159 @@ import java.util.List;
 public class AdminSaveCarController implements Controller<AdminSaveCarController.IAdminSaveCarView> {
 
   public interface IAdminSaveCarView extends View {
-    Button getSaveCarButton();
-    ComboBox<CarMakeModel> getCarMakesCombo();
-    ComboBox<CarTypeModel> getCarTypesCombo();
-    ComboBox<FuelModel> getFuelCombo();
-    ComboBox<CarKitCategoryModel> getCarKitCategoryCombo();
-    ComboBox<CarKitModel> getCarKitCombo();
-    ComboBox<CarSubkitModel> getCarSubkitCombo();
+    TableView<CarMakeModel> getCarMakesTable();
+    TableView<CarTypeModel> getCarTypesTable();
+    Node getSaveCarForm();
+    Node getCarImagesPane();
+    Button getContinueButton();
+    Button getBackButton();
+    void setActiveNode(Node node);
+    Node getActiveNode();
+    Text getPathText();
+    Text getCarMakeText();
+    Text getCarTypeText();
     TextField getCarNameField();
-    DatePicker getFromDatePicker();
-    DatePicker getToDatePicker();
-    Spinner<Integer> getKwSpinner();
-    Spinner<Integer> getCapCilSpinner();
-    Spinner<Integer> getCilindersSpinner();
-    TextField getEngineField();
-    TextArea getCarDescriptionTextArea();
-    Text getAddComponentsLink();
-    TableView<CarComponentModel> getComponentsTable();
-    TextField getComponentNameTextField();
-    TextField getComponentCodeTextField();
-    TextField getComponentStockTextField();
-    TextArea getComponentDescriptionTextArea();
-    TextField getComponentImageTextField();
-    Button getComponentImageAddButton();
-    Button getComponentAddButton();
-    void showComponentsView();
-    void hideComponentsView();
+    DatePicker getProducedFromPicker();
+    DatePicker getProducedToPicker();
+    DatePicker getProductionYearPicker();
+    TextField getCarKmField();
+    Spinner<Integer> getCarKwSpinner();
+    Spinner<Integer> getCarCapacitySpinner();
+    Spinner<Integer> getCarCylindersSpinner();
+    ComboBox<FuelModel> getCarFuelCombo();
   }
 
   private IAdminSaveCarView view;
+  private CarDefinedModelsDTO carSystemModels;
 
-  private SystemModelsDTO systemModelsDTO;
-
-  private CarKitCategoryModel allCarKitCategory = new CarKitCategoryModel(-1, "--Toate--");
-  private CarKitModel allCarKit = new CarKitModel(-1, "--Toate--", allCarKitCategory);
+  private CarMakeModel selectedCarMake;
+  private CarTypeModel selectedCarType;
 
   @Override
   public void bind(IAdminSaveCarView view) {
     this.view = view;
 
-    view.getAddComponentsLink().setOnMouseClicked(event -> {
-      view.showComponentsView();
-    });
-
-    // Car Make combo selection
-    view.getCarMakesCombo().valueProperty().addListener((observable, oldValue, newValue) -> populateCarModelsCombo(newValue));
-
-    // Car Kit Category selection
-    view.getCarKitCategoryCombo().valueProperty().addListener((observable, oldValue, newValue) -> populateCarKitsCombo(newValue));
-
-    // Car Kit selection
-    view.getCarKitCombo().valueProperty().addListener((observable, oldValue, newValue) -> populateCarSubkitsCombo(newValue));
-
-    // Car Fuel selection
-    view.getFuelCombo().valueProperty().addListener((observable, oldValue, newValue) -> fuelSelectionChanged(newValue));
-
-    setSpinnerValueListener(view.getKwSpinner());
-    setSpinnerValueListener(view.getCapCilSpinner());
-    setSpinnerValueListener(view.getCilindersSpinner());
-
-    // Add Car Component Selection
-    view.getComponentAddButton().setOnAction(event -> {
-      CarComponentModel carComponent = collectComponent();
-      if (carComponent != null) {
-        view.getComponentsTable().getItems().add(carComponent);
-      } else {
-        EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Unele campuri obligatorii nu sunt completate")));
+    view.getContinueButton().setOnAction(event -> {
+      Node activeNode = view.getActiveNode();
+      if (activeNode == view.getCarMakesTable()) {
+        continueAfterCarMakeSelection();
+      } else if (activeNode == view.getCarTypesTable()) {
+        continueAfterCarTypeSelection();
+      } else if (activeNode == view.getSaveCarForm()) {
+        continueAfterSaveCarForm();
       }
     });
 
-    // Save Car selection
-    view.getSaveCarButton().setOnAction(event -> {
-      CarModel car = collectCar();
-      if (car != null) {
-        ArrayList<CarComponentModel> components = new ArrayList<>(view.getComponentsTable().getItems());
-        EventBus.fireEvent(new AddCarEvent(car, components));
-      } else {
-        EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Unele campuri obligatorii nu sunt completate")));
+    view.getBackButton().setOnAction(event -> {
+      Node activeNode = view.getActiveNode();
+      if (activeNode == view.getCarMakesTable()) {
+        EventBus.fireEvent(new BackToPreviousViewEvent());
+      } else if (activeNode == view.getCarTypesTable()) {
+        backFromCarTypeView();
+      } else if (activeNode == view.getSaveCarForm()) {
+        backFromSaveCarFormView();
       }
     });
 
-    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> EventBus.fireEvent(new GetAllCarDefinedModelsEvent(models -> {
-      systemModelsDTO = models;
-
-      List<CarMakeModel> carMakes = models.getCarMakes();
-      if (carMakes != null && !carMakes.isEmpty()) {
-        view.getCarMakesCombo().getItems().addAll(carMakes);
-        view.getCarMakesCombo().setValue(carMakes.get(0));
-        populateCarModelsCombo(carMakes.get(0));
-      }
-
-      List<CarKitCategoryModel> carKitCategories = new ArrayList<>(models.getCarKitCategories());
-      carKitCategories.add(0, allCarKitCategory);
-      view.getCarKitCategoryCombo().getItems().addAll(carKitCategories);
-      view.getCarKitCategoryCombo().setValue(carKitCategories.get(0));
-      populateCarKitsCombo(carKitCategories.get(0));
-
-      List<FuelModel> fuels = models.getFuels();
-      if (fuels != null && !fuels.isEmpty()) {
-        view.getFuelCombo().getItems().addAll(fuels);
-        view.getFuelCombo().setValue(fuels.get(0));
-        fuelSelectionChanged(fuels.get(0));
-      }
+    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> EventBus.fireEvent(new GetAllCarDefinedModelsEvent(carModelsDTO -> {
+      this.carSystemModels = carModelsDTO;
+      ObservableList<CarMakeModel> items = view.getCarMakesTable().getItems();
+      items.clear();
+      items.addAll(carSystemModels.getCarMakes());
     })), true);
   }
 
+  private void continueAfterCarMakeSelection() {
+    CarMakeModel selectedMake = view.getCarMakesTable().getSelectionModel().getSelectedItem();
+    if (selectedMake != null) {
+      List<CarTypeModel> carTypes = carSystemModels.getCarTypesByMake(selectedMake);
+      if (carTypes != null && !carTypes.isEmpty()) {
+        selectedCarMake = selectedMake;
+        ObservableList<CarTypeModel> items = view.getCarTypesTable().getItems();
+        items.clear();
+        items.addAll(carTypes);
+        view.setActiveNode(view.getCarTypesTable());
+        setPathInfo();
+      } else {
+        EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Nu exista" +
+                "nici un model definit pentru marca " + selectedMake.getName())));
+      }
+    } else {
+      EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Selecteaza" +
+              " o marca pentru a putea continua adaugarea")));
+    }
+  }
+
+  private void continueAfterCarTypeSelection() {
+    CarTypeModel selectedType = view.getCarTypesTable().getSelectionModel().getSelectedItem();
+    if (selectedType != null) {
+      selectedCarType = selectedType;
+      view.setActiveNode(view.getSaveCarForm());
+      setPathInfo();
+      view.getCarMakeText().setText(selectedCarMake.getName());
+      view.getCarTypeText().setText(selectedCarType.getName());
+      view.getProducedFromPicker().setValue(selectedCarType.getFrom());
+      view.getProducedToPicker().setValue(selectedCarType.getTo());
+      ObservableList<FuelModel> fuels = view.getCarFuelCombo().getItems();
+      if (fuels.isEmpty()) {
+        fuels.addAll(carSystemModels.getFuels());
+        view.getCarFuelCombo().setValue(carSystemModels.getFuels().get(0));
+      }
+    } else {
+      EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Selecteaza" +
+              " un model pentru a putea continua adaugarea")));
+    }
+  }
+
+  private void continueAfterSaveCarForm() {
+    CarModel car = collectCar();
+    if (car == null) {
+      EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Nu toate campurile obligatorii sunt completate")));
+      return;
+    }
+    EventBus.fireEvent(new AddCarEvent(car, null));
+  }
+
+  private void backFromCarTypeView() {
+    selectedCarMake = null;
+    selectedCarType = null;
+    view.setActiveNode(view.getCarMakesTable());
+    setPathInfo();
+  }
+
+  private void backFromSaveCarFormView() {
+    selectedCarType = null;
+    view.setActiveNode(view.getCarTypesTable());
+    setPathInfo();
+  }
+
+  private void setPathInfo() {
+    String text = "> ";
+    if (selectedCarMake != null) {
+      text += selectedCarMake.getName();
+    }
+    if (selectedCarMake != null && selectedCarType != null) {
+      text += " > " + selectedCarType.getName();
+    }
+    view.getPathText().setText(text);
+  }
+
   private CarModel collectCar() {
-    CarTypeModel carType = view.getCarTypesCombo().getValue();
     String carName = view.getCarNameField().getText();
-    LocalDate carFrom = view.getFromDatePicker().getValue();
-    LocalDate carTo = view.getToDatePicker().getValue();
-    Integer carKW = view.getKwSpinner().getValue();
-    Integer carCapacity = view.getCapCilSpinner().getValue();
-    Integer carCilinders = view.getCilindersSpinner().getValue();
-    String carEngineCode = view.getEngineField().getText();
-    FuelModel carFuel = view.getFuelCombo().getValue();
-
-    if (carType == null || carFrom == null || carTo == null || carKW == null || carCapacity == null || carCilinders == null
-            || carFuel == null || StringValidator.isNullOrEmpty(carName) || StringValidator.isNullOrEmpty(carEngineCode)) {
+    LocalDate prodYear = view.getProductionYearPicker().getValue();
+    LocalDate prodFrom = view.getProducedFromPicker().getValue();
+    LocalDate prodTo = view.getProducedToPicker().getValue();
+    Integer carKW = view.getCarKwSpinner().getValue();
+    Integer carCapacity = view.getCarCapacitySpinner().getValue();
+    Integer carCylinders = view.getCarCylindersSpinner().getValue();
+    FuelModel carFuel = view.getCarFuelCombo().getValue();
+    if (selectedCarMake == null || selectedCarType == null || StringValidator.isNullOrEmpty(carName) ||
+            prodYear == null || prodFrom == null || prodTo == null ||
+            !StringValidator.isPositiveInteger(view.getCarKmField().getText()) || carKW == null || carCapacity == null ||
+            carCylinders == null || carFuel == null) {
       return null;
     }
 
-    String[] split = carEngineCode.trim().split(",");
-    List<String> engines = new ArrayList<>(split.length);
-    for (String s : split)
-      engines.add(s.trim());
-    return new CarModel(-1, carType, carName, carFrom, carTo, carKW, carCapacity, carCilinders, engines, carFuel,
-            view.getCarDescriptionTextArea().getText());
-  }
-
-  private CarComponentModel collectComponent() {
-    CarSubkitModel carSubkit = view.getCarSubkitCombo().getValue();
-    String componentName = view.getComponentNameTextField().getText();
-    String componentCode = view.getComponentCodeTextField().getText();
-    String componentStock = view.getComponentStockTextField().getText();
-    if (carSubkit == null || StringValidator.isNullOrEmpty(componentName) || StringValidator.isNullOrEmpty(componentCode)
-            || StringValidator.isNullOrEmpty(componentStock)) {
-      return null;
-    }
-    return new CarComponentModel(-1, -1, carSubkit.getId(), componentName, componentCode, componentStock, view.getComponentDescriptionTextArea().getText());
-  }
-
-  private void populateCarModelsCombo(CarMakeModel carMake) {
-    if (carMake != null && systemModelsDTO != null) {
-      List<CarTypeModel> carTypes = systemModelsDTO.getCarTypesByMake(carMake);
-      view.getCarTypesCombo().getItems().clear();
-      if (!carTypes.isEmpty()) {
-        view.getCarTypesCombo().getItems().addAll(carTypes);
-        view.getCarTypesCombo().setValue(carTypes.get(0));
-      } else {
-        view.getCarTypesCombo().setValue(null);
-      }
-    }
-  }
-
-  private void populateCarKitsCombo(CarKitCategoryModel carKitCategory) {
-    if (carKitCategory != null && systemModelsDTO != null) {
-      List<CarKitModel> carKits;
-      if (carKitCategory.getId() == -1) {
-        carKits = new ArrayList<>(systemModelsDTO.getCarKits());
-        carKits.add(0, allCarKit);
-      } else {
-        carKits = systemModelsDTO.getCarKitByCategory(carKitCategory);
-      }
-      view.getCarKitCombo().getItems().clear();
-      if (!carKits.isEmpty()) {
-        view.getCarKitCombo().getItems().addAll(carKits);
-        view.getCarKitCombo().setValue(carKits.get(0));
-      } else {
-        view.getCarKitCombo().setValue(null);
-      }
-    }
-  }
-
-  private void populateCarSubkitsCombo(CarKitModel carKit) {
-    if (carKit != null && systemModelsDTO != null) {
-      List<CarSubkitModel> carSubkits;
-      if (carKit.getId() == -1) {
-        carSubkits = new ArrayList<>(systemModelsDTO.getCarSubkits());
-      } else {
-        carSubkits = ModelFilter.filterCarSubkitsByKit(carKit);
-      }
-      view.getCarSubkitCombo().getItems().clear();
-      if (!carSubkits.isEmpty()) {
-        view.getCarSubkitCombo().getItems().addAll(carSubkits);
-        view.getCarSubkitCombo().setValue(carSubkits.get(0));
-      } else {
-        view.getCarSubkitCombo().setValue(null);
-      }
-    }
-  }
-
-  private void fuelSelectionChanged(FuelModel fuel) {
-
-  }
-
-  private void setSpinnerValueListener(Spinner<Integer> spinner) {
-    spinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-      if (StringValidator.isPositiveInteger(newValue)) {
-        spinner.getValueFactory().setValue(Integer.parseInt(newValue));
-      }
-    });
+    return new CarModel(-1, selectedCarType, carName, prodFrom, prodTo, carKW, carCapacity, carCylinders, null, carFuel, null);
   }
 }

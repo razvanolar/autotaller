@@ -5,7 +5,7 @@ import com.autotaller.app.components.app_view.admin_view.util.FilterPanelView;
 import com.autotaller.app.components.utils.statistics.CarTypeStatisticsModel;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
-import com.autotaller.app.events.app_view.admin_view.GetAllCarDefinedModelsEvent;
+import com.autotaller.app.events.app_view.admin_view.GetAllSystemDefinedModelsEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarsByTypeIdEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEventHandler;
@@ -66,7 +66,7 @@ public class AdminStatisticsController implements Controller<AdminStatisticsCont
   }
 
   private void loadDefinedModels() {
-    EventBus.fireEvent(new GetAllCarDefinedModelsEvent(models -> {
+    EventBus.fireEvent(new GetAllSystemDefinedModelsEvent(models -> {
       this.modelsDTO = models;
       this.view.getCarMakeFilter().showFilterPanels(models.getCarMakes());
 

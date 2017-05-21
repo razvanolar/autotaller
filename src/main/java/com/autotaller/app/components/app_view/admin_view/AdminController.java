@@ -4,7 +4,6 @@ import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEventHandler;
-import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEvent;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.Component;

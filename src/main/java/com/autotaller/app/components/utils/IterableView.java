@@ -15,8 +15,8 @@ public class IterableView extends MaskableView {
 
   protected BorderPane borderPane;
   protected ToolBar toolBar;
-  private Button backButton;
-  private Button exitButton;
+  protected Button backButton;
+  protected Button exitButton;
 
   public IterableView() {
     super();

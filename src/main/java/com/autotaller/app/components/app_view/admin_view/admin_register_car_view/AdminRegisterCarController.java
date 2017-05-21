@@ -5,7 +5,7 @@ import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.components.utils.filter_views.DefaultCarFilterView;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
-import com.autotaller.app.events.app_view.admin_view.GetAllCarDefinedModelsEvent;
+import com.autotaller.app.events.app_view.admin_view.GetAllSystemDefinedModelsEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarsEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEventHandler;
@@ -164,7 +164,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
 
     EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> {
       loadCars();
-      EventBus.fireEvent(new GetAllCarDefinedModelsEvent(models -> {
+      EventBus.fireEvent(new GetAllSystemDefinedModelsEvent(models -> {
         this.modelsDTO = models;
 
         List<CarMakeModel> carMakes = models.getCarMakes();
