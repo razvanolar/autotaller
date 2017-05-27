@@ -1,5 +1,6 @@
 package com.autotaller.app.events.app_view;
 
+import com.autotaller.app.utils.callbacks.EmptyCallback;
 import com.autotaller.app.utils.event.Event;
 import com.autotaller.app.utils.event.EventType;
 
@@ -11,6 +12,19 @@ import com.autotaller.app.utils.event.EventType;
 public class BindLastViewEvent extends Event<BindLastViewEventHandler> {
 
   public static EventType<BindLastViewEventHandler> TYPE = new EventType<>();
+
+  private EmptyCallback callback;
+
+  public BindLastViewEvent() {
+  }
+
+  public BindLastViewEvent(EmptyCallback callback) {
+    this.callback = callback;
+  }
+
+  public EmptyCallback getCallback() {
+    return callback;
+  }
 
   @Override
   public EventType getAssociatedType() {

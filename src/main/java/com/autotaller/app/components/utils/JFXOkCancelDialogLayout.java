@@ -15,22 +15,28 @@ public class JFXOkCancelDialogLayout extends JFXDialogLayout {
   private JFXButton cancelButton;
 
   private String confirmText;
+  private String cancelText;
   private String title;
   private JFXDialog dialog;
 
-  public JFXOkCancelDialogLayout(String title, String confirmText, JFXDialog dialog) {
+  public JFXOkCancelDialogLayout(String title, String confirmText, String cancelText, JFXDialog dialog) {
     super();
     this.title = title;
     this.confirmText = confirmText;
+    this.cancelText = cancelText;
     this.dialog = dialog;
     init();
     setActionNodes();
     addListeners();
   }
 
+  public JFXOkCancelDialogLayout(String title, String confirmText, JFXDialog dialog) {
+    this(title, confirmText, "Renunta", dialog);
+  }
+
   protected void init() {
     okButton = new JFXButton(confirmText);
-    cancelButton = new JFXButton("Renunta");
+    cancelButton = new JFXButton(cancelText);
     setHeading(new Text(title));
   }
 
@@ -51,5 +57,9 @@ public class JFXOkCancelDialogLayout extends JFXDialogLayout {
 
   public JFXButton getOkButton() {
     return okButton;
+  }
+
+  public JFXButton getCancelButton() {
+    return cancelButton;
   }
 }

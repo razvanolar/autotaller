@@ -19,6 +19,8 @@ public class CarService extends GenericService {
 
   private String CARS_BY_CAR_TYPE_QUERY = ALL_CARS_QUERY + " WHERE c.model_id = ?";
 
+  private String CAR_BY_ID_QUERY = ALL_CARS_QUERY + " WHERE c.id = ?";
+
   public CarService(JDBCUtil jdbcUtil) {
     super(jdbcUtil);
   }
@@ -58,6 +60,24 @@ public class CarService extends GenericService {
     }
   }
 
+  public CarModel getCarById(int carId, SystemModelsDTO systemModelsDTO) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      statement = connection.prepareStatement(CAR_BY_ID_QUERY);
+      statement.setInt(1, carId);
+      List<CarModel> carsList = getCarsFromStatement(connection, statement, systemModelsDTO);
+      return !carsList.isEmpty() ? carsList.get(0) : null;
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
+
   private List<CarModel> getCarsFromStatement(Connection connection, PreparedStatement statement, SystemModelsDTO systemModelsDTO) throws Exception {
     ResultSet rs = null;
     try {
@@ -78,7 +98,13 @@ public class CarService extends GenericService {
     }
   }
 
-  public void addCar(CarModel car) throws Exception {
+  /**
+   * Register the specified car alongside with the engines list.
+   * @param car car model
+   * @return the id of the registered car
+   * @throws Exception in case some db operations fail
+   */
+  public int addCar(CarModel car) throws Exception {
     Connection connection = null;
     PreparedStatement addCarStatement = null;
     PreparedStatement carIdStatement = null;
@@ -124,6 +150,7 @@ public class CarService extends GenericService {
       }
 
       connection.commit();
+      return carId;
     } catch (Exception e) {
       //TODO handle exception
       e.printStackTrace();

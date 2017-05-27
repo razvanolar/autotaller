@@ -18,6 +18,7 @@ import com.autotaller.app.utils.Component;
 import com.autotaller.app.utils.ComponentType;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.View;
+import com.autotaller.app.utils.callbacks.EmptyCallback;
 import com.autotaller.app.utils.factories.ComponentFactory;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -51,22 +52,25 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
   public void bind(IAdminComponentsView view) {
     this.view = view;
 
-    view.getAddComponentButton().setOnAction(event -> {
-      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_SAVE_COMPONENTS_VIEW);
-      if (component != null) {
-        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
-        EventBus.fireEvent(new BindLastViewEvent());
-      }
-    });
+    view.getAddComponentButton().setOnAction(event -> EventBus.fireEvent(new ShowSaveCarComponentsEvent()));
 
     EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> {
       this.repository = event.getRepository();
       initHandlers();
     }, true);
 
+    EventBus.addHandler(ShowSaveCarComponentsEvent.TYPE, (ShowSaveCarComponentsEventHandler) event -> {
+      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_SAVE_COMPONENTS_VIEW);
+      if (component != null) {
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new InjectCarInformationEvent(injectedCarId));
+        EventBus.fireEvent(new BindLastViewEvent());
+      }
+    }, true);
+
     EventBus.addHandler(InjectCarInformationEvent.TYPE, (InjectCarInformationEventHandler) event -> this.injectedCarId = event.getCarId(), true);
 
-    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> loadComponents(), true);
+    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> load(event.getCallback()), true);
   }
 
   private void initHandlers() {
@@ -80,7 +84,7 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
               NotificationsUtil.showInfoNotification("Info", "Componentele au fost adaugate cu succes", 5);
               EventBus.fireEvent(new UnmaskViewEvent());
               EventBus.fireEvent(new BackToPreviousViewEvent());
-              loadComponents();
+              load(null);
             });
           } catch (Exception e) {
             //TODO handle exception
@@ -98,11 +102,19 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     }, true);
   }
 
-  private void loadComponents() {
+  private void load(EmptyCallback callback) {
     if (injectedCarId <= 0) {
-      EventBus.fireEvent(new GetCarComponentsEvent(this::loadComponents));
+      EventBus.fireEvent(new GetCarComponentsEvent(components -> {
+        loadComponents(components);
+        if (callback != null)
+          callback.call();
+      }));
     } else {
-      EventBus.fireEvent(new GetCarComponentsByCarIdEvent(injectedCarId, this::loadComponents));
+      EventBus.fireEvent(new GetCarComponentsByCarIdEvent(injectedCarId, components -> {
+        loadComponents(components);
+        if (callback != null)
+          callback.call();
+      }));
     }
   }
 

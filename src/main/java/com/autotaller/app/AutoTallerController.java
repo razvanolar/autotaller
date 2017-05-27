@@ -296,8 +296,8 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           try {
             List<CarModel> cars = repository.getCars();
             Platform.runLater(() -> {
-              event.getCallback().call(cars);
               EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(cars);
             });
           } catch (Exception e) {
             //TODO show error dialog

@@ -145,8 +145,9 @@ public class Repository {
     return carService.getCarsByTypeId(carTypeId, getAllDefinedModels());
   }
 
-  public void addCar(CarModel car) throws Exception {
-    carService.addCar(car);
+  public CarModel addCar(CarModel car) throws Exception {
+    int carId = carService.addCar(car);
+    return carService.getCarById(carId, getAllDefinedModels());
   }
 
 

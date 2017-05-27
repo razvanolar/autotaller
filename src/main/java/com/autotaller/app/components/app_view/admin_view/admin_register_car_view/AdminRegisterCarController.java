@@ -2,19 +2,23 @@ package com.autotaller.app.components.app_view.admin_view.admin_register_car_vie
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.components.utils.NotificationsUtil;
+import com.autotaller.app.components.utils.YesNoDialog;
 import com.autotaller.app.components.utils.filter_views.DefaultCarFilterView;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
+import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetAllSystemDefinedModelsEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarsEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEventHandler;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.ShowSaveCarComponentsEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEventHandler;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
+import com.autotaller.app.events.view_stack.BackToPreviousViewEvent;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarModel;
 import com.autotaller.app.model.CarTypeModel;
@@ -22,6 +26,7 @@ import com.autotaller.app.model.FuelModel;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.*;
+import com.autotaller.app.utils.callbacks.EmptyCallback;
 import com.autotaller.app.utils.factories.ComponentFactory;
 import com.autotaller.app.utils.filters.ModelFilter;
 import com.autotaller.app.utils.filters.car_model_filters.*;
@@ -99,12 +104,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
       CarModel selectedCar = view.getCarTable().getSelectionModel().getSelectedItem();
       if (selectedCar == null)
         return;
-      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_COMPONENTS_VIEW);
-      if (component != null) {
-        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
-        EventBus.fireEvent(new InjectCarInformationEvent(selectedCar.getId()));
-        EventBus.fireEvent(new BindLastViewEvent());
-      }
+      showCarComponentsView(selectedCar.getId(), null);
     });
 
     view.getShowFilterCarButton().setOnAction(event -> {
@@ -163,7 +163,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     }, true);
 
     EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> {
-      loadCars();
+      load(null);
       EventBus.fireEvent(new GetAllSystemDefinedModelsEvent(models -> {
         this.modelsDTO = models;
 
@@ -187,17 +187,28 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     }, true);
   }
 
+  private void showCarComponentsView(int carId, EmptyCallback bindCallback) {
+    Component component = ComponentFactory.createComponent(ComponentType.ADMIN_COMPONENTS_VIEW);
+    if (component != null) {
+      EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+      EventBus.fireEvent(new InjectCarInformationEvent(carId));
+      EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
+      EventBus.fireEvent(new BindLastViewEvent(bindCallback));
+    }
+  }
+
   private void initHandlers() {
     EventBus.addHandler(AddCarEvent.TYPE, (AddCarEventHandler) event -> {
       try {
         EventBus.fireEvent(new MaskViewEvent("Adaugare Masina"));
         Thread thread = new Thread(() -> {
           try {
-            repository.addCar(event.getCar());
+            CarModel car = repository.addCar(event.getCar());
             Platform.runLater(() -> {
               EventBus.fireEvent(new UnmaskViewEvent());
               NotificationsUtil.showInfoNotification("Notificare", "Masina a fost adaugata cu succes", 3);
-              loadCars();
+              EventBus.fireEvent(new BackToPreviousViewEvent());
+              showAddComponentsDialogAfterCarRegistration(car);
             });
           } catch (Exception e) {
             //TODO handle exception
@@ -216,17 +227,32 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     }, true);
   }
 
+  private void showAddComponentsDialogAfterCarRegistration(CarModel car) {
+    YesNoDialog dialog = new YesNoDialog("Adaugare componente", "Doriti sa adaugati componente pentru " + car.getName() + "?");
+    EventBus.fireEvent(new ShowDialogEvent(dialog));
+    dialog.getYesButton().setOnAction(event -> {
+      dialog.close();
+      load(() -> showCarComponentsView(car.getId(), () -> EventBus.fireEvent(new ShowSaveCarComponentsEvent())));
+    });
+    dialog.getNoButton().setOnAction(event -> {
+      dialog.close();
+      load(null);
+    });
+  }
+
+  private void load(EmptyCallback callback) {
+    EventBus.fireEvent(new GetCarsEvent(cars -> {
+      this.allCars = cars;
+      filterCars();
+      if (callback != null)
+        callback.call();
+    }));
+  }
+
   private void filterCars() {
     List<CarModel> cars = ModelFilter.filterCars(allCars, carModelYearsFilter, carModelMakeFilter, carModelTypeFilter,
             carModelNameFilter, carModelKWFilter, carModelCapacityFilter, carModelCilindersFilter, carModelFuelFilter);
     loadCars(cars);
-  }
-
-  private void loadCars() {
-    EventBus.fireEvent(new GetCarsEvent(cars -> {
-      this.allCars = cars;
-      loadCars(cars);
-    }));
   }
 
   private void loadCars(List<CarModel> cars) {
