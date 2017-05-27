@@ -145,8 +145,8 @@ public class Repository {
     return carService.getCarsByTypeId(carTypeId, getAllDefinedModels());
   }
 
-  public void addCar(CarModel car, List<CarComponentModel> components) throws Exception {
-    carService.addCar(car, components);
+  public void addCar(CarModel car) throws Exception {
+    carService.addCar(car);
   }
 
 
@@ -159,6 +159,10 @@ public class Repository {
 
   public List<CarComponentModel> getCarComponentsByCarId(int carId) throws Exception {
     return carComponentsService.getComponentsByCarId(carId);
+  }
+
+  public void addComponents(List<CarComponentModel> components) throws Exception {
+    carComponentsService.addComponents(components);
   }
 
 

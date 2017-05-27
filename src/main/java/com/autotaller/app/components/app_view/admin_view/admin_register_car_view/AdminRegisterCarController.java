@@ -193,7 +193,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
         EventBus.fireEvent(new MaskViewEvent("Adaugare Masina"));
         Thread thread = new Thread(() -> {
           try {
-            repository.addCar(event.getCar(), event.getCarComponents());
+            repository.addCar(event.getCar());
             Platform.runLater(() -> {
               EventBus.fireEvent(new UnmaskViewEvent());
               NotificationsUtil.showInfoNotification("Notificare", "Masina a fost adaugata cu succes", 3);

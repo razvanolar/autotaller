@@ -1,6 +1,5 @@
 package com.autotaller.app.repository.services.cars;
 
-import com.autotaller.app.model.CarComponentModel;
 import com.autotaller.app.model.CarModel;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.services.GenericService;
@@ -79,12 +78,11 @@ public class CarService extends GenericService {
     }
   }
 
-  public void addCar(CarModel car, List<CarComponentModel> components) throws Exception {
+  public void addCar(CarModel car) throws Exception {
     Connection connection = null;
     PreparedStatement addCarStatement = null;
     PreparedStatement carIdStatement = null;
     PreparedStatement addEnginesStatement = null;
-    PreparedStatement addComponentsStatement = null;
     ResultSet rs = null;
     try {
       connection = jdbcUtil.getNewConnection();
@@ -125,20 +123,6 @@ public class CarService extends GenericService {
         }
       }
 
-      if (components != null && !components.isEmpty()) {
-        String componentSql = "INSERT INTO car_components (car_id, subkit_id, component_name, code, stock, description) VALUES (?, ?, ?, ?, ?, ?)";
-        addComponentsStatement = connection.prepareStatement(componentSql);
-        addComponentsStatement.setInt(1, carId);
-        for (CarComponentModel component : components) {
-          addComponentsStatement.setInt(2, component.getCarSubkitId());
-          addComponentsStatement.setString(3, component.getName());
-          addComponentsStatement.setString(4, component.getCode());
-          addComponentsStatement.setString(5, component.getStock());
-          addComponentsStatement.setString(6, component.getDescription());
-          addComponentsStatement.executeUpdate();
-        }
-      }
-
       connection.commit();
     } catch (Exception e) {
       //TODO handle exception
@@ -151,7 +135,6 @@ public class CarService extends GenericService {
       jdbcUtil.closePrepareStatement(addCarStatement);
       jdbcUtil.closePrepareStatement(carIdStatement);
       jdbcUtil.closePrepareStatement(addEnginesStatement);
-      jdbcUtil.closePrepareStatement(addComponentsStatement);
       jdbcUtil.closeResultSet(rs);
     }
   }

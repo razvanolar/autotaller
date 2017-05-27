@@ -8,6 +8,9 @@ import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetAllSystemDefinedModelsEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.AddCarComponentsEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEventHandler;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectPreviewCarComponentsEvent;
 import com.autotaller.app.model.CarComponentModel;
 import com.autotaller.app.model.CarKitModel;
@@ -42,6 +45,7 @@ public class AdminSaveComponentsController implements Controller<AdminSaveCompon
 
   private IAdminSaveComponentsView view;
   private SystemModelsDTO modelsDTO;
+  private int injectedCarId = -1;
 
   private Map<CarKitModel, List<CarComponentModel>> componentsMap;
 
@@ -64,12 +68,14 @@ public class AdminSaveComponentsController implements Controller<AdminSaveCompon
         EventBus.fireEvent(new InjectPreviewCarComponentsEvent(carComponents));
         dialog.getConfirmationButton().setOnAction(event1 -> {
           dialog.close();
-
+          saveComponents(filterValidComponents(carComponents));
         });
       }
     });
 
-    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> loadSystemData());
+    EventBus.addHandler(InjectCarInformationEvent.TYPE, (InjectCarInformationEventHandler) event -> this.injectedCarId = event.getCarId(), true);
+
+    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> loadSystemData(), true);
   }
 
   @Override
@@ -89,7 +95,7 @@ public class AdminSaveComponentsController implements Controller<AdminSaveCompon
       carComponents = new ArrayList<>();
       List<CarSubkitModel> carSubkitByKit = modelsDTO.getCarSubkitByKit(catKit);
       for (CarSubkitModel carSubkit : carSubkitByKit) {
-        carComponents.add(new CarComponentModel(-1, 1, carSubkit.getId(), carSubkit.getName(), "", "", ""));
+        carComponents.add(new CarComponentModel(-1, injectedCarId, carSubkit.getId(), carSubkit.getName(), "", "", ""));
       }
       componentsMap.put(catKit, carComponents);
     }
@@ -102,6 +108,7 @@ public class AdminSaveComponentsController implements Controller<AdminSaveCompon
       return;
     }
 
+    EventBus.fireEvent(new AddCarComponentsEvent(carComponents));
   }
 
   private List<CarComponentModel> collectCarComponents() {

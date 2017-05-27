@@ -140,7 +140,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
       EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Nu toate campurile obligatorii sunt completate")));
       return;
     }
-    EventBus.fireEvent(new AddCarEvent(car, null));
+    EventBus.fireEvent(new AddCarEvent(car));
   }
 
   private void backFromCarTypeView() {

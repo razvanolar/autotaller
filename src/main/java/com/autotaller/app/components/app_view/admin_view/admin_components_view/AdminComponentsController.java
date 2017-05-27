@@ -1,19 +1,25 @@
 package com.autotaller.app.components.app_view.admin_view.admin_components_view;
 
 import com.autotaller.app.EventBus;
+import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.admin_view.GetCarComponentsEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEventHandler;
+import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
+import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEventHandler;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.*;
+import com.autotaller.app.events.mask_view.MaskViewEvent;
+import com.autotaller.app.events.mask_view.UnmaskViewEvent;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
+import com.autotaller.app.events.view_stack.BackToPreviousViewEvent;
 import com.autotaller.app.model.CarComponentModel;
+import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.Component;
 import com.autotaller.app.utils.ComponentType;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.factories.ComponentFactory;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
@@ -35,6 +41,7 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     TableView<CarComponentModel> getCarComponentsTable();
   }
 
+  private Repository repository;
   private int injectedCarId = -1;
   private IAdminComponentsView view;
 
@@ -52,10 +59,42 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
       }
     });
 
-    EventBus.addHandler(InjectCarInformationEvent.TYPE, (InjectCarInformationEventHandler) event -> this.injectedCarId = event.getCarId());
+    EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> {
+      this.repository = event.getRepository();
+      initHandlers();
+    }, true);
 
-    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> {
-      loadComponents();
+    EventBus.addHandler(InjectCarInformationEvent.TYPE, (InjectCarInformationEventHandler) event -> this.injectedCarId = event.getCarId(), true);
+
+    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> loadComponents(), true);
+  }
+
+  private void initHandlers() {
+    EventBus.addHandler(AddCarComponentsEvent.TYPE, (AddCarComponentsEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Adaugare componente..."));
+        Thread thread = new Thread(() -> {
+          try {
+            repository.addComponents(event.getCarComponents());
+            Platform.runLater(() -> {
+              NotificationsUtil.showInfoNotification("Info", "Componentele au fost adaugate cu succes", 5);
+              EventBus.fireEvent(new UnmaskViewEvent());
+              EventBus.fireEvent(new BackToPreviousViewEvent());
+              loadComponents();
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+        NotificationsUtil.showErrorNotification("Eroare", "A aparut o eroare la adaugarea componentelor", -1);
+      }
     }, true);
   }
 

@@ -6,16 +6,16 @@ package com.autotaller.app.model;
 public class CarComponentModel {
 
   private int id;
-  private int carModelId;
+  private int carId;
   private int carSubkitId;
   private String name;
   private String code;
   private String stock;
   private String description;
 
-  public CarComponentModel(int id, int carModelId, int carSubkitId, String name, String code, String stock, String description) {
+  public CarComponentModel(int id, int carId, int carSubkitId, String name, String code, String stock, String description) {
     this.id = id;
-    this.carModelId = carModelId;
+    this.carId = carId;
     this.carSubkitId = carSubkitId;
     this.name = name;
     this.code = code;
@@ -27,8 +27,8 @@ public class CarComponentModel {
     return id;
   }
 
-  public int getCarModelId() {
-    return carModelId;
+  public int getCarId() {
+    return carId;
   }
 
   public int getCarSubkitId() {

@@ -54,6 +54,7 @@ public class AdminController implements Controller<AdminController.IAdminView> {
       if (component != null) {
         EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
         EventBus.fireEvent(new BindLastViewEvent());
+        EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
       }
     });
 
