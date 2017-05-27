@@ -3,6 +3,8 @@ package com.autotaller.app.utils.factories;
 import com.autotaller.app.components.app_view.AutoTallerMenuBarView;
 import com.autotaller.app.components.app_view.admin_view.AdminView;
 import com.autotaller.app.components.app_view.admin_view.admin_components_view.AdminComponentsView;
+import com.autotaller.app.components.app_view.admin_view.admin_components_view.AdminSaveComponentsView;
+import com.autotaller.app.components.app_view.admin_view.admin_components_view.utils.AdminSaveComponentValidatorView;
 import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.AdminDefineModelView;
 import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_kit_view.AdminCarKitView;
 import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_make_view.AddCarMakeDialogView;
@@ -50,6 +52,10 @@ public class ViewFactory {
         return new AdminSaveCarView();
       case ADMIN_COMPONENTS_VIEW:
         return new AdminComponentsView();
+      case ADMIN_SAVE_COMPONENTS_VIEW:
+        return new AdminSaveComponentsView();
+      case ADMIN_SAVE_COMPONENTS_VALIDATOR_VIEW:
+        return new AdminSaveComponentValidatorView();
       case ADMIN_STATISTICS_VIEW:
         return new AdminStatisticsView();
     }

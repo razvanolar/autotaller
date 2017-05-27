@@ -8,8 +8,8 @@ import javafx.scene.text.Text;
  */
 public class SimpleDialog extends JFXDialog {
 
-  public SimpleDialog(String title, String confimationText, String content) {
-    JFXOkDialog dialogView = new JFXOkDialog(confimationText, title , this);
+  public SimpleDialog(String title, String confirmationText, String content) {
+    JFXOkDialogLayout dialogView = new JFXOkDialogLayout(confirmationText, title , this);
     dialogView.setBody(new Text(content));
     this.setContent(dialogView);
     this.setTransitionType(JFXDialog.DialogTransition.CENTER);

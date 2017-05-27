@@ -50,4 +50,20 @@ public class CarComponentModel {
   public String getDescription() {
     return description;
   }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
+
+  public void setStock(String stock) {
+    this.stock = stock;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
 }

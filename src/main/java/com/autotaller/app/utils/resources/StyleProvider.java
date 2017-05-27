@@ -21,8 +21,11 @@ public class StyleProvider {
   public static final String YEAR_VIEW_SELECTED_CLASS = "yearViewSelectedBackground";
   public static final String GENERAL_PANE_BACKGROUND_CLASS = "generalPaneBackground";
   public static final String GENERAL_SCROLL_PANE_BACKGROUND_CLASS = "generalScrollPaneBackground";
+  public static final String KIT_CATEGORY_TAB_BACKGROUND_CLASS = "kitCategoryTabBackground";
+  public static final String KIT_CATEGORY_TAB_SELECTED_BACKGROUND_CLASS = "kitCategoryTabSelectedBackground";
+  public static final String KIT_TAB_BACKGROUND_CLASS = "kitTabBackground";
 
-  public static final String CENTERED_TABLE_CELL_TEXT_CSS = "-fx-alignment: CENTER;";
+  public static final String CENTERED_TABLE_CELL_TEXT_CSS = "-fx-alignment: TOP-CENTER;";
 
   public static String getDefaultTheme() {
     String path = StyleProvider.class.getResource("styles/default_theme.css").getPath();

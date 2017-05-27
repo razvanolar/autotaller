@@ -56,6 +56,10 @@ public class ImageProvider {
     return getImage("icons/back.png");
   }
 
+  public static Image nextIcon() {
+    return getImage("icons/next.png");
+  }
+
   public static Image exitIcon() {
     return getImage("icons/exit.png");
   }

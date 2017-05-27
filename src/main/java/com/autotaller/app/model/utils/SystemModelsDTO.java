@@ -70,7 +70,7 @@ public class SystemModelsDTO {
     return carMakeTypeMap.get(carMake);
   }
 
-  public List<CarKitModel> getCarKitByCategory(CarKitCategoryModel carKitCategory) {
+  public List<CarKitModel> getCarKitsByCategory(CarKitCategoryModel carKitCategory) {
     return carCategoryKitMap.get(carKitCategory);
   }
 

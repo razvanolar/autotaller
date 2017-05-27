@@ -1,4 +1,10 @@
 
+.table-view:focused {
+    -fx-background-color: -fx-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1;
+    -fx-padding: 1;
+}
+
 /* clean toolbar buttons */
 .clearButtonsContainer .button, .clearButtonsContainer .toggle-button {
     -fx-background-color: transparent;
@@ -114,4 +120,12 @@
 
 .yearViewSelectedBackground {
     -fx-background-color: rgba(6,38,212,0.46);
+}
+
+.kitCategoryTabBackground {
+    -fx-background-color: lightgray;
+}
+
+.kitCategoryTabSelectedBackground, .kitTabBackground {
+    -fx-background-color: darkgray;
 }

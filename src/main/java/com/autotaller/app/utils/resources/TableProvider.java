@@ -1,13 +1,17 @@
 package com.autotaller.app.utils.resources;
 
 import com.autotaller.app.model.*;
+import com.autotaller.app.utils.ModelValidator;
 import com.autotaller.app.utils.filters.ModelFilter;
 import com.autotaller.app.utils.StringValidator;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.*;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.paint.Color;
 
 /**
  * Created by razvanolar on 30.04.2017
@@ -200,14 +204,14 @@ public class TableProvider {
   }
 
   @SuppressWarnings("unchecked")
-  public TableView<CarComponentModel> createCarComponentTable() {
+  public TableView<CarComponentModel> createCarComponentTable(boolean isEditable, boolean useValidatorStyles) {
     TableView<CarComponentModel> table = new TableView<>();
     TableColumn<CarComponentModel, String> nameColumn = new TableColumn<>("Nume");
     TableColumn<CarComponentModel, String> codeCoulmn = new TableColumn<>("Cod");
     TableColumn<CarComponentModel, String> stockColumn = new TableColumn<>("Stoc");
     TableColumn<CarComponentModel, String> subkitColumn = new TableColumn<>("Sub-ansamblu");
 
-    DoubleBinding widthProperty = table.widthProperty().multiply(.25);
+    DoubleBinding widthProperty = table.widthProperty().multiply(.245);
     nameColumn.prefWidthProperty().bind(widthProperty);
     codeCoulmn.prefWidthProperty().bind(widthProperty);
     stockColumn.prefWidthProperty().bind(widthProperty);
@@ -229,7 +233,44 @@ public class TableProvider {
     stockColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     subkitColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
 
+    if (isEditable) {
+      nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+      nameColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setName(event.getNewValue()));
+
+      codeCoulmn.setCellFactory(TextFieldTableCell.forTableColumn());
+      codeCoulmn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setCode(event.getNewValue()));
+
+      stockColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+      stockColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setStock(event.getNewValue()));
+    }
+
+    if (useValidatorStyles) {
+      nameColumn.setCellFactory(param -> new TableCell<CarComponentModel, String>() {
+        @Override
+        protected void updateItem(String item, boolean empty) {
+          super.updateItem(item, empty);
+          if (!isEmpty()) {
+            Object value = this.getTableRow().getItem();
+            if (value != null && value instanceof CarComponentModel) {
+              CarComponentModel component = (CarComponentModel) value;
+              if (!ModelValidator.isValidCarComponent(component))
+                this.setTextFill(Color.RED);
+            }
+            setText(item);
+          }
+        }
+      });
+    }
+
     table.getColumns().addAll(nameColumn, codeCoulmn, stockColumn, subkitColumn);
     return table;
+  }
+
+  public TableView<CarComponentModel> createCarComponentTable(boolean isEditable) {
+    return createCarComponentTable(isEditable, false);
+  }
+
+  public TableView<CarComponentModel> createCarComponentValidationTable() {
+    return createCarComponentTable(false, true);
   }
 }

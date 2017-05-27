@@ -258,6 +258,14 @@ public class NodeProvider {
   }
 
   public static TableView<CarComponentModel> createCarComponentTable() {
-    return TABLE_PROVIDER.createCarComponentTable();
+    return createCarComponentTable(false);
+  }
+
+  public static TableView<CarComponentModel> createCarComponentTable(boolean isEditable) {
+    return TABLE_PROVIDER.createCarComponentTable(isEditable);
+  }
+
+  public static TableView<CarComponentModel> createCarComponentValidatorTable() {
+    return TABLE_PROVIDER.createCarComponentValidationTable();
   }
 }

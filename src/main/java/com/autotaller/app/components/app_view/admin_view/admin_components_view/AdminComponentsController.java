@@ -7,9 +7,13 @@ import com.autotaller.app.events.app_view.admin_view.GetCarComponentsEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEventHandler;
+import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.model.CarComponentModel;
+import com.autotaller.app.utils.Component;
+import com.autotaller.app.utils.ComponentType;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.View;
+import com.autotaller.app.utils.factories.ComponentFactory;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
@@ -39,6 +43,14 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
   @Override
   public void bind(IAdminComponentsView view) {
     this.view = view;
+
+    view.getAddComponentButton().setOnAction(event -> {
+      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_SAVE_COMPONENTS_VIEW);
+      if (component != null) {
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new BindLastViewEvent());
+      }
+    });
 
     EventBus.addHandler(InjectCarInformationEvent.TYPE, (InjectCarInformationEventHandler) event -> this.injectedCarId = event.getCarId());
 
