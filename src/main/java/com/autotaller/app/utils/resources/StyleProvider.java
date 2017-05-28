@@ -16,7 +16,8 @@ public class StyleProvider {
   public static final String APP_MENU_BOX_CLASS = "appMenuBox";
   public static final String BUTTONS_CONTAINER_CLASS = "clearButtonsContainer";
   public static final String ADMIN_TOOLBAR_PANE_CLASS = "adminToolbarPaneBackground";
-  public static final String TITLE_PANE_CLASS = "titlePaneBackground";
+  public static final String TITLE_FOOTER_PANE_CLASS = "titleFooterPaneBackground";
+  public static final String TITLE_HORIZONTAL_BAR_PANE_CLASS = "titleBarPaneBackground";
   public static final String ADMIN_SUB_TOOLBAR_PANE_CLASS = "adminSubToolbarPaneBackground";
   public static final String YEAR_VIEW_UNSELECTED_CLASS = "yearViewUnselectedBackground";
   public static final String YEAR_VIEW_SELECTED_CLASS = "yearViewSelectedBackground";

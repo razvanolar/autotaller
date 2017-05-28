@@ -4,7 +4,6 @@ import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.model.*;
 import com.autotaller.app.utils.StringValidator;
 import com.jfoenix.controls.*;
-import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -12,7 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -200,18 +198,21 @@ public class NodeProvider {
     VBox node = new VBox();
 
     Text textLabel = createTextLabel(title, 17, false);
-    if (image != null) {
-      HBox titleNode = createHBox(Pos.CENTER_LEFT, 10);
-      titleNode.getChildren().addAll(new ImageView(image), textLabel);
-      node.getChildren().add(titleNode);
-    } else {
-      node.getChildren().add(textLabel);
-    }
-
     FillToolItem bar = new FillToolItem();
-    bar.setPrefHeight(5);
-    bar.getStyleClass().add(StyleProvider.TITLE_PANE_CLASS);
-    node.getChildren().add(bar);
+    bar.setMaxHeight(2);
+    bar.getStyleClass().addAll(StyleProvider.TITLE_HORIZONTAL_BAR_PANE_CLASS);
+
+    HBox titleNode = createHBox(Pos.CENTER_LEFT, 10);
+
+    if (image != null) {
+      titleNode.getChildren().add(new ImageView(image));
+    }
+    titleNode.getChildren().addAll(textLabel, bar);
+
+    FillToolItem footer = new FillToolItem();
+    footer.setPrefHeight(5);
+    footer.getStyleClass().add(StyleProvider.TITLE_FOOTER_PANE_CLASS);
+    node.getChildren().addAll(titleNode, footer);
     node.setAlignment(Pos.CENTER_LEFT);
     node.setPadding(new Insets(5, 10, 5, 10));
     return node;

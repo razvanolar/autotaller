@@ -97,10 +97,14 @@
     -fx-background-color: darkcyan;
 }
 
-.adminToolbarPaneBackground, .titlePaneBackground {
+.adminToolbarPaneBackground, .titleFooterPaneBackground {
     /*-fx-background-color: rgba(8,52,112,0.5);*/
     -fx-background-color: rgba(8,52,112,0.4);
     -fx-fill: rgba(8,52,112,0.4);
+}
+
+.titleBarPaneBackground {
+    -fx-background-color: rgba(184,94,38,0.84);
 }
 
 .adminToolbarPaneBackground:hover {
