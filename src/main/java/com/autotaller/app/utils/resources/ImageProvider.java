@@ -84,8 +84,32 @@ public class ImageProvider {
     return getImage("icons/components.png");
   }
 
+  public static Image infoIcon() {
+    return getImage("icons/info.png");
+  }
+
   public static Image detailsIcon() {
     return getImage("icons/details.png");
+  }
+
+  public static Image imageIcon() {
+    return getImage("icons/image.png");
+  }
+
+  public static Image descriptionIcon() {
+    return getImage("icons/description.png");
+  }
+
+  public static Image uploadIcon() {
+    return getImage("icons/upload.png");
+  }
+
+  public static Image binIcon() {
+    return getImage("icons/bin.png");
+  }
+
+  public static Image galleryIcon() {
+    return getImage("icons/gallery.png");
   }
 
   public static Image cameraIcon() {

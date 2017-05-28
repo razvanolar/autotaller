@@ -5,6 +5,7 @@ import com.autotaller.app.events.app_view.GetStageInstanceEvent;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.utils.resources.ImageProvider;
 import com.autotaller.app.utils.resources.NodeProvider;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -12,6 +13,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -56,9 +58,9 @@ public class ImageGalleryPane {
     imageContainer.setHgap(10);
     imageContainer.setVgap(10);
 
-    uploadImagesButton = NodeProvider.createToolbarButton("Incarca Imagini", null);
-    clearImagesButton = NodeProvider.createToolbarButton("Sterge Imaginile", null);
-    openGalleryButton = NodeProvider.createToolbarButton("Deschide Galeria", null);
+    uploadImagesButton = NodeProvider.createToolbarButton("Incarca Imagini", ImageProvider.uploadIcon());
+    clearImagesButton = NodeProvider.createToolbarButton("Sterge Imaginile", ImageProvider.binIcon());
+    openGalleryButton = NodeProvider.createToolbarButton("Deschide Galeria", ImageProvider.galleryIcon());
 
     ToolBar toolBar = NodeProvider.createToolBar();
     toolBar.getItems().addAll(uploadImagesButton, clearImagesButton, new Separator(), openGalleryButton);
@@ -69,6 +71,11 @@ public class ImageGalleryPane {
   }
 
   private void addHandlers() {
+    EventHandler<MouseEvent> imageMouseEvent = mouseEvent -> {
+      ImageView imageView = (ImageView) mouseEvent.getSource();
+      EventBus.fireEvent(new ShowDialogEvent(new ImageDialog(imageView.getImage())));
+    };
+
     uploadImagesButton.setOnAction(event -> EventBus.fireEvent(new GetStageInstanceEvent(stage -> {
       FileChooser fileChooser = new FileChooser();
       FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Imagini", "*.png", "*.jpg", "*.jpeg");
@@ -81,6 +88,7 @@ public class ImageGalleryPane {
           ImageView imageView = new ImageView(ImageProvider.getImageFromPath(file.getAbsolutePath()));
           imageView.setPreserveRatio(true);
           imageView.setFitWidth(120);
+          imageView.setOnMouseClicked(imageMouseEvent);
           imageContainer.getChildren().add(imageView);
           images.add(file);
         }

@@ -191,12 +191,22 @@ public class NodeProvider {
     return hBox;
   }
 
-  public static VBox createTitlePane(String title) {
+  public static VBox createTitlePane(String title, Image image) {
     VBox node = new VBox();
+
+    Text textLabel = createTextLabel(title, 17, false);
+    if (image != null) {
+      HBox titleNode = createHBox(Pos.CENTER_LEFT, 10);
+      titleNode.getChildren().addAll(new ImageView(image), textLabel);
+      node.getChildren().add(titleNode);
+    } else {
+      node.getChildren().add(textLabel);
+    }
+
     FillToolItem bar = new FillToolItem();
     bar.setPrefHeight(5);
     bar.getStyleClass().add(StyleProvider.TITLE_PANE_CLASS);
-    node.getChildren().addAll(createTextLabel(title, 17, false), bar);
+    node.getChildren().add(bar);
     node.setAlignment(Pos.CENTER_LEFT);
     node.setPadding(new Insets(5, 10, 5, 10));
     return node;
@@ -217,6 +227,26 @@ public class NodeProvider {
 
   public static VBox createVBox(Pos pos, int spacing, Node... nodes) {
     VBox node = createVBox(spacing, nodes);
+    if (pos != null)
+      node.setAlignment(pos);
+    return node;
+  }
+
+  public static HBox createHBox(int spacing) {
+    HBox node = new HBox(spacing);
+    node.getStyleClass().add(StyleProvider.GENERAL_PANE_BACKGROUND_CLASS);
+    return node;
+  }
+
+  public static HBox createHBox(int spacing, Node... nodes) {
+    HBox node = createHBox(spacing);
+    if (nodes != null)
+      node.getChildren().addAll(nodes);
+    return node;
+  }
+
+  public static HBox createHBox(Pos pos, int spacing, Node... nodes) {
+    HBox node = createHBox(spacing, nodes);
     if (pos != null)
       node.setAlignment(pos);
     return node;
@@ -262,7 +292,7 @@ public class NodeProvider {
     return createAppMenu(text, icon, width, height, StyleProvider.DEFAULT_BUTTON_CLASS);
   }
 
-  public static ScrollPane createScrollPane(Region content) {
+  public static ScrollPane createScrollPane(Node content) {
     ScrollPane scrollPane = new ScrollPane(content) {public void requestFocus() {}};
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
     scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -270,7 +300,7 @@ public class NodeProvider {
     return scrollPane;
   }
 
-  public static ScrollPane createScrollPane(Region content, boolean centerContent) {
+  public static ScrollPane createScrollPane(Node content, boolean centerContent) {
     ScrollPane scroll = createScrollPane(content);
     scroll.setFitToWidth(centerContent);
     scroll.setFitToHeight(centerContent);

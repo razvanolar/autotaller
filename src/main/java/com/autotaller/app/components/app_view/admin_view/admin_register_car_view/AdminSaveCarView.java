@@ -6,6 +6,7 @@ import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.model.FuelModel;
+import com.autotaller.app.utils.resources.ImageProvider;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -101,16 +102,16 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     descriptionPane.add(carDescriptionTextArea, 0, 0);
 
     BorderPane imagesPane = NodeProvider.createBorderPane();
-    imagesPane.setTop(NodeProvider.createTitlePane("Imagini"));
+    imagesPane.setTop(NodeProvider.createTitlePane("Imagini", ImageProvider.imageIcon()));
     imagesPane.setCenter(imageGalleryPane.asNode());
 
-    VBox formVBox = NodeProvider.createVBox(5, NodeProvider.createTitlePane("Informatii"),
-            saveCarFormPane, NodeProvider.createTitlePane("Descriere"), descriptionPane);
+    VBox formVBox = NodeProvider.createVBox(5, NodeProvider.createTitlePane("Informatii", ImageProvider.infoIcon()),
+            saveCarFormPane, NodeProvider.createTitlePane("Descriere", ImageProvider.descriptionIcon()), descriptionPane);
 
     SplitPane splitPane = new SplitPane(NodeProvider.createScrollPane(formVBox, true), imagesPane);
 
     splitPane.setDividerPosition(0, .33);
-//    SplitPane.setResizableWithParent(imagesPane, false);
+    SplitPane.setResizableWithParent(formVBox, false);
 
     this.saveCarFormPane = splitPane;
   }
