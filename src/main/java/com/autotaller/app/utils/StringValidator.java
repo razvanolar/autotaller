@@ -12,4 +12,12 @@ public class StringValidator {
   public static boolean isPositiveInteger(String value) {
     return !isNullOrEmpty(value) && value.matches("^\\d+$");
   }
+
+  public static boolean isInteger(String value) {
+    return !isNullOrEmpty(value) && value.trim().matches("^[-]?\\d+$");
+  }
+
+  public static Integer getValue(String value) {
+    return isInteger(value) ? Integer.parseInt(value) : null;
+  }
 }

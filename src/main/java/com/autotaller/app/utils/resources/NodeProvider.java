@@ -2,6 +2,7 @@ package com.autotaller.app.utils.resources;
 
 import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.model.*;
+import com.autotaller.app.utils.StringValidator;
 import com.jfoenix.controls.*;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
@@ -96,6 +97,10 @@ public class NodeProvider {
     Spinner<Integer> spinner = new Spinner<>(min, max, init, step);
     spinner.setPrefWidth(width);
     spinner.setEditable(true);
+    spinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+      Integer value = StringValidator.getValue(newValue);
+      spinner.getValueFactory().setValue(value != null ? value : min);
+    });
     return spinner;
   }
 

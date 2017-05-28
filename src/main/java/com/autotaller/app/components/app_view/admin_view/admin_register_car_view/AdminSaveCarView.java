@@ -37,6 +37,7 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
   private Spinner<Integer> carKwSpinner;
   private Spinner<Integer> carCapacitySpinner;
   private Spinner<Integer> carCylindersSpinner;
+  private TextField enginesTextField;
   private ComboBox<FuelModel> carFuelCombo;
   private TextArea carDescriptionTextArea;
   private ImageGalleryPane imageGalleryPane;
@@ -69,9 +70,12 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     carKwSpinner = NodeProvider.createSpinner(width,0, 1000, 0, 1);
     carCapacitySpinner = NodeProvider.createSpinner(width,0, 10000, 0, 1);
     carCylindersSpinner = NodeProvider.createSpinner(width,0, 100, 0, 1);
+    enginesTextField = NodeProvider.createTextField(width);
     carFuelCombo = NodeProvider.createFuelCombo(width);
     carDescriptionTextArea = NodeProvider.createTextArea(width + 90, 120);
     imageGalleryPane = new ImageGalleryPane();
+
+    Tooltip.install(enginesTextField, new Tooltip("Daca mai multe serii de motor sunt disponibile acestea se vor separa prin virgula"));
 
     GridPane saveCarFormPane = NodeProvider.createGridPane(Pos.TOP_CENTER, 10, 10);
     int row = 0;
@@ -95,6 +99,8 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     saveCarFormPane.add(carCapacitySpinner, 1, row++);
     saveCarFormPane.add(NodeProvider.createFormTextLabel("Cilindrii: "), 0, row);
     saveCarFormPane.add(carCylindersSpinner, 1, row++);
+    saveCarFormPane.add(NodeProvider.createFormTextLabel("Serii motor: "), 0, row);
+    saveCarFormPane.add(enginesTextField, 1, row++);
     saveCarFormPane.add(NodeProvider.createFormTextLabel("Combustibil: "), 0, row);
     saveCarFormPane.add(carFuelCombo, 1, row);
 
@@ -190,6 +196,10 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
 
   public Spinner<Integer> getCarCylindersSpinner() {
     return carCylindersSpinner;
+  }
+
+  public TextField getEnginesTextField() {
+    return enginesTextField;
   }
 
   public ComboBox<FuelModel> getCarFuelCombo() {

@@ -23,8 +23,11 @@ import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.model.FuelModel;
+import com.autotaller.app.model.utils.SaveCarResult;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.Repository;
+import com.autotaller.app.repository.utils.CarStatus;
+import com.autotaller.app.repository.utils.ImageStatus;
 import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.callbacks.EmptyCallback;
 import com.autotaller.app.utils.factories.ComponentFactory;
@@ -203,12 +206,28 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
         EventBus.fireEvent(new MaskViewEvent("Adaugare Masina"));
         Thread thread = new Thread(() -> {
           try {
-            CarModel car = repository.addCar(event.getCar());
+            String carName = event.getCar().getName();
+            SaveCarResult result = repository.addCar(event.getCar(), event.getImages());
+            CarModel car = result.getCarModel();
             Platform.runLater(() -> {
               EventBus.fireEvent(new UnmaskViewEvent());
-              NotificationsUtil.showInfoNotification("Notificare", "Masina a fost adaugata cu succes", 3);
+              CarStatus carStatus = result.getCarStatus();
+              ImageStatus imageStatus = result.getImageStatus();
+              if (carStatus != null) {
+                if (carStatus == CarStatus.SUCCESS_SAVE)
+                  NotificationsUtil.showInfoNotification("Notificare", carStatus.getText(carName), 10);
+                else
+                  NotificationsUtil.showWarningNotification("Atentie", carStatus.getText(carName), 10);
+              }
+              if (imageStatus != null) {
+                if (imageStatus == ImageStatus.SUCCESS_IMAGE_SAVE)
+                  NotificationsUtil.showInfoNotification("Notificare", imageStatus.getText(carName), 10);
+                else
+                  NotificationsUtil.showWarningNotification("Atentie", imageStatus.getText(carName), 10);
+              }
               EventBus.fireEvent(new BackToPreviousViewEvent());
-              showAddComponentsDialogAfterCarRegistration(car);
+              if (car != null)
+                showAddComponentsDialogAfterCarRegistration(car);
             });
           } catch (Exception e) {
             //TODO handle exception

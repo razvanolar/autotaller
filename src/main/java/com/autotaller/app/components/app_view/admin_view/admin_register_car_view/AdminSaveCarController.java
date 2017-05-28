@@ -23,7 +23,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 
+import java.io.File;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,6 +52,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     Spinner<Integer> getCarKwSpinner();
     Spinner<Integer> getCarCapacitySpinner();
     Spinner<Integer> getCarCylindersSpinner();
+    TextField getEnginesTextField();
     ComboBox<FuelModel> getCarFuelCombo();
     TextArea getCarDescriptionTextArea();
     ImageGalleryPane getImageGalleryPane();
@@ -143,7 +146,8 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
       EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Nu toate campurile obligatorii sunt completate")));
       return;
     }
-    EventBus.fireEvent(new AddCarEvent(car));
+
+    EventBus.fireEvent(new AddCarEvent(car, view.getImageGalleryPane().getImages()));
   }
 
   private void backFromCarTypeView() {
@@ -186,6 +190,18 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
       return null;
     }
 
-    return new CarModel(-1, selectedCarType, carName, prodFrom, prodTo, carKW, carCapacity, carCylinders, null, carFuel, null);
+    String enginesText = view.getEnginesTextField().getText();
+    List<String> engines = null;
+    if (!StringValidator.isNullOrEmpty(enginesText)) {
+      String[] values = enginesText.trim().split(",");
+      engines = new ArrayList<>();
+      for (String s : values) {
+        if (!StringValidator.isNullOrEmpty(s))
+          engines.add(s.trim());
+      }
+    }
+
+    return new CarModel(-1, selectedCarType, carName, prodFrom, prodTo, carKW, carCapacity, carCylinders, engines,
+            carFuel, view.getCarDescriptionTextArea().getText());
   }
 }

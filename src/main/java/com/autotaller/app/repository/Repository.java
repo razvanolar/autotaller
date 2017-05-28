@@ -3,17 +3,24 @@ package com.autotaller.app.repository;
 import com.autotaller.app.components.utils.statistics.CarTypeStatisticsModel;
 import com.autotaller.app.model.*;
 import com.autotaller.app.model.utils.CarDefinedModelsDTO;
+import com.autotaller.app.model.utils.SaveCarResult;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.services.UserService;
 import com.autotaller.app.repository.services.cars.*;
+import com.autotaller.app.repository.utils.CarStatus;
+import com.autotaller.app.repository.utils.ImageStatus;
 import com.autotaller.app.repository.utils.JDBCUtil;
+import com.autotaller.app.repository.utils.RepoFileUtil;
 
+import java.io.File;
 import java.util.List;
 
 /**
  * Created by razvanolar on 11.04.2017
  */
 public class Repository {
+
+  public String APP_VARIABLE_NAME = "AUTOTALLER";
 
   private JDBCUtil jdbcUtil;
   private UserService userService;
@@ -24,6 +31,8 @@ public class Repository {
   private CarComponentsService carComponentsService;
   private CarStatisticsService carStatisticsService;
   private CarUtilsService carUtilsService;
+
+  private RepoFileUtil fileUtil;
 
   private List<CarMakeModel> carMakesCache;
   private List<CarTypeModel> carTypesCache;
@@ -36,6 +45,7 @@ public class Repository {
   public Repository() throws Exception {
     try {
       jdbcUtil = new JDBCUtil();
+      fileUtil = new RepoFileUtil(System.getenv(APP_VARIABLE_NAME));
     } catch (Exception e) {
       //TODO handle exception
       e.printStackTrace();
@@ -145,9 +155,26 @@ public class Repository {
     return carService.getCarsByTypeId(carTypeId, getAllDefinedModels());
   }
 
-  public CarModel addCar(CarModel car) throws Exception {
+  public SaveCarResult addCar(CarModel car, List<File> images) throws Exception {
     int carId = carService.addCar(car);
-    return carService.getCarById(carId, getAllDefinedModels());
+    CarModel savedCar = carService.getCarById(carId, getAllDefinedModels());
+    CarStatus carStatus = savedCar != null ? CarStatus.SUCCESS_SAVE : CarStatus.FAILED_SAVE;
+    ImageStatus imageStatus;
+    try {
+      if (!fileUtil.isHomeSet()) {
+        throw new Exception("Directorul %AUTOTALLER% nu a putut fi gasit");
+      }
+      if (images == null || images.isEmpty()) {
+        imageStatus = null;
+      } else {
+        fileUtil.copyCarImages(carId, images);
+        imageStatus = ImageStatus.SUCCESS_IMAGE_SAVE;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      imageStatus = ImageStatus.FAILED_IMAGE_SAVE;
+    }
+    return new SaveCarResult(savedCar, carStatus, imageStatus);
   }
 
 

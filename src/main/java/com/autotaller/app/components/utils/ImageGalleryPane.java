@@ -137,6 +137,10 @@ public class ImageGalleryPane {
       scrollPane.setContent(imageContainer);
   }
 
+  public List<File> getImages() {
+    return new ArrayList<>(images);
+  }
+
   public Region asNode() {
     return mainContainer;
   }

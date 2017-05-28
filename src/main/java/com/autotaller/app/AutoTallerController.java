@@ -123,8 +123,8 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           try {
             List<CarMakeModel> allCarMakes = repository.getAllCarMakes();
             Platform.runLater(() -> {
-              event.getCallback().call(allCarMakes);
               EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(allCarMakes);
             });
           } catch (Exception ex) {
             //TODO show error dialog
@@ -147,8 +147,8 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           try {
             List<CarTypeModel> carModels = repository.getCarModels();
             Platform.runLater(() -> {
-              event.getCallback().call(carModels);
               EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(carModels);
             });
           } catch (Exception e) {
             //TODO show error dialog
@@ -171,8 +171,8 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           try {
             List<CarKitCategoryModel> carKitCategories = repository.getCarKitCategories();
             Platform.runLater(() -> {
-              event.getCallback().call(carKitCategories);
               EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(carKitCategories);
             });
           } catch (Exception e) {
             //TODO show error dialog
@@ -195,8 +195,8 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           try {
             List<CarKitModel> carKits = repository.getCarKits();
             Platform.runLater(() -> {
-              event.getCallback().call(carKits);
               EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(carKits);
             });
           } catch (Exception e) {
             //TODO show error dialog
@@ -220,9 +220,9 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           try {
             List<CarSubkitModel> carSubkits = repository.getCarSubkits();
             Platform.runLater(() -> {
-              event.getCallback().call(carSubkits);
               if (event.isMaskView())
                 EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(carSubkits);
             });
           } catch (Exception e) {
             //TODO show error dialog
@@ -249,8 +249,8 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           try {
             SystemModelsDTO allDefinedModels = repository.getAllDefinedModels();
             Platform.runLater(() -> {
-              event.getCallback().call(allDefinedModels);
               EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(allDefinedModels);
             });
           } catch (Exception e) {
             //TODO show error dialog
@@ -273,8 +273,8 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           try {
             CarDefinedModelsDTO carDefinedModels = repository.getCarDefinedModels();
             Platform.runLater(() -> {
-              event.getCallback().call(carDefinedModels);
               EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(carDefinedModels);
             });
           } catch (Exception e) {
             //TODO handle exception
@@ -320,8 +320,8 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           try {
             List<CarComponentModel> result = repository.getCarComponents();
             Platform.runLater(() -> {
-              event.getCallback().call(result);
               EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(result);
             });
           } catch (Exception e) {
             //TODO handle exception
@@ -344,8 +344,8 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           try {
             List<CarComponentModel> result = repository.getCarComponentsByCarId(event.getCarTypeId());
             Platform.runLater(() -> {
-              event.getCallback().call(result);
               EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(result);
             });
           } catch (Exception e) {
             //TODO handle exception
@@ -368,8 +368,8 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           try {
             List<CarModel> cars = repository.getCarsByTypeId(event.getCarTypeId());
             Platform.runLater(() -> {
-              event.getCallback().call(cars);
               EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(cars);
             });
           } catch (Exception e) {
             //TODO handle exception
