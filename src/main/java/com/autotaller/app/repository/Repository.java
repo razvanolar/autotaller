@@ -232,6 +232,11 @@ public class Repository {
   }
 
 
+  public List<File> getCarImageFiles(int carId) throws Exception {
+    return fileUtil.getCarFiles(carId);
+  }
+
+
   public void testConnection() throws Exception {
     jdbcUtil.testConnection();
     System.out.println("[ Test Connection executed successfully ]");

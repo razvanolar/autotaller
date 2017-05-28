@@ -180,13 +180,13 @@ public class TableProvider {
 
     nameColumn.prefWidthProperty().bind(table.widthProperty().multiply(.15));
     modelColumn.prefWidthProperty().bind(table.widthProperty().multiply(.15));
+    cilindersColumn.prefWidthProperty().bind(table.widthProperty().multiply(.07));
     DoubleBinding widthProp = table.widthProperty().multiply(.1);
     fromColumn.prefWidthProperty().bind(widthProp);
     toColumn.prefWidthProperty().bind(widthProp);
     kwColumn.prefWidthProperty().bind(widthProp);
     hpColumn.prefWidthProperty().bind(widthProp);
     capacityColumn.prefWidthProperty().bind(widthProp);
-    cilindersColumn.prefWidthProperty().bind(widthProp);
     enginesColumn.prefWidthProperty().bind(widthProp);
 
     nameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getName()) : new SimpleStringProperty());
@@ -198,6 +198,16 @@ public class TableProvider {
     capacityColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getCapacity()) : new SimpleObjectProperty<>());
     cilindersColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getCilinders()) : new SimpleObjectProperty<>());
     enginesColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getEnginesString()) : new SimpleObjectProperty<>());
+
+    nameColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    modelColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    fromColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    toColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    kwColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    hpColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    capacityColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    cilindersColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    enginesColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
 
     table.getColumns().addAll(nameColumn, modelColumn, fromColumn, toColumn, kwColumn, hpColumn, capacityColumn, cilindersColumn, enginesColumn);
     return table;

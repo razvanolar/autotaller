@@ -4,6 +4,8 @@ import com.autotaller.app.utils.StringValidator;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,6 +26,16 @@ public class RepoFileUtil {
     for (File file : images) {
       FileUtils.copyFileToDirectory(file, destinationDir);
     }
+  }
+
+  public List<File> getCarFiles(int carId) throws Exception {
+    File carDir = getCarDir(carId);
+    File[] files = carDir.listFiles();
+    if (files == null || files.length == 0)
+      return null;
+    List<File> result = new ArrayList<>(files.length);
+    result.addAll(Arrays.asList(files));
+    return result;
   }
 
   public String completePath(String path) {

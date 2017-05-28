@@ -1,6 +1,10 @@
 package com.autotaller.app;
 
+import com.autotaller.app.components.utils.ImageGalleryDialog;
 import com.autotaller.app.components.utils.NotificationsUtil;
+import com.autotaller.app.events.app_view.OpenCarImageGalleryEvent;
+import com.autotaller.app.events.app_view.OpenCarImageGalleryEventHandler;
+import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.*;
 import com.autotaller.app.events.app_view.ShowAppViewEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEvent;
@@ -19,9 +23,13 @@ import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.factories.ComponentFactory;
 import com.autotaller.app.utils.filters.ModelFilter;
+import com.autotaller.app.utils.resources.ImageProvider;
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -115,6 +123,37 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
     });
 
     autoTallerView.getExitMenu().setOnMouseClicked(event -> EventBus.fireEvent(new ShowLoginScreenEvent()));
+
+    EventBus.addHandler(OpenCarImageGalleryEvent.TYPE, (OpenCarImageGalleryEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Incarcare Imagini"));
+        Thread thread = new Thread(() -> {
+          try {
+            List<File> files = repository.getCarImageFiles(event.getCarId());
+            List<Image> images = new ArrayList<>();
+            if (files != null && !files.isEmpty()) {
+              for (File file : files) {
+                images.add(ImageProvider.getImageFromPath(file.getAbsolutePath()));
+              }
+            }
+
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              EventBus.fireEvent(new ShowDialogEvent(new ImageGalleryDialog(images)));
+            });
+          } catch (Exception e) {
+            //TODO show error dialog
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO show error dialog
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
 
     EventBus.addHandler(GetCarMakesEvent.TYPE, (GetCarMakesEventHandler) event -> {
       try {

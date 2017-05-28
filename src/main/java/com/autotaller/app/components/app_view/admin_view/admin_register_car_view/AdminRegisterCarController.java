@@ -1,11 +1,13 @@
 package com.autotaller.app.components.app_view.admin_view.admin_register_car_view;
 
 import com.autotaller.app.EventBus;
+import com.autotaller.app.components.app_view.admin_view.admin_register_car_view.utils.AdminCarTableViewContextMenu;
 import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.components.utils.YesNoDialog;
 import com.autotaller.app.components.utils.filter_views.DefaultCarFilterView;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
+import com.autotaller.app.events.app_view.OpenCarImageGalleryEvent;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetAllSystemDefinedModelsEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarsEvent;
@@ -158,6 +160,15 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
       filterView.getCilindersSpinner().getValueFactory().setValue(0);
       filterView.getFuelCombo().setValue(allFuels);
       filterCars();
+    });
+
+    // set table context menu
+    AdminCarTableViewContextMenu contextMenu = new AdminCarTableViewContextMenu();
+    view.getCarTable().setContextMenu(contextMenu.getContextMenu());
+    contextMenu.getGalleryMenuItem().setOnAction(event -> {
+      CarModel selectedCar = view.getCarTable().getSelectionModel().getSelectedItem();
+      if (selectedCar != null)
+        EventBus.fireEvent(new OpenCarImageGalleryEvent(selectedCar.getId()));
     });
 
     EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> {

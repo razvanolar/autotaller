@@ -4,7 +4,6 @@ import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.GetStageInstanceEvent;
 import com.autotaller.app.utils.resources.NodeProvider;
 import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialogLayout;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -56,8 +55,10 @@ public class ImageGalleryDialog extends JFXDialog {
   }
 
   private void initPreviewImages(List<Image> images) {
-    if (images == null || images.isEmpty())
+    if (images == null || images.isEmpty()) {
+      mainContainer.setCenter(NodeProvider.createTextLabel("Nici o imagine disponibila", 17, false));
       return;
+    }
 
     EventHandler<MouseEvent> mouseEvent = event -> {
       if (lastSelectedNode != null)
