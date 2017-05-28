@@ -25,7 +25,6 @@ import com.jfoenix.controls.JFXDialog;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -42,7 +41,7 @@ public class AutoTallerApplication extends Application {
   private Scene primaryScene;
   private StackPane stackContainer;
   private BorderPane primaryContainer;
-  private HBox footerPane;
+  private FooterView footer;
 
   private Stack<View> viewStack;
 
@@ -58,9 +57,8 @@ public class AutoTallerApplication extends Application {
     loadingScreenScene.getStylesheets().add(defaultThemePath);
 
     primaryContainer = new BorderPane();
-    footerPane = new HBox();
-    footerPane.setPrefHeight(25);
-    primaryContainer.setBottom(footerPane);
+    footer = new FooterView();
+    primaryContainer.setBottom(footer.asNode());
     stackContainer = new StackPane(primaryContainer);
     primaryScene = new Scene(stackContainer, 700, 400);
     primaryScene.getStylesheets().add(defaultThemePath);
@@ -111,6 +109,7 @@ public class AutoTallerApplication extends Application {
       if (event.getView() != null) {
         primaryContainer.setCenter(event.getView().asNode());
         viewStack.add(event.getView());
+        footer.addPath(event.getTitle());
       }
     });
 
@@ -118,6 +117,7 @@ public class AutoTallerApplication extends Application {
       if (viewStack.size() > 1) {
         viewStack.pop();
         primaryContainer.setCenter(viewStack.peek().asNode());
+        footer.removeLastPath();
       }
     });
 

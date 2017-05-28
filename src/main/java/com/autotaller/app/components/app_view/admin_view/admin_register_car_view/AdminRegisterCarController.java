@@ -98,7 +98,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     view.getAddCarButton().setOnAction(event -> {
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_SAVE_CAR_VIEW);
       if (component != null) {
-        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.ADMIN_SAVE_CAR_VIEW.getTitle()));
         EventBus.fireEvent(new BindLastViewEvent());
       }
     });
@@ -107,7 +107,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
       CarModel selectedCar = view.getCarTable().getSelectionModel().getSelectedItem();
       if (selectedCar == null)
         return;
-      showCarComponentsView(selectedCar.getId(), null);
+      showCarComponentsView(selectedCar, null);
     });
 
     view.getShowFilterCarButton().setOnAction(event -> {
@@ -190,11 +190,12 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     }, true);
   }
 
-  private void showCarComponentsView(int carId, EmptyCallback bindCallback) {
+  private void showCarComponentsView(CarModel car, EmptyCallback bindCallback) {
     Component component = ComponentFactory.createComponent(ComponentType.ADMIN_COMPONENTS_VIEW);
     if (component != null) {
-      EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
-      EventBus.fireEvent(new InjectCarInformationEvent(carId));
+      String title = ComponentType.ADMIN_COMPONENTS_VIEW.getTitle() + " (" + car.getName() + ")";
+      EventBus.fireEvent(new AddViewToStackEvent(component.getView(), title));
+      EventBus.fireEvent(new InjectCarInformationEvent(car.getId()));
       EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
       EventBus.fireEvent(new BindLastViewEvent(bindCallback));
     }
@@ -251,7 +252,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     EventBus.fireEvent(new ShowDialogEvent(dialog));
     dialog.getYesButton().setOnAction(event -> {
       dialog.close();
-      load(() -> showCarComponentsView(car.getId(), () -> EventBus.fireEvent(new ShowSaveCarComponentsEvent())));
+      load(() -> showCarComponentsView(car, () -> EventBus.fireEvent(new ShowSaveCarComponentsEvent())));
     });
     dialog.getNoButton().setOnAction(event -> {
       dialog.close();

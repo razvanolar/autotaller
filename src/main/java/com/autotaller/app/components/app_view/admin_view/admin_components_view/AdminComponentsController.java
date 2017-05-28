@@ -62,7 +62,7 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     EventBus.addHandler(ShowSaveCarComponentsEvent.TYPE, (ShowSaveCarComponentsEventHandler) event -> {
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_SAVE_COMPONENTS_VIEW);
       if (component != null) {
-        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.ADMIN_SAVE_COMPONENTS_VIEW.getTitle()));
         EventBus.fireEvent(new InjectCarInformationEvent(injectedCarId));
         EventBus.fireEvent(new BindLastViewEvent());
       }

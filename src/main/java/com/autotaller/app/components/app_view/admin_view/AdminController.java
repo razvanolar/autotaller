@@ -34,7 +34,7 @@ public class AdminController implements Controller<AdminController.IAdminView> {
     view.getDefineModelMenu().setOnMouseClicked(event -> {
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_DEFINE_MODEL_VIEW);
       if (component != null) {
-        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.ADMIN_DEFINE_MODEL_VIEW.getTitle()));
         EventBus.fireEvent(new BindLastViewEvent());
         EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
       }
@@ -43,7 +43,7 @@ public class AdminController implements Controller<AdminController.IAdminView> {
     view.getAddCarMenu().setOnMouseClicked(event -> {
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_REGISTER_CAR_VIEW);
       if (component != null) {
-        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.ADMIN_REGISTER_CAR_VIEW.getTitle()));
         EventBus.fireEvent(new BindLastViewEvent());
         EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
       }
@@ -52,7 +52,7 @@ public class AdminController implements Controller<AdminController.IAdminView> {
     view.getAddComponentMenu().setOnMouseClicked(event -> {
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_COMPONENTS_VIEW);
       if (component != null) {
-        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.ADMIN_COMPONENTS_VIEW.getTitle()));
         EventBus.fireEvent(new BindLastViewEvent());
         EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
       }
@@ -61,7 +61,7 @@ public class AdminController implements Controller<AdminController.IAdminView> {
     view.getStatisticsComponentMenu().setOnMouseClicked(event -> {
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_STATISTICS_VIEW);
       if (component != null) {
-        EventBus.fireEvent(new AddViewToStackEvent(component.getView()));
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.ADMIN_STATISTICS_VIEW.getTitle()));
         EventBus.fireEvent(new BindLastViewEvent());
         EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
       }

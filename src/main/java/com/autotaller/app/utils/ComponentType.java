@@ -4,20 +4,30 @@ package com.autotaller.app.utils;
  * Created by razvanolar on 11.04.2017
  */
 public enum ComponentType {
-  LOGIN_VIEW,
-  SIGN_UP_VIEW,
-  APP_MENU_BAR,
-  ADMIN_VIEW,
-  ADMIN_DEFINE_MODEL_VIEW,
-  ADMIN_CAR_MAKE_VIEW,
-  ADD_CAR_MAKE_VIEW,
-  ADMIN_CAR_MODEL_VIEW,
-  ADMIN_CAR_KIT_VIEW,
-  ADMIN_CAR_SUBKIT_VIEW,
-  ADMIN_REGISTER_CAR_VIEW,
-  ADMIN_SAVE_CAR_VIEW,
-  ADMIN_COMPONENTS_VIEW,
-  ADMIN_SAVE_COMPONENTS_VIEW,
-  ADMIN_SAVE_COMPONENTS_VALIDATOR_VIEW,
-  ADMIN_STATISTICS_VIEW
+  LOGIN_VIEW("Login"),
+  SIGN_UP_VIEW("Inregistrare"),
+  APP_MENU_BAR("Meniu"),
+  ADMIN_VIEW("Admin"),
+  ADMIN_DEFINE_MODEL_VIEW("Definire model"),
+  ADMIN_CAR_MAKE_VIEW("Marci"),
+  ADD_CAR_MAKE_VIEW("Adaugare Marca"),
+  ADMIN_CAR_MODEL_VIEW("Modele"),
+  ADMIN_CAR_KIT_VIEW("Ansamble"),
+  ADMIN_CAR_SUBKIT_VIEW("Sub-Ansamble"),
+  ADMIN_REGISTER_CAR_VIEW("Administrare Masini"),
+  ADMIN_SAVE_CAR_VIEW("Adaugare Masina"),
+  ADMIN_COMPONENTS_VIEW("Administrare Componente"),
+  ADMIN_SAVE_COMPONENTS_VIEW("Adaugare Componente"),
+  ADMIN_SAVE_COMPONENTS_VALIDATOR_VIEW("Validare Componente"),
+  ADMIN_STATISTICS_VIEW("Statistici");
+
+  String title;
+
+  ComponentType(String title) {
+    this.title = title;
+  }
+
+  public String getTitle() {
+    return title;
+  }
 }

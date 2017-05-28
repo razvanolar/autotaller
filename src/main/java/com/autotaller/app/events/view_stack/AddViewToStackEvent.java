@@ -13,12 +13,19 @@ public class AddViewToStackEvent extends Event<AddViewToStackEventHandler> {
 
   private View view;
 
-  public AddViewToStackEvent(View view) {
+  private String title;
+
+  public AddViewToStackEvent(View view, String title) {
     this.view = view;
+    this.title = title;
   }
 
   public View getView() {
     return view;
+  }
+
+  public String getTitle() {
+    return title;
   }
 
   @Override
