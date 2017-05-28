@@ -5,8 +5,10 @@ import com.autotaller.app.events.app_view.GetStageInstanceEvent;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.utils.resources.ImageProvider;
 import com.autotaller.app.utils.resources.NodeProvider;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
@@ -87,7 +89,7 @@ public class ImageGalleryPane {
         for (File file : filesCopy) {
           ImageView imageView = new ImageView(ImageProvider.getImageFromPath(file.getAbsolutePath()));
           imageView.setPreserveRatio(true);
-          imageView.setFitWidth(120);
+          imageView.setFitHeight(150);
           imageView.setOnMouseClicked(imageMouseEvent);
           imageContainer.getChildren().add(imageView);
           images.add(file);
@@ -108,6 +110,21 @@ public class ImageGalleryPane {
         dialog.close();
       });
     });
+
+    openGalleryButton.setOnAction(event -> {
+      EventBus.fireEvent(new ShowDialogEvent(new ImageGalleryDialog(collectImages())));
+    });
+  }
+
+  private List<Image> collectImages() {
+    List<Image> result = new ArrayList<>();
+    if (scrollPane.getContent() == imageContainer) {
+      ObservableList<Node> children = imageContainer.getChildren();
+      for (Node node : children) {
+        result.add(((ImageView) node).getImage());
+      }
+    }
+    return result;
   }
 
   private void showPreviewImage() {

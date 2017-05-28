@@ -4,7 +4,6 @@ import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.GetStageInstanceEvent;
 import com.autotaller.app.utils.resources.NodeProvider;
 import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialogLayout;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,8 +18,6 @@ public class ImageDialog extends JFXDialog {
   public ImageDialog(Image image) {
     ImageView imageView = new ImageView(image);
     scrollPane = NodeProvider.createScrollPane(imageView, true);
-    JFXDialogLayout dialogLayout = new JFXDialogLayout();
-    dialogLayout.setBody(scrollPane);
     this.setContent(scrollPane);
     this.setTransitionType(JFXDialog.DialogTransition.CENTER);
 
