@@ -1,6 +1,7 @@
 package com.autotaller.app.components.app_view.admin_view.admin_register_car_view;
 
 import com.autotaller.app.EventBus;
+import com.autotaller.app.components.utils.ImageGalleryPane;
 import com.autotaller.app.components.utils.SimpleDialog;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
@@ -19,6 +20,7 @@ import com.autotaller.app.utils.View;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 
 import java.time.LocalDate;
@@ -32,12 +34,11 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
   public interface IAdminSaveCarView extends View {
     TableView<CarMakeModel> getCarMakesTable();
     TableView<CarTypeModel> getCarTypesTable();
-    Node getSaveCarForm();
-    Node getCarImagesPane();
+    Region getSaveCarForm();
     Button getContinueButton();
     Button getBackButton();
-    void setActiveNode(Node node);
-    Node getActiveNode();
+    void setActiveNode(Region node);
+    Region getActiveNode();
     Text getPathText();
     Text getCarMakeText();
     Text getCarTypeText();
@@ -50,6 +51,8 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     Spinner<Integer> getCarCapacitySpinner();
     Spinner<Integer> getCarCylindersSpinner();
     ComboBox<FuelModel> getCarFuelCombo();
+    TextArea getCarDescriptionTextArea();
+    ImageGalleryPane getImageGalleryPane();
   }
 
   private IAdminSaveCarView view;
@@ -63,7 +66,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     this.view = view;
 
     view.getContinueButton().setOnAction(event -> {
-      Node activeNode = view.getActiveNode();
+      Region activeNode = view.getActiveNode();
       if (activeNode == view.getCarMakesTable()) {
         continueAfterCarMakeSelection();
       } else if (activeNode == view.getCarTypesTable()) {

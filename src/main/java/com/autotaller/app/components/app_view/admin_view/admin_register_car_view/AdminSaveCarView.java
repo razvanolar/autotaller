@@ -1,6 +1,7 @@
 package com.autotaller.app.components.app_view.admin_view.admin_register_car_view;
 
 import com.autotaller.app.components.utils.FillToolItem;
+import com.autotaller.app.components.utils.ImageGalleryPane;
 import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
@@ -11,6 +12,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
@@ -34,9 +37,10 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
   private Spinner<Integer> carCapacitySpinner;
   private Spinner<Integer> carCylindersSpinner;
   private ComboBox<FuelModel> carFuelCombo;
-  private GridPane saveCarFormPane;
+  private TextArea carDescriptionTextArea;
+  private ImageGalleryPane imageGalleryPane;
 
-  private BorderPane carImagesPane;
+  private Region saveCarFormPane;
 
   public AdminSaveCarView() {
     init();
@@ -65,8 +69,10 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     carCapacitySpinner = NodeProvider.createSpinner(width,0, 10000, 0, 1);
     carCylindersSpinner = NodeProvider.createSpinner(width,0, 100, 0, 1);
     carFuelCombo = NodeProvider.createFuelCombo(width);
+    carDescriptionTextArea = NodeProvider.createTextArea(width + 90, 120);
+    imageGalleryPane = new ImageGalleryPane();
 
-    saveCarFormPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
+    GridPane saveCarFormPane = NodeProvider.createGridPane(Pos.TOP_CENTER, 10, 10);
     int row = 0;
     saveCarFormPane.add(NodeProvider.createFormTextLabel("Marca: "), 0, row);
     saveCarFormPane.add(carMakeText, 1, row++);
@@ -90,10 +96,23 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     saveCarFormPane.add(carCylindersSpinner, 1, row++);
     saveCarFormPane.add(NodeProvider.createFormTextLabel("Combustibil: "), 0, row);
     saveCarFormPane.add(carFuelCombo, 1, row);
-  }
 
-  private void initCarImagesPane() {
-    carImagesPane = new BorderPane();
+    GridPane descriptionPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
+    descriptionPane.add(carDescriptionTextArea, 0, 0);
+
+    BorderPane imagesPane = NodeProvider.createBorderPane();
+    imagesPane.setTop(NodeProvider.createTitlePane("Imagini"));
+    imagesPane.setCenter(imageGalleryPane.asNode());
+
+    VBox formVBox = NodeProvider.createVBox(5, NodeProvider.createTitlePane("Informatii"),
+            saveCarFormPane, NodeProvider.createTitlePane("Descriere"), descriptionPane);
+
+    SplitPane splitPane = new SplitPane(NodeProvider.createScrollPane(formVBox, true), imagesPane);
+
+    splitPane.setDividerPosition(0, .33);
+//    SplitPane.setResizableWithParent(imagesPane, false);
+
+    this.saveCarFormPane = splitPane;
   }
 
   public TableView<CarMakeModel> getCarMakesTable() {
@@ -106,17 +125,10 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     return carTypesTable;
   }
 
-  public Node getSaveCarForm() {
+  public Region getSaveCarForm() {
     if (saveCarFormPane == null)
       initSaveCarFormPane();
     return saveCarFormPane;
-  }
-
-  @Override
-  public Node getCarImagesPane() {
-    if (carImagesPane == null)
-      initCarImagesPane();
-    return carImagesPane;
   }
 
   public Button getContinueButton() {
@@ -127,12 +139,12 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     return backButton;
   }
 
-  public void setActiveNode(Node node) {
+  public void setActiveNode(Region node) {
     borderPane.setCenter(node);
   }
 
-  public Node getActiveNode() {
-    return borderPane.getCenter();
+  public Region getActiveNode() {
+    return (Region) borderPane.getCenter();
   }
 
   public Text getPathText() {
@@ -181,6 +193,14 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
 
   public ComboBox<FuelModel> getCarFuelCombo() {
     return carFuelCombo;
+  }
+
+  public TextArea getCarDescriptionTextArea() {
+    return carDescriptionTextArea;
+  }
+
+  public ImageGalleryPane getImageGalleryPane() {
+    return imageGalleryPane;
   }
 
   @Override

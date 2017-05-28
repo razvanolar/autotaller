@@ -97,9 +97,10 @@
     -fx-background-color: darkcyan;
 }
 
-.adminToolbarPaneBackground {
+.adminToolbarPaneBackground, .titlePaneBackground {
     /*-fx-background-color: rgba(8,52,112,0.5);*/
     -fx-background-color: rgba(8,52,112,0.4);
+    -fx-fill: rgba(8,52,112,0.4);
 }
 
 .adminToolbarPaneBackground:hover {
@@ -128,4 +129,10 @@
 
 .kitCategoryTabSelectedBackground, .kitTabBackground {
     -fx-background-color: darkgray;
+}
+
+.imageGalleryBackground {
+    -fx-background-image: url("../icons/image_gallery_light_bg.png");
+    /*-fx-background-position: center;*/
+    /*-fx-background-repeat: no-repeat;*/
 }

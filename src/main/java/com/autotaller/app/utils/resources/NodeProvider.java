@@ -1,17 +1,17 @@
 package com.autotaller.app.utils.resources;
 
+import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.model.*;
 import com.jfoenix.controls.*;
 import javafx.beans.binding.Bindings;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -72,6 +72,12 @@ public class NodeProvider {
     TextField textField = new TextField();
     textField.setPrefWidth(width);
     return textField;
+  }
+
+  public static TextArea createTextArea(int width, int height) {
+    TextArea textArea = new TextArea();
+    textArea.setPrefSize(width, height);
+    return textArea;
   }
 
   public static JFXPasswordField createPasswordField(String promptText, boolean labelFloat, int minWidth) {
@@ -185,6 +191,50 @@ public class NodeProvider {
     return hBox;
   }
 
+  public static VBox createTitlePane(String title) {
+    VBox node = new VBox();
+    FillToolItem bar = new FillToolItem();
+    bar.setPrefHeight(5);
+    bar.getStyleClass().add(StyleProvider.TITLE_PANE_CLASS);
+    node.getChildren().addAll(createTextLabel(title, 17, false), bar);
+    node.setAlignment(Pos.CENTER_LEFT);
+    node.setPadding(new Insets(5, 10, 5, 10));
+    return node;
+  }
+
+  public static VBox createVBox(int spacing) {
+    VBox node = new VBox(spacing);
+    node.getStyleClass().add(StyleProvider.GENERAL_PANE_BACKGROUND_CLASS);
+    return node;
+  }
+
+  public static VBox createVBox(int spacing, Node... nodes) {
+    VBox node = createVBox(spacing);
+    if (nodes != null)
+      node.getChildren().addAll(nodes);
+    return node;
+  }
+
+  public static VBox createVBox(Pos pos, int spacing, Node... nodes) {
+    VBox node = createVBox(spacing, nodes);
+    if (pos != null)
+      node.setAlignment(pos);
+    return node;
+  }
+
+  public static BorderPane createBorderPane() {
+    BorderPane pane = new BorderPane();
+    pane.getStyleClass().add(StyleProvider.GENERAL_PANE_BACKGROUND_CLASS);
+    return pane;
+  }
+
+  public static FlowPane createFlowPane(Pos pos) {
+    FlowPane flowPane = new FlowPane();
+    flowPane.getStyleClass().add(StyleProvider.GENERAL_PANE_BACKGROUND_CLASS);
+    flowPane.setAlignment(pos);
+    return flowPane;
+  }
+
   public static Node createAppMenu(String text, Image icon) {
     return createAppMenu(text, icon, 150, 200, StyleProvider.APP_MENU_BOX_CLASS);
   }
@@ -214,17 +264,16 @@ public class NodeProvider {
 
   public static ScrollPane createScrollPane(Region content) {
     ScrollPane scrollPane = new ScrollPane(content) {public void requestFocus() {}};
-    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
     scrollPane.getStyleClass().add(StyleProvider.GENERAL_SCROLL_PANE_BACKGROUND_CLASS);
     return scrollPane;
   }
 
   public static ScrollPane createScrollPane(Region content, boolean centerContent) {
     ScrollPane scroll = createScrollPane(content);
-    if (centerContent) {
-      content.minWidthProperty().bind(Bindings.createDoubleBinding(() -> scroll.getViewportBounds().getWidth(), scroll.viewportBoundsProperty()));
-      content.minHeightProperty().bind(Bindings.createDoubleBinding(() -> scroll.getViewportBounds().getHeight(), scroll.viewportBoundsProperty()));
-    }
+    scroll.setFitToWidth(centerContent);
+    scroll.setFitToHeight(centerContent);
     return scroll;
   }
 

@@ -173,6 +173,10 @@ public class AutoTallerApplication extends Application {
         }
       }
     });
+
+    EventBus.addHandler(GetStageInstanceEvent.TYPE, (GetStageInstanceEventHandler) event -> {
+      event.getCallback().call(primaryStage);
+    }, true);
   }
 
   public static void main(String[] args) {

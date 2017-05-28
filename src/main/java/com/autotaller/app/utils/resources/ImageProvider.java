@@ -88,13 +88,21 @@ public class ImageProvider {
     return getImage("icons/details.png");
   }
 
-  private static Image getImage(String file) {
+  public static Image cameraIcon() {
+    return getImage("icons/camera.png");
+  }
+
+  public static Image getImage(String file) {
     String path = ImageProvider.class.getResource(file).getPath();
     if (path.contains("!")) {
       path = path.substring(path.lastIndexOf("!") + 1);
       return new Image(path);
     } else {
-    return new Image("file:///" + path.replace("\\", "/"));
+      return new Image("file:///" + path.replace("\\", "/"));
     }
+  }
+
+  public static Image getImageFromPath(String path) {
+    return new Image("file:///" + path.replace("\\", "/"));
   }
 }
