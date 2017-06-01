@@ -25,7 +25,7 @@ public class AdminView extends IterableView implements AdminController.IAdminVie
   }
 
   private void init() {
-    defineModelMenu = NodeProvider.createAdminAppMenu("Definire Model", null);
+    defineModelMenu = NodeProvider.createAdminAppMenu("Definire Context", null);
     addCarMenu = NodeProvider.createAdminAppMenu("Inregistrare Masina", null);
     addComponentMenu = NodeProvider.createAdminAppMenu("Inregistrare Componenta", null);
     statisticsComponentMenu = NodeProvider.createAdminAppMenu("Statistici", null);

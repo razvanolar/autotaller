@@ -10,11 +10,11 @@ import javafx.scene.layout.VBox;
 /**
  * Created by razvanolar on 18.04.2017
  */
-public class AdminDefineModelView extends IterableView implements AdminDefineModelController.IAdminDefineModelView {
+public class AdminDefineAllContextView extends IterableView implements AdminDefineAllContextController.IAdminDefineAllContextView {
 
   private VBox vBox;
 
-  public AdminDefineModelView() {
+  public AdminDefineAllContextView() {
     super();
     init();
   }

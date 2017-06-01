@@ -8,7 +8,7 @@ public enum ComponentType {
   SIGN_UP_VIEW("Inregistrare"),
   APP_MENU_BAR("Meniu"),
   ADMIN_VIEW("Admin"),
-  ADMIN_DEFINE_MODEL_VIEW("Definire model"),
+  ADMIN_DEFINE_CONTEXT_VIEW("Definire Context"),
   ADMIN_CAR_MAKE_VIEW("Marci"),
   ADD_CAR_MAKE_VIEW("Adaugare Marca"),
   ADMIN_CAR_MODEL_VIEW("Modele"),

@@ -32,9 +32,9 @@ public class AdminController implements Controller<AdminController.IAdminView> {
   public void bind(IAdminView view) {
 
     view.getDefineModelMenu().setOnMouseClicked(event -> {
-      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_DEFINE_MODEL_VIEW);
+      Component component = ComponentFactory.createComponent(ComponentType.ADMIN_DEFINE_CONTEXT_VIEW);
       if (component != null) {
-        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.ADMIN_DEFINE_MODEL_VIEW.getTitle()));
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.ADMIN_DEFINE_CONTEXT_VIEW.getTitle()));
         EventBus.fireEvent(new BindLastViewEvent());
         EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
       }

@@ -5,7 +5,7 @@ import com.autotaller.app.components.app_view.admin_view.AdminController;
 import com.autotaller.app.components.app_view.admin_view.admin_components_view.AdminComponentsController;
 import com.autotaller.app.components.app_view.admin_view.admin_components_view.AdminSaveComponentsController;
 import com.autotaller.app.components.app_view.admin_view.admin_components_view.utils.AdminSaveComponentValidatorController;
-import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.AdminDefineModelController;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.AdminDefineAllContextController;
 import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_kit_view.AdminCarKitController;
 import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_make_view.AddCarMakeDialogController;
 import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_make_view.AdminCarMakeController;
@@ -34,8 +34,8 @@ public class ControllerFactory {
         return new AutoTallerMenuBarController();
       case ADMIN_VIEW:
         return new AdminController();
-      case ADMIN_DEFINE_MODEL_VIEW:
-        return new AdminDefineModelController();
+      case ADMIN_DEFINE_CONTEXT_VIEW:
+        return new AdminDefineAllContextController();
       case ADMIN_CAR_MAKE_VIEW:
         return new AdminCarMakeController();
       case ADD_CAR_MAKE_VIEW:
