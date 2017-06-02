@@ -342,12 +342,12 @@ public class NodeProvider {
     return TABLE_PROVIDER.createCarTable();
   }
 
-  public static TableView<CarComponentModel> createCarComponentTable() {
-    return createCarComponentTable(false);
+  public static TableView<CarComponentModel> createCarComponentTable(boolean showSoldPiecesColumn) {
+    return createCarComponentTable(false, showSoldPiecesColumn);
   }
 
-  public static TableView<CarComponentModel> createCarComponentTable(boolean isEditable) {
-    return TABLE_PROVIDER.createCarComponentTable(isEditable);
+  public static TableView<CarComponentModel> createCarComponentTable(boolean isEditable, boolean showSoldPiecesColumn) {
+    return TABLE_PROVIDER.createCarComponentTable(isEditable, showSoldPiecesColumn);
   }
 
   public static TableView<CarComponentModel> createCarComponentValidatorTable() {

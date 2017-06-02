@@ -12,6 +12,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
+import javafx.util.StringConverter;
+import javafx.util.converter.IntegerStringConverter;
 
 /**
  * Created by razvanolar on 30.04.2017
@@ -23,7 +25,7 @@ public class TableProvider {
     TableView<CarMakeModel> table = new TableView<>();
     TableColumn<CarMakeModel, String> nameColumn = new TableColumn<>("Nume Marca");
 
-    nameColumn.prefWidthProperty().bind(table.widthProperty());
+    nameColumn.prefWidthProperty().bind(table.widthProperty().multiply(.99));
 
     nameColumn.setCellValueFactory(p -> new SimpleStringProperty(p.getValue() != null ? p.getValue().getName() : ""));
 
@@ -214,18 +216,20 @@ public class TableProvider {
   }
 
   @SuppressWarnings("unchecked")
-  public TableView<CarComponentModel> createCarComponentTable(boolean isEditable, boolean useValidatorStyles) {
+  public TableView<CarComponentModel> createCarComponentTable(boolean isEditable, boolean useValidatorStyles, boolean showSoldPiecesColumn) {
     TableView<CarComponentModel> table = new TableView<>();
     TableColumn<CarComponentModel, String> nameColumn = new TableColumn<>("Nume");
     TableColumn<CarComponentModel, String> codeCoulmn = new TableColumn<>("Cod");
     TableColumn<CarComponentModel, String> stockColumn = new TableColumn<>("Stoc");
     TableColumn<CarComponentModel, String> subkitColumn = new TableColumn<>("Sub-ansamblu");
+    TableColumn<CarComponentModel, Integer> initialPiecesColumn = new TableColumn<>("Bucati");
 
-    DoubleBinding widthProperty = table.widthProperty().multiply(.245);
+    DoubleBinding widthProperty = table.widthProperty().multiply(.198);
     nameColumn.prefWidthProperty().bind(widthProperty);
     codeCoulmn.prefWidthProperty().bind(widthProperty);
     stockColumn.prefWidthProperty().bind(widthProperty);
     subkitColumn.prefWidthProperty().bind(widthProperty);
+    initialPiecesColumn.prefWidthProperty().bind(widthProperty);
 
     nameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getName()) : new SimpleStringProperty());
     codeCoulmn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getCode()) : new SimpleStringProperty());
@@ -237,11 +241,13 @@ public class TableProvider {
       }
       return new SimpleStringProperty();
     });
+    initialPiecesColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getInitialPieces()) : new SimpleObjectProperty<>());
 
     nameColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     codeCoulmn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     stockColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     subkitColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    initialPiecesColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
 
     if (isEditable) {
       nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -252,6 +258,17 @@ public class TableProvider {
 
       stockColumn.setCellFactory(TextFieldTableCell.forTableColumn());
       stockColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setStock(event.getNewValue()));
+
+      initialPiecesColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Integer>() {
+        @Override public String toString(Integer object) {
+          return object != null ? String.valueOf(object) : String.valueOf(0);
+        }
+
+        @Override public Integer fromString(String string) {
+          return StringValidator.isPositiveInteger(string) ? Integer.parseInt(string) : 0;
+        }
+      }));
+      initialPiecesColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setInitial_pieces(event.getNewValue()));
     }
 
     if (useValidatorStyles) {
@@ -272,15 +289,15 @@ public class TableProvider {
       });
     }
 
-    table.getColumns().addAll(nameColumn, codeCoulmn, stockColumn, subkitColumn);
+    table.getColumns().addAll(subkitColumn, nameColumn, codeCoulmn, stockColumn, initialPiecesColumn);
     return table;
   }
 
-  public TableView<CarComponentModel> createCarComponentTable(boolean isEditable) {
-    return createCarComponentTable(isEditable, false);
+  public TableView<CarComponentModel> createCarComponentTable(boolean isEditable, boolean showSoldPiecesColumn) {
+    return createCarComponentTable(isEditable, false, showSoldPiecesColumn);
   }
 
   public TableView<CarComponentModel> createCarComponentValidationTable() {
-    return createCarComponentTable(false, true);
+    return createCarComponentTable(false, true, false);
   }
 }

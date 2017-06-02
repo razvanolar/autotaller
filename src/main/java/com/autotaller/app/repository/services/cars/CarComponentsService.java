@@ -25,7 +25,7 @@ public class CarComponentsService extends GenericService {
     PreparedStatement statement = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = "SELECT id, car_id, subkit_id, component_name, code, stock, description FROM car_components";
+      String query = "SELECT id, car_id, subkit_id, component_name, code, stock, description, initial_pieces_no, sold_pieces_no FROM car_components";
       statement = connection.prepareStatement(query);
       return getCarComponentsFromStatement(statement);
     } catch (Exception e) {
@@ -42,7 +42,7 @@ public class CarComponentsService extends GenericService {
     PreparedStatement statement = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = "SELECT id, car_id, subkit_id, component_name, code, stock, description FROM car_components WHERE car_id = ?";
+      String query = "SELECT id, car_id, subkit_id, component_name, code, stock, description, initial_pieces_no, sold_pieces_no FROM car_components WHERE car_id = ?";
       statement = connection.prepareStatement(query);
       statement.setInt(1, carId);
       return getCarComponentsFromStatement(statement);
@@ -61,7 +61,7 @@ public class CarComponentsService extends GenericService {
     try {
       connection = jdbcUtil.getNewConnection();
       connection.setAutoCommit(false);
-      String sql = "INSERT INTO car_components (car_id, subkit_id, component_name, code, stock, description) VALUES (?, ?, ?, ?, ?, ?)";
+      String sql = "INSERT INTO car_components (car_id, subkit_id, component_name, code, stock, description, initial_pieces_no, sold_pieces_no) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
       statement = connection.prepareStatement(sql);
       for (CarComponentModel component : components) {
         statement.setInt(1, component.getCarId() > 0 ? component.getCarId() : 0);
@@ -70,6 +70,8 @@ public class CarComponentsService extends GenericService {
         statement.setString(4, component.getCode());
         statement.setString(5, component.getStock());
         statement.setString(6, StringValidator.isNullOrEmpty(component.getDescription()) ? "" : component.getDescription());
+        statement.setInt(7, component.getInitialPieces());
+        statement.setInt(8, component.getSoldPieces());
         statement.executeUpdate();
       }
       connection.commit();
@@ -92,7 +94,7 @@ public class CarComponentsService extends GenericService {
       while (rs.next()) {
         result.add(new CarComponentModel(rs.getInt(1), rs.getInt(2), rs.getInt(3),
                 rs.getString(4), rs.getString(5), rs.getString(6),
-                rs.getString(7)));
+                rs.getString(7), rs.getInt(8), rs.getInt(9)));
       }
       return result;
     } finally {

@@ -40,7 +40,7 @@ public class AdminComponentsView extends IterableView implements AdminComponents
     toolBar.getItems().addAll(new Separator(), addComponentButton, editComponentButton, deleteComponentButton,
             new Separator(), filterComponentsButton, detailsButton);
 
-    carComponentsTable = NodeProvider.createCarComponentTable();
+    carComponentsTable = NodeProvider.createCarComponentTable(true);
     filterPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
 
     mainSplitPane = new SplitPane(carComponentsTable);

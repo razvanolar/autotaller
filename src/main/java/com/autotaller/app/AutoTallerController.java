@@ -2,11 +2,8 @@ package com.autotaller.app;
 
 import com.autotaller.app.components.utils.ImageGalleryDialog;
 import com.autotaller.app.components.utils.NotificationsUtil;
-import com.autotaller.app.events.app_view.OpenCarImageGalleryEvent;
-import com.autotaller.app.events.app_view.OpenCarImageGalleryEventHandler;
-import com.autotaller.app.events.app_view.ShowDialogEvent;
+import com.autotaller.app.events.app_view.*;
 import com.autotaller.app.events.app_view.admin_view.*;
-import com.autotaller.app.events.app_view.ShowAppViewEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEventHandler;
 import com.autotaller.app.events.login_view.*;
@@ -39,6 +36,7 @@ import java.util.List;
 public class AutoTallerController implements Controller<AutoTallerController.IAutoTallerView> {
 
   public interface IAutoTallerView extends View {
+    Node getCarsMenu();
     Node getAdminMenu();
     Node getExitMenu();
   }
@@ -114,6 +112,14 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
   }
 
   private void initAppViewHandlers() {
+    autoTallerView.getCarsMenu().setOnMouseClicked(event -> {
+      Component component = ComponentFactory.createComponent(ComponentType.SEARCH_CAR_MAKE_VIEW);
+      if (component != null) {
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.SEARCH_CAR_MAKE_VIEW.getTitle()));
+        EventBus.fireEvent(new BindLastViewEvent());
+      }
+    });
+
     autoTallerView.getAdminMenu().setOnMouseClicked(event -> {
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_VIEW);
       if (component != null) {
@@ -153,7 +159,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetCarMakesEvent.TYPE, (GetCarMakesEventHandler) event -> {
       try {

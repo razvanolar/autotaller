@@ -140,3 +140,15 @@
     /*-fx-background-position: center;*/
     /*-fx-background-repeat: no-repeat;*/
 }
+
+.chipSetStyle {
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: rgba(12,83,184,0.74);
+}
+
+.chipSetStyle:hover {
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: rgba(184,99,50,0.74);
+}

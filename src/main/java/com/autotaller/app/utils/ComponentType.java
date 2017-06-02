@@ -19,7 +19,8 @@ public enum ComponentType {
   ADMIN_COMPONENTS_VIEW("Administrare Componente"),
   ADMIN_SAVE_COMPONENTS_VIEW("Adaugare Componente"),
   ADMIN_SAVE_COMPONENTS_VALIDATOR_VIEW("Validare Componente"),
-  ADMIN_STATISTICS_VIEW("Statistici");
+  ADMIN_STATISTICS_VIEW("Statistici"),
+  SEARCH_CAR_MAKE_VIEW("Cautare Marca");
 
   String title;
 

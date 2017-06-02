@@ -116,6 +116,10 @@ public class ImageProvider {
     return getImage("icons/camera.png");
   }
 
+  public static Image chipSetCloseIcon() {
+    return getImage("icons/chip_set_close_icon.png");
+  }
+
   public static Image getImage(String file) {
     String path = ImageProvider.class.getResource(file).getPath();
     if (path.contains("!")) {

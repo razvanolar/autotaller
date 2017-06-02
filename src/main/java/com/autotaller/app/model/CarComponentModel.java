@@ -12,8 +12,11 @@ public class CarComponentModel {
   private String code;
   private String stock;
   private String description;
+  private int initial_pieces;
+  private int sold_pieces;
 
-  public CarComponentModel(int id, int carId, int carSubkitId, String name, String code, String stock, String description) {
+  public CarComponentModel(int id, int carId, int carSubkitId, String name, String code, String stock,
+                           String description, int initial_pieces, int sold_pieces) {
     this.id = id;
     this.carId = carId;
     this.carSubkitId = carSubkitId;
@@ -21,6 +24,8 @@ public class CarComponentModel {
     this.code = code;
     this.stock = stock;
     this.description = description;
+    this.initial_pieces = initial_pieces;
+    this.sold_pieces = sold_pieces;
   }
 
   public int getId() {
@@ -51,6 +56,14 @@ public class CarComponentModel {
     return description;
   }
 
+  public int getInitialPieces() {
+    return initial_pieces;
+  }
+
+  public int getSoldPieces() {
+    return sold_pieces;
+  }
+
   public void setName(String name) {
     this.name = name;
   }
@@ -65,5 +78,9 @@ public class CarComponentModel {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public void setInitial_pieces(int initial_pieces) {
+    this.initial_pieces = initial_pieces;
   }
 }

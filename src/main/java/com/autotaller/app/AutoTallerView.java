@@ -13,6 +13,7 @@ import javafx.scene.layout.GridPane;
 public class AutoTallerView implements AutoTallerController.IAutoTallerView {
 
   private BorderPane mainContainer;
+  private Node carsMenu;
   private Node adminMenu;
   private Node exitMenu;
 
@@ -22,7 +23,7 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
   }
 
   private void init() {
-    Node carsMenu = NodeProvider.createAppMenu("Masini", ImageProvider.carMenuIcon());
+    carsMenu = NodeProvider.createAppMenu("Masini", ImageProvider.carMenuIcon());
     Node componentsMenu = NodeProvider.createAppMenu("Componente", ImageProvider.componentMenuIcon());
     Node searchMenu = NodeProvider.createAppMenu("Cautare", ImageProvider.searchMenuIcon());
     adminMenu = NodeProvider.createAppMenu("Administrare", ImageProvider.adminMenuIcon());
@@ -42,6 +43,10 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
     gridPane.add(exitMenu, 2, 1);
 
     mainContainer = new BorderPane(gridPane);
+  }
+
+  public Node getCarsMenu() {
+    return carsMenu;
   }
 
   public Node getAdminMenu() {

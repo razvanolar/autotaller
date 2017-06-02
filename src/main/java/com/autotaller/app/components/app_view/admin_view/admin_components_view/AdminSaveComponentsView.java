@@ -34,7 +34,7 @@ public class AdminSaveComponentsView extends IterableView implements AdminSaveCo
   }
 
   private void init() {
-    carComponentTable = NodeProvider.createCarComponentTable(true);
+    carComponentTable = NodeProvider.createCarComponentTable(true, false);
     carComponentTable.setEditable(true);
 
     previousKitButton = NodeProvider.createToolbarButton("Ansamblul Anterior", ImageProvider.backIcon());
