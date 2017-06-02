@@ -189,6 +189,10 @@ public class Repository {
     return carComponentsService.getComponentsByCarId(carId);
   }
 
+  public List<CarComponentModel> getCarComponentsByCarAndKitId(int carId, int kitId) throws Exception {
+    return carComponentsService.getComponentsByCarAndKitId(carId, kitId);
+  }
+
   public void addComponents(List<CarComponentModel> components) throws Exception {
     carComponentsService.addComponents(components);
   }

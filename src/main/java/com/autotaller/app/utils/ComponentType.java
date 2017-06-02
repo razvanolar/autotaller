@@ -22,7 +22,9 @@ public enum ComponentType {
   ADMIN_STATISTICS_VIEW("Statistici"),
   SEARCH_CAR_MAKE_VIEW("Cautare Marca"),
   SEARCH_CAR_TYPE_VIEW("Cautare Model"),
-  SEARCH_CAR_VIEW("Cautare Masina");
+  SEARCH_CAR_VIEW("Cautare Masina"),
+  SHOW_CAR_KITS_VIEW("Prezentare Ansamble"),
+  SEARCH_CAR_COMPONENTS_VIEW("Cautare Componente");
 
   String title;
 

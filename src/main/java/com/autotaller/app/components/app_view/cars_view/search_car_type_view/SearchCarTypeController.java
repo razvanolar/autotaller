@@ -50,13 +50,13 @@ public class SearchCarTypeController implements Controller<SearchCarTypeControll
       }
     });
 
-    EventBus.addHandler(InjectCarTypesEvent.TYPE, (InjectCarTypesEventHandler) event -> this.carTypes = event.getCarTypes());
+    EventBus.addHandler(InjectCarTypesEvent.TYPE, (InjectCarTypesEventHandler) event -> this.carTypes = event.getCarTypes(), true);
 
     EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> {
       ObservableList<CarTypeModel> items = view.getCarTypeTable().getItems();
       items.clear();
       if (carTypes != null)
         items.addAll(carTypes);
-    });
+    }, true);
   }
 }

@@ -55,6 +55,27 @@ public class CarComponentsService extends GenericService {
     }
   }
 
+  public List<CarComponentModel> getComponentsByCarAndKitId(int carId, int kitId) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      String query = "SELECT cc.id, cc.car_id, cc.subkit_id, cc.component_name, cc.code, cc.stock, cc.description, " +
+              "cc.initial_pieces_no, cc.sold_pieces_no FROM car_components cc INNER JOIN car_subkits cs " +
+              "ON cc.subkit_id = cs.id INNER JOIN car_kits ck ON cs.car_kit_id = ck.id WHERE car_id = ? AND ck.id = ?";
+      statement = connection.prepareStatement(query);
+      statement.setInt(1, carId);
+      statement.setInt(2, kitId);
+      return getCarComponentsFromStatement(statement);
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
+
   public void addComponents(List<CarComponentModel> components) throws Exception {
     Connection connection = null;
     PreparedStatement statement = null;

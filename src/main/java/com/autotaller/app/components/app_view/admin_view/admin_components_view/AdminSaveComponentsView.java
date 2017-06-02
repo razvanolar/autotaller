@@ -1,7 +1,7 @@
 package com.autotaller.app.components.app_view.admin_view.admin_components_view;
 
 import com.autotaller.app.components.app_view.admin_view.admin_components_view.utils.CarKitCategoriesTabView;
-import com.autotaller.app.components.app_view.admin_view.admin_components_view.utils.KitSelectionListener;
+import com.autotaller.app.components.utils.listeners.KitSelectionListener;
 import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.model.CarComponentModel;

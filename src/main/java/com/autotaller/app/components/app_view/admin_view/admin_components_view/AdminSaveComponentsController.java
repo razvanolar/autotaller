@@ -1,7 +1,7 @@
 package com.autotaller.app.components.app_view.admin_view.admin_components_view;
 
 import com.autotaller.app.EventBus;
-import com.autotaller.app.components.app_view.admin_view.admin_components_view.utils.KitSelectionListener;
+import com.autotaller.app.components.utils.listeners.KitSelectionListener;
 import com.autotaller.app.components.utils.NodeDialog;
 import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.events.app_view.BindLastViewEvent;

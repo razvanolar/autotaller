@@ -4,6 +4,8 @@ import com.autotaller.app.components.utils.ImageGalleryDialog;
 import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.events.app_view.*;
 import com.autotaller.app.events.app_view.admin_view.*;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarAndKitIdEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarAndKitIdEventHandler;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEventHandler;
 import com.autotaller.app.events.login_view.*;
@@ -388,6 +390,30 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         Thread thread = new Thread(() -> {
           try {
             List<CarComponentModel> result = repository.getCarComponentsByCarId(event.getCarTypeId());
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(result);
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
+
+    EventBus.addHandler(GetCarComponentsByCarAndKitIdEvent.TYPE, (GetCarComponentsByCarAndKitIdEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Incarcare Componente"));
+        Thread thread = new Thread(() -> {
+          try {
+            List<CarComponentModel> result = repository.getCarComponentsByCarAndKitId(event.getCarId(), event.getKitId());
             Platform.runLater(() -> {
               EventBus.fireEvent(new UnmaskViewEvent());
               event.getCallback().call(result);

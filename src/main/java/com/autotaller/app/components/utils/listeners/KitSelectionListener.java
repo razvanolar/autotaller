@@ -1,4 +1,4 @@
-package com.autotaller.app.components.app_view.admin_view.admin_components_view.utils;
+package com.autotaller.app.components.utils.listeners;
 
 import com.autotaller.app.model.CarKitModel;
 

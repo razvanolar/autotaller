@@ -4,12 +4,17 @@ import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.admin_view.GetCarsByTypeIdEvent;
+import com.autotaller.app.events.app_view.search_views.InjectCarEvent;
 import com.autotaller.app.events.app_view.search_views.InjectCarTypeEvent;
 import com.autotaller.app.events.app_view.search_views.InjectCarTypeEventHandler;
+import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.model.CarModel;
 import com.autotaller.app.model.CarTypeModel;
+import com.autotaller.app.utils.Component;
+import com.autotaller.app.utils.ComponentType;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.View;
+import com.autotaller.app.utils.factories.ComponentFactory;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
@@ -31,9 +36,22 @@ public class SearchCarController implements Controller<SearchCarController.ISear
   public void bind(ISearchCarView view) {
     this.view = view;
 
-    EventBus.addHandler(InjectCarTypeEvent.TYPE, (InjectCarTypeEventHandler) event -> this.carType = event.getCarType());
+    view.getContinueButton().setOnAction(event -> {
+      CarModel selectedCar = view.getCarsTable().getSelectionModel().getSelectedItem();
+      if (selectedCar == null) {
+        return;
+      }
+      Component component = ComponentFactory.createComponent(ComponentType.SHOW_CAR_KITS_VIEW);
+      if (component != null) {
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.SHOW_CAR_KITS_VIEW.getTitle()));
+        EventBus.fireEvent(new InjectCarEvent(selectedCar));
+        EventBus.fireEvent(new BindLastViewEvent());
+      }
+    });
 
-    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> load());
+    EventBus.addHandler(InjectCarTypeEvent.TYPE, (InjectCarTypeEventHandler) event -> this.carType = event.getCarType(), true);
+
+    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> load(), true);
   }
 
   private void load() {

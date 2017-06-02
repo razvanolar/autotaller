@@ -69,9 +69,9 @@ public class SearchCarMakeController implements Controller<SearchCarMakeControll
     EventBus.addHandler(ShowFilterDialogEvent.TYPE, (ShowFilterDialogEventHandler) event -> {
       CarMakeFilterView carMakeFilterView = new CarMakeFilterView();
       EventBus.fireEvent(new ShowDialogEvent(new FilterDialog((Region) carMakeFilterView.asNode())));
-    });
+    }, true);
 
-    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> load());
+    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> load(), true);
   }
 
   private void load() {
