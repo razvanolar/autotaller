@@ -1,11 +1,14 @@
-package com.autotaller.app.components.app_view.cars_view;
+package com.autotaller.app.components.app_view.cars_view.search_car_make_view;
 
 import com.autotaller.app.components.utils.ChipSet;
+import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -18,12 +21,16 @@ public class SearchCarMakeView extends IterableView implements SearchCarMakeCont
   private BorderPane container;
   private HBox chipSetContainer;
   private TableView<CarMakeModel> carMakeTable;
+  private Button continueButton;
 
   public SearchCarMakeView() {
     init();
   }
 
   private void init() {
+    continueButton = NodeProvider.createToolbarButton("Continua", null);
+    toolBar.getItems().addAll(new Separator(), new FillToolItem(), continueButton);
+
     chipSetContainer = new HBox(15);
     chipSetContainer.setPadding(new Insets(3));
 
@@ -42,6 +49,10 @@ public class SearchCarMakeView extends IterableView implements SearchCarMakeCont
 
   public TableView<CarMakeModel> getCarMakeTable() {
     return carMakeTable;
+  }
+
+  public Button getContinueButton() {
+    return continueButton;
   }
 
   @Override

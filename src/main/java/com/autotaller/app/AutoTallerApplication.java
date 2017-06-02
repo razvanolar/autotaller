@@ -3,6 +3,7 @@ package com.autotaller.app;
 import com.autotaller.app.components.loading_view.LoadingView;
 import com.autotaller.app.components.utils.MaskableView;
 import com.autotaller.app.events.app_view.*;
+import com.autotaller.app.events.app_view.search_views.ShowFilterDialogEvent;
 import com.autotaller.app.events.login_view.ShowLoginScreenEvent;
 import com.autotaller.app.events.login_view.ShowLoginScreenEventHandler;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
@@ -24,6 +25,8 @@ import com.autotaller.app.utils.resources.StyleProvider;
 import com.jfoenix.controls.JFXDialog;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -62,6 +65,14 @@ public class AutoTallerApplication extends Application {
     stackContainer = new StackPane(primaryContainer);
     primaryScene = new Scene(stackContainer, 700, 400);
     primaryScene.getStylesheets().add(defaultThemePath);
+
+    primaryScene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+      if (key.isControlDown()) {
+        if (key.getCode() == KeyCode.F) {
+          EventBus.fireEvent(new ShowFilterDialogEvent());
+        }
+      }
+    });
 
     // create and bind the app controller
     (new AutoTallerController()).bind(null);

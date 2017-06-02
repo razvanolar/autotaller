@@ -46,7 +46,7 @@ public class TableProvider {
     nameColumn.prefWidthProperty().bind(table.widthProperty().multiply(.33));
     fromColumn.prefWidthProperty().bind(table.widthProperty().multiply(.17));
     toColumn.prefWidthProperty().bind(table.widthProperty().multiply(.17));
-    makeColumn.prefWidthProperty().bind(table.widthProperty().multiply(.33));
+    makeColumn.prefWidthProperty().bind(table.widthProperty().multiply(.32));
 
     nameColumn.setCellValueFactory(p -> {
       CarTypeModel value = p.getValue();
@@ -90,7 +90,7 @@ public class TableProvider {
     toColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     makeColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
 
-    table.getColumns().addAll(nameColumn, fromColumn, toColumn, makeColumn);
+    table.getColumns().addAll(makeColumn, nameColumn, fromColumn, toColumn);
     return table;
   }
 
