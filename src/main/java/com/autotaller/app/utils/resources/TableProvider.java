@@ -2,6 +2,8 @@ package com.autotaller.app.utils.resources;
 
 import com.autotaller.app.model.*;
 import com.autotaller.app.utils.ModelValidator;
+import com.autotaller.app.utils.StockType;
+import com.autotaller.app.utils.UsageStateType;
 import com.autotaller.app.utils.filters.ModelFilter;
 import com.autotaller.app.utils.StringValidator;
 import javafx.beans.binding.DoubleBinding;
@@ -10,10 +12,10 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
-import javafx.util.converter.IntegerStringConverter;
 
 /**
  * Created by razvanolar on 30.04.2017
@@ -218,22 +220,26 @@ public class TableProvider {
   @SuppressWarnings("unchecked")
   public TableView<CarComponentModel> createCarComponentTable(boolean isEditable, boolean useValidatorStyles, boolean showSoldPiecesColumn) {
     TableView<CarComponentModel> table = new TableView<>();
+    TableColumn<CarComponentModel, String> subkitColumn = new TableColumn<>("Sub-ansamblu");
     TableColumn<CarComponentModel, String> nameColumn = new TableColumn<>("Nume");
     TableColumn<CarComponentModel, String> codeCoulmn = new TableColumn<>("Cod");
-    TableColumn<CarComponentModel, String> stockColumn = new TableColumn<>("Stoc");
-    TableColumn<CarComponentModel, String> subkitColumn = new TableColumn<>("Sub-ansamblu");
+    TableColumn<CarComponentModel, StockType> stockColumn = new TableColumn<>("Stoc");
     TableColumn<CarComponentModel, Integer> initialPiecesColumn = new TableColumn<>("Bucati");
+    TableColumn<CarComponentModel, UsageStateType> usageStateColumn = new TableColumn<>("Grad de uzura");
+    TableColumn<CarComponentModel, Integer> priceColumn = new TableColumn<>("Pret");
 
-    DoubleBinding widthProperty = table.widthProperty().multiply(.198);
+    DoubleBinding widthProperty = table.widthProperty().multiply(.142);
     nameColumn.prefWidthProperty().bind(widthProperty);
     codeCoulmn.prefWidthProperty().bind(widthProperty);
     stockColumn.prefWidthProperty().bind(widthProperty);
     subkitColumn.prefWidthProperty().bind(widthProperty);
     initialPiecesColumn.prefWidthProperty().bind(widthProperty);
+    usageStateColumn.prefWidthProperty().bind(widthProperty);
+    priceColumn.prefWidthProperty().bind(widthProperty);
 
     nameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getName()) : new SimpleStringProperty());
     codeCoulmn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getCode()) : new SimpleStringProperty());
-    stockColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getStock()) : new SimpleStringProperty());
+    stockColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getStock()) : new SimpleObjectProperty<>());
     subkitColumn.setCellValueFactory(p -> {
       if (p.getValue() != null) {
         CarSubkitModel carSubkit = ModelFilter.getCarSubkitModelById(p.getValue().getCarSubkitId());
@@ -242,12 +248,16 @@ public class TableProvider {
       return new SimpleStringProperty();
     });
     initialPiecesColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getInitialPieces()) : new SimpleObjectProperty<>());
+    usageStateColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getUsageState()) : new SimpleObjectProperty<>());
+    priceColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getPrice()) : new SimpleObjectProperty<>());
 
     nameColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     codeCoulmn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     stockColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     subkitColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     initialPiecesColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    usageStateColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    priceColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
 
     if (isEditable) {
       nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -256,19 +266,17 @@ public class TableProvider {
       codeCoulmn.setCellFactory(TextFieldTableCell.forTableColumn());
       codeCoulmn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setCode(event.getNewValue()));
 
-      stockColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+      stockColumn.setCellFactory(param -> new ComboBoxTableCell<>(StockType.values()));
       stockColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setStock(event.getNewValue()));
 
-      initialPiecesColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Integer>() {
-        @Override public String toString(Integer object) {
-          return object != null ? String.valueOf(object) : String.valueOf(0);
-        }
+      initialPiecesColumn.setCellFactory(TextFieldTableCell.forTableColumn(getIntConverter()));
+      initialPiecesColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setInitialPieces(event.getNewValue()));
 
-        @Override public Integer fromString(String string) {
-          return StringValidator.isPositiveInteger(string) ? Integer.parseInt(string) : 0;
-        }
-      }));
-      initialPiecesColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setInitial_pieces(event.getNewValue()));
+      usageStateColumn.setCellFactory(param -> new ComboBoxTableCell<>(UsageStateType.values()));
+      usageStateColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setUsageState(event.getNewValue()));
+
+      priceColumn.setCellFactory(TextFieldTableCell.forTableColumn(getIntConverter()));
+      priceColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setPrice(event.getNewValue()));
     }
 
     if (useValidatorStyles) {
@@ -289,7 +297,7 @@ public class TableProvider {
       });
     }
 
-    table.getColumns().addAll(subkitColumn, nameColumn, codeCoulmn, stockColumn, initialPiecesColumn);
+    table.getColumns().addAll(subkitColumn, nameColumn, codeCoulmn, stockColumn, initialPiecesColumn, usageStateColumn, priceColumn);
     return table;
   }
 
@@ -299,5 +307,20 @@ public class TableProvider {
 
   public TableView<CarComponentModel> createCarComponentValidationTable() {
     return createCarComponentTable(false, true, false);
+  }
+
+
+  private StringConverter<Integer> getIntConverter() {
+    return new StringConverter<Integer>() {
+      @Override
+      public String toString(Integer object) {
+        return object != null ? String.valueOf(object) : String.valueOf(0);
+      }
+
+      @Override
+      public Integer fromString(String string) {
+        return StringValidator.isPositiveInteger(string) ? Integer.parseInt(string) : 0;
+      }
+    };
   }
 }

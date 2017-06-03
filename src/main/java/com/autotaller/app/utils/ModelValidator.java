@@ -10,7 +10,12 @@ public class ModelValidator {
   public static boolean isValidCarComponent(CarComponentModel carComponent) {
     return carComponent != null && !StringValidator.isNullOrEmpty(carComponent.getName()) &&
             !StringValidator.isNullOrEmpty(carComponent.getCode()) &&
-            !StringValidator.isNullOrEmpty(carComponent.getStock()) &&
-            carComponent.getCarSubkitId() > 0;
+            carComponent.getCarSubkitId() > 0 &&
+            carComponent.getInitialPieces() > 0 &&
+            carComponent.getSoldPieces() > 0 &&
+            carComponent.getInitialPieces() >= carComponent.getSoldPieces() &&
+            carComponent.getPrice() > 0 &&
+            carComponent.getUsageState() != null &&
+            carComponent.getStock() != null;
   }
 }

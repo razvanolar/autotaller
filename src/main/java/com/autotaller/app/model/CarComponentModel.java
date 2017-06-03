@@ -1,5 +1,8 @@
 package com.autotaller.app.model;
 
+import com.autotaller.app.utils.StockType;
+import com.autotaller.app.utils.UsageStateType;
+
 /**
  * Created by razvanolar on 07.05.2017
  */
@@ -10,22 +13,26 @@ public class CarComponentModel {
   private int carSubkitId;
   private String name;
   private String code;
-  private String stock;
   private String description;
   private int initial_pieces;
   private int sold_pieces;
+  private UsageStateType usageState;
+  private int price;
+  private StockType stock;
 
-  public CarComponentModel(int id, int carId, int carSubkitId, String name, String code, String stock,
-                           String description, int initial_pieces, int sold_pieces) {
+  public CarComponentModel(int id, int carId, int carSubkitId, String name, String code, String description,
+                           int initial_pieces, int sold_pieces, UsageStateType usageState, int price, StockType stock) {
     this.id = id;
     this.carId = carId;
     this.carSubkitId = carSubkitId;
     this.name = name;
     this.code = code;
-    this.stock = stock;
     this.description = description;
     this.initial_pieces = initial_pieces;
     this.sold_pieces = sold_pieces;
+    this.usageState = usageState;
+    this.price = price;
+    this.stock = stock;
   }
 
   public int getId() {
@@ -48,7 +55,7 @@ public class CarComponentModel {
     return code;
   }
 
-  public String getStock() {
+  public StockType getStock() {
     return stock;
   }
 
@@ -64,6 +71,14 @@ public class CarComponentModel {
     return sold_pieces;
   }
 
+  public int getPrice() {
+    return price;
+  }
+
+  public UsageStateType getUsageState() {
+    return usageState;
+  }
+
   public void setName(String name) {
     this.name = name;
   }
@@ -72,7 +87,7 @@ public class CarComponentModel {
     this.code = code;
   }
 
-  public void setStock(String stock) {
+  public void setStock(StockType stock) {
     this.stock = stock;
   }
 
@@ -80,7 +95,27 @@ public class CarComponentModel {
     this.description = description;
   }
 
-  public void setInitial_pieces(int initial_pieces) {
+  public void setInitialPieces(int initial_pieces) {
     this.initial_pieces = initial_pieces;
+  }
+
+  public void setCarId(int carId) {
+    this.carId = carId;
+  }
+
+  public void setCarSubkitId(int carSubkitId) {
+    this.carSubkitId = carSubkitId;
+  }
+
+  public void setSoldPieces(int sold_pieces) {
+    this.sold_pieces = sold_pieces;
+  }
+
+  public void setUsageState(UsageStateType usageState) {
+    this.usageState = usageState;
+  }
+
+  public void setPrice(int price) {
+    this.price = price;
   }
 }

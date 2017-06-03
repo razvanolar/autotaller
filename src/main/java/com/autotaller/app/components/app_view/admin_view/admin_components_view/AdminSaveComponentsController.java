@@ -95,7 +95,8 @@ public class AdminSaveComponentsController implements Controller<AdminSaveCompon
       carComponents = new ArrayList<>();
       List<CarSubkitModel> carSubkitByKit = modelsDTO.getCarSubkitByKit(catKit);
       for (CarSubkitModel carSubkit : carSubkitByKit) {
-        carComponents.add(new CarComponentModel(-1, injectedCarId, carSubkit.getId(), carSubkit.getName(), "", "", "", 0, 0));
+        carComponents.add(new CarComponentModel(-1, injectedCarId, carSubkit.getId(), carSubkit.getName(),
+                "", "", 0, 0, UsageStateType.NEW, 0, StockType.DEPOZIT));
       }
       componentsMap.put(catKit, carComponents);
     }
