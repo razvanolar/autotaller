@@ -3,6 +3,7 @@ package com.autotaller.app.repository;
 import com.autotaller.app.components.utils.statistics.CarTypeStatisticsModel;
 import com.autotaller.app.model.*;
 import com.autotaller.app.model.utils.CarDefinedModelsDTO;
+import com.autotaller.app.model.utils.PreSellComponentModel;
 import com.autotaller.app.model.utils.SaveCarResult;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.services.UserService;
@@ -57,7 +58,7 @@ public class Repository {
     UserService
    */
 
-  public int getUserIdByCredentials(String username, String password) throws Exception {
+  public UserModel getUserIdByCredentials(String username, String password) throws Exception {
     return userService.getUserIdByCredentials(username, password);
   }
 
@@ -195,6 +196,10 @@ public class Repository {
 
   public void addComponents(List<CarComponentModel> components) throws Exception {
     carComponentsService.addComponents(components);
+  }
+
+  public void addPresellComponent(PreSellComponentModel preSellComponent, int userId) throws Exception {
+    carComponentsService.addPreSellComponent(preSellComponent, userId);
   }
 
 

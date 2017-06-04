@@ -1,6 +1,7 @@
 package com.autotaller.app.repository.services.cars;
 
 import com.autotaller.app.model.CarComponentModel;
+import com.autotaller.app.model.utils.PreSellComponentModel;
 import com.autotaller.app.repository.services.GenericService;
 import com.autotaller.app.repository.utils.JDBCUtil;
 import com.autotaller.app.utils.StockType;
@@ -21,7 +22,6 @@ public class CarComponentsService extends GenericService {
   private String SELECT_ALL = "SELECT cc.id, cc.car_id, cc.subkit_id, cc.component_name, cc.code, cc.description, " +
           "cc.initial_pieces_no, cc.sold_pieces_no, cc.usage_state, cc.price, cc.stock FROM car_components cc";
 
-
   public CarComponentsService(JDBCUtil jdbcUtil) {
     super(jdbcUtil);
   }
@@ -33,7 +33,26 @@ public class CarComponentsService extends GenericService {
       connection = jdbcUtil.getNewConnection();
       String query = SELECT_ALL;
       statement = connection.prepareStatement(query);
-      return getCarComponentsFromStatement(statement);
+      return getCarComponentsFromStatement(connection, statement);
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
+
+  public CarComponentModel getComponentById(int componentId) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      String query = SELECT_ALL + " WHERE cc.id = ?";
+      statement = connection.prepareStatement(query);
+      statement.setInt(1, componentId);
+      List<CarComponentModel> result = getCarComponentsFromStatement(connection, statement);
+      return result != null && !result.isEmpty() ? result.get(0) : null;
     } catch (Exception e) {
       //TODO handle exception
       e.printStackTrace();
@@ -51,7 +70,7 @@ public class CarComponentsService extends GenericService {
       String query = SELECT_ALL + " WHERE cc.car_id = ?";
       statement = connection.prepareStatement(query);
       statement.setInt(1, carId);
-      return getCarComponentsFromStatement(statement);
+      return getCarComponentsFromStatement(connection, statement);
     } catch (Exception e) {
       //TODO handle exception
       e.printStackTrace();
@@ -71,7 +90,7 @@ public class CarComponentsService extends GenericService {
       statement = connection.prepareStatement(query);
       statement.setInt(1, carId);
       statement.setInt(2, kitId);
-      return getCarComponentsFromStatement(statement);
+      return getCarComponentsFromStatement(connection, statement);
     } catch (Exception e) {
       //TODO handle exception
       e.printStackTrace();
@@ -115,29 +134,70 @@ public class CarComponentsService extends GenericService {
     }
   }
 
-  private List<CarComponentModel> getCarComponentsFromStatement(PreparedStatement statement) throws Exception {
-    ResultSet rs = null;
+  public void addPreSellComponent(PreSellComponentModel preSellModel, int userId) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
     try {
-      rs = statement.executeQuery();
+      int componentId = preSellModel.getCarComponent().getId();
+      CarComponentModel component = getComponentById(componentId);
+
+      if (component == null)
+        throw new Exception("Piesa nu a putut fi gasita. Id: " + componentId);
+      if (component.getLeftPieces() < preSellModel.getSoldPieces())
+        throw new Exception("Nu exista suficiente bucati disponibile pentru " + component.getName());
+
+      connection = jdbcUtil.getNewConnection();
+      String query = "INSERT INTO car_component_sales (component_id, sold_pieces, price, sold_date, user_id, status) VALUES (?, ?, ?, now(), ?, 0)";
+      statement = connection.prepareStatement(query);
+      statement.setInt(1, componentId);
+      statement.setInt(2, preSellModel.getSoldPieces());
+      statement.setInt(3, preSellModel.getPrice());
+      statement.setInt(4, userId);
+      statement.executeUpdate();
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
+
+  private List<CarComponentModel> getCarComponentsFromStatement(Connection connection, PreparedStatement statement) throws Exception {
+    ResultSet componentResultSet = null;
+    PreparedStatement sellStatement = null;
+    try {
+      componentResultSet = statement.executeQuery();
       List<CarComponentModel> result = new ArrayList<>();
-      while (rs.next()) {
-        result.add(new CarComponentModel(
-                rs.getInt(1),
-                rs.getInt(2),
-                rs.getInt(3),
-                rs.getString(4),
-                rs.getString(5),
-                rs.getString(6),
-                rs.getInt(7),
-                rs.getInt(8),
-                UsageStateType.fromId(rs.getInt(9)),
-                rs.getInt(10),
-                StockType.fromId(rs.getInt(11))
-        ));
+      String query = "SELECT SUM(sold_pieces) FROM car_component_sales WHERE component_id = ?";
+      sellStatement = connection.prepareStatement(query);
+      while (componentResultSet.next()) {
+        int componentId = componentResultSet.getInt(1);
+        CarComponentModel component = new CarComponentModel(
+                componentId,
+                componentResultSet.getInt(2),
+                componentResultSet.getInt(3),
+                componentResultSet.getString(4),
+                componentResultSet.getString(5),
+                componentResultSet.getString(6),
+                componentResultSet.getInt(7),
+                componentResultSet.getInt(8),
+                UsageStateType.fromId(componentResultSet.getInt(9)),
+                componentResultSet.getInt(10),
+                StockType.fromId(componentResultSet.getInt(11))
+        );
+        sellStatement.setInt(1, componentId);
+        ResultSet resultSet = sellStatement.executeQuery();
+        if (resultSet.next()) {
+          component.setSoldPieces(component.getSoldPieces() + resultSet.getInt(1));
+        }
+        jdbcUtil.closeResultSet(resultSet);
+        result.add(component);
       }
       return result;
     } finally {
-      jdbcUtil.closeResultSet(rs);
+      jdbcUtil.closeStatement(sellStatement);
+      jdbcUtil.closeResultSet(componentResultSet);
     }
   }
 }

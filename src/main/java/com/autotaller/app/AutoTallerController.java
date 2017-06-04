@@ -8,6 +8,8 @@ import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCar
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarAndKitIdEventHandler;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEventHandler;
+import com.autotaller.app.events.app_view.search_views.AddPreSellComponentEvent;
+import com.autotaller.app.events.app_view.search_views.AddPreSellComponentEventHandler;
 import com.autotaller.app.events.login_view.*;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
@@ -45,6 +47,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
 
   private IAutoTallerView autoTallerView;
   private Repository repository;
+  private UserModel activeUser;
 
   @Override
   public void bind(IAutoTallerView view) {
@@ -68,20 +71,21 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         }
       });
       th.start();
-    });
+    }, true);
 
     EventBus.addHandler(TestCredentialsEvent.TYPE, (TestCredentialsEventHandler) event -> {
       try {
         EventBus.fireEvent(new MaskViewEvent("Autentificare"));
         Thread thread = new Thread(() -> {
           try {
-            int userId = repository.getUserIdByCredentials(event.getUsername(), event.getPassword());
+            UserModel user = repository.getUserIdByCredentials(event.getUsername(), event.getPassword());
             Platform.runLater(() -> {
-              if (userId < 0) {
+              if (user == null) {
                 EventBus.fireEvent(new AuthenticationFailedEvent());
                 EventBus.fireEvent(new UnmaskViewEvent());
                 return;
               }
+              activeUser = user;
               EventBus.fireEvent(new ReleaseLoginViewEvent());
               // init autoTallerView
               initAppView();
@@ -99,7 +103,9 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
       } catch (Exception e) {
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
+
+    EventBus.addHandler(GetActiveUserEvent.TYPE, (GetActiveUserEventHandler) event -> event.getCallback().call(activeUser), true);
   }
 
   private void initAppView() {
@@ -185,7 +191,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetCarModelsEvent.TYPE, (GetCarModelsEventHandler) event -> {
       try {
@@ -209,7 +215,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetCarKitCategoriesEvent.TYPE, (GetCarKitCategoriesEventHandler) event -> {
       try {
@@ -233,7 +239,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetCarKitsEvent.TYPE, (GetCarKitsEventHandler) event -> {
       try {
@@ -257,7 +263,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetCarSubkitsEvent.TYPE, (GetCarSubkitsEventHandler) event -> {
       try {
@@ -287,7 +293,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         if (event.isMaskView())
           EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetAllSystemDefinedModelsEvent.TYPE, (GetAllSystemDefinedModelsEventHandler) event -> {
       try {
@@ -311,7 +317,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetAllCarDefinedModelsEvent.TYPE, (GetAllCarDefinedModelsEventHandler) event -> {
       try {
@@ -334,7 +340,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetCarsEvent.TYPE, (GetCarsEventHandler) event -> {
       try {
@@ -358,7 +364,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetCarComponentsEvent.TYPE, (GetCarComponentsEventHandler) event -> {
       try {
@@ -382,7 +388,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetCarComponentsByCarIdEvent.TYPE, (GetCarComponentsByCarIdEventHandler) event -> {
       try {
@@ -406,7 +412,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetCarComponentsByCarAndKitIdEvent.TYPE, (GetCarComponentsByCarAndKitIdEventHandler) event -> {
       try {
@@ -430,7 +436,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetCarsByTypeIdEvent.TYPE, (GetCarsByTypeIdEventHandler) event -> {
       try {
@@ -454,7 +460,32 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
+
+    EventBus.addHandler(AddPreSellComponentEvent.TYPE, (AddPreSellComponentEventHandler) event -> {
+      try {
+         EventBus.fireEvent(new MaskViewEvent("Inregistrare actiune"));
+         Thread thread = new Thread(() -> {
+           try {
+             repository.addPresellComponent(event.getPreSellComponent(), activeUser.getId());
+             Platform.runLater(() -> {
+               EventBus.fireEvent(new UnmaskViewEvent());
+               NotificationsUtil.showInfoNotification("Notificare", "Inregistrarea a fost efectuata cu succes", 10);
+               event.getCallback().call();
+             });
+           } catch (Exception e) {
+             //TODO handle exception
+             e.printStackTrace();
+             Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+           }
+         });
+         thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    }, true);
   }
 
   private void initAutotallerUtilities() {

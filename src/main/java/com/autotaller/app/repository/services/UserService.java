@@ -1,5 +1,6 @@
 package com.autotaller.app.repository.services;
 
+import com.autotaller.app.model.UserModel;
 import com.autotaller.app.repository.utils.JDBCUtil;
 
 import java.security.MessageDigest;
@@ -20,18 +21,18 @@ public class UserService extends GenericService {
     md5 = MessageDigest.getInstance("MD5");
   }
 
-  public int getUserIdByCredentials(String username, String password) throws Exception {
+  public UserModel getUserIdByCredentials(String username, String password) throws Exception {
     Connection connection = null;
     PreparedStatement statement = null;
     ResultSet rs = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String sql = "SELECT id FROM users WHERE username = ? AND password = ?";
+      String sql = "SELECT id, name, username FROM users WHERE username = ? AND password = ?";
       statement = connection.prepareStatement(sql);
       statement.setString(1, username);
       statement.setString(2, encriptPassword(password));
       rs = statement.executeQuery();
-      return rs.next() ? rs.getInt(1) : -1;
+      return rs.next() ? new UserModel(rs.getInt(1), rs.getString(2), rs.getString(3)) : null;
     } catch (Exception e) {
       //TODO handle exception
       e.printStackTrace();

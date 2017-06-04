@@ -35,6 +35,12 @@ public class CarComponentModel {
     this.stock = stock;
   }
 
+  public int getLeftPieces() {
+    if (initial_pieces >= sold_pieces)
+      return initial_pieces - sold_pieces;
+    return 0;
+  }
+
   public int getId() {
     return id;
   }

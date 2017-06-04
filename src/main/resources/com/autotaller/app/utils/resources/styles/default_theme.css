@@ -152,3 +152,7 @@
     -fx-background-radius: 10;
     -fx-background-color: rgba(184,99,50,0.74);
 }
+
+.whiteBackground {
+    -fx-background-color: white;
+}

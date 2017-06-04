@@ -224,7 +224,7 @@ public class TableProvider {
     TableColumn<CarComponentModel, String> nameColumn = new TableColumn<>("Nume");
     TableColumn<CarComponentModel, String> codeCoulmn = new TableColumn<>("Cod");
     TableColumn<CarComponentModel, StockType> stockColumn = new TableColumn<>("Stoc");
-    TableColumn<CarComponentModel, Integer> initialPiecesColumn = new TableColumn<>("Bucati");
+    TableColumn<CarComponentModel, Integer> piecesColumn = new TableColumn<>("Bucati");
     TableColumn<CarComponentModel, UsageStateType> usageStateColumn = new TableColumn<>("Grad de uzura");
     TableColumn<CarComponentModel, Integer> priceColumn = new TableColumn<>("Pret");
 
@@ -233,7 +233,7 @@ public class TableProvider {
     codeCoulmn.prefWidthProperty().bind(widthProperty);
     stockColumn.prefWidthProperty().bind(widthProperty);
     subkitColumn.prefWidthProperty().bind(widthProperty);
-    initialPiecesColumn.prefWidthProperty().bind(widthProperty);
+    piecesColumn.prefWidthProperty().bind(widthProperty);
     usageStateColumn.prefWidthProperty().bind(widthProperty);
     priceColumn.prefWidthProperty().bind(widthProperty);
 
@@ -247,7 +247,11 @@ public class TableProvider {
       }
       return new SimpleStringProperty();
     });
-    initialPiecesColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getInitialPieces()) : new SimpleObjectProperty<>());
+    if (isEditable) {
+      piecesColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getInitialPieces()) : new SimpleObjectProperty<>());
+    } else {
+      piecesColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getLeftPieces()) : new SimpleObjectProperty<>());
+    }
     usageStateColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getUsageState()) : new SimpleObjectProperty<>());
     priceColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getPrice()) : new SimpleObjectProperty<>());
 
@@ -255,7 +259,7 @@ public class TableProvider {
     codeCoulmn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     stockColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     subkitColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
-    initialPiecesColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    piecesColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     usageStateColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     priceColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
 
@@ -269,8 +273,8 @@ public class TableProvider {
       stockColumn.setCellFactory(param -> new ComboBoxTableCell<>(StockType.values()));
       stockColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setStock(event.getNewValue()));
 
-      initialPiecesColumn.setCellFactory(TextFieldTableCell.forTableColumn(getIntConverter()));
-      initialPiecesColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setInitialPieces(event.getNewValue()));
+      piecesColumn.setCellFactory(TextFieldTableCell.forTableColumn(getIntConverter()));
+      piecesColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setInitialPieces(event.getNewValue()));
 
       usageStateColumn.setCellFactory(param -> new ComboBoxTableCell<>(UsageStateType.values()));
       usageStateColumn.setOnEditCommit(event -> table.getItems().get(event.getTablePosition().getRow()).setUsageState(event.getNewValue()));
@@ -297,7 +301,7 @@ public class TableProvider {
       });
     }
 
-    table.getColumns().addAll(subkitColumn, nameColumn, codeCoulmn, stockColumn, initialPiecesColumn, usageStateColumn, priceColumn);
+    table.getColumns().addAll(subkitColumn, nameColumn, codeCoulmn, stockColumn, piecesColumn, usageStateColumn, priceColumn);
     return table;
   }
 

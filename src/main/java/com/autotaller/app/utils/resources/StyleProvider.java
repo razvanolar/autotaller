@@ -28,6 +28,7 @@ public class StyleProvider {
   public static final String KIT_TAB_BACKGROUND_CLASS = "kitTabBackground";
   public static final String IMAGE_GALLERY_CLASS = "imageGalleryBackground";
   public static final String CHIP_SET_STYLE_CLASS = "chipSetStyle";
+  public static final String WHITE_BACKGROUND_CLASS = "whiteBackground";
 
   public static final String CENTERED_TABLE_CELL_TEXT_CSS = "-fx-alignment: TOP-CENTER;";
 
