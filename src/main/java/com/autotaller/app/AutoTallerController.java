@@ -2,6 +2,7 @@ package com.autotaller.app;
 
 import com.autotaller.app.components.utils.ImageGalleryDialog;
 import com.autotaller.app.components.utils.NotificationsUtil;
+import com.autotaller.app.components.utils.PasswordDialog;
 import com.autotaller.app.events.app_view.*;
 import com.autotaller.app.events.app_view.admin_view.*;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarAndKitIdEvent;
@@ -42,6 +43,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
   public interface IAutoTallerView extends View {
     Node getCarsMenu();
     Node getAdminMenu();
+    Node getNotificationsMenu();
     Node getExitMenu();
   }
 
@@ -134,6 +136,17 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.ADMIN_VIEW.getTitle()));
         EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
       }
+    });
+
+    autoTallerView.getNotificationsMenu().setOnMouseClicked(event -> {
+      PasswordDialog dialog = new PasswordDialog("Introduceti parola");
+      EventBus.fireEvent(new ShowDialogEvent(dialog));
+      dialog.getConfirmationButton().setOnAction(dialogEvent -> {
+        dialog.close();
+        EventBus.fireEvent(new CheckUserPasswordEvent(activeUser.getId(), dialog.getText(), () -> {
+          
+        }));
+      });
     });
 
     autoTallerView.getExitMenu().setOnMouseClicked(event -> EventBus.fireEvent(new ShowLoginScreenEvent()));
@@ -486,6 +499,35 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         EventBus.fireEvent(new UnmaskViewEvent());
       }
     }, true);
+
+    EventBus.addHandler(CheckUserPasswordEvent.TYPE, (CheckUserPasswordEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Testare parola"));
+        Thread thread = new Thread(() -> {
+          try {
+            boolean result = repository.checkUserPassword(event.getUserId(), event.getPassword());
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              if (result) {
+                NotificationsUtil.showInfoNotification("Notificare", "Parola testata", 5);
+                event.getCallback().call();
+              } else {
+                NotificationsUtil.showErrorNotification("Atentie", "Parola nu a putut fi validata", -1);
+              }
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
   }
 
   private void initAutotallerUtilities() {

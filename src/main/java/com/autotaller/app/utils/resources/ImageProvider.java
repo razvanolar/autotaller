@@ -32,8 +32,16 @@ public class ImageProvider {
     return getImage("icons/search_menu_icon.png");
   }
 
+  public static Image clientsMenuIcon() {
+    return getImage("icons/clients_menu_icon.png");
+  }
+
   public static Image adminMenuIcon() {
     return getImage("icons/admin_menu_icon.png");
+  }
+
+  public static Image notificationMenuIcon() {
+    return getImage("icons/notification_menu_icon.png");
   }
 
   public static Image settingsMenuIcon() {

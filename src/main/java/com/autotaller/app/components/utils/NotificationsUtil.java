@@ -43,6 +43,8 @@ public class NotificationsUtil {
             .materiaDesignStyle();
     if (duration > 0)
       notification.hideAfter(Duration.seconds(duration));
+    else
+      notification.hideAfter(Duration.INDEFINITE);
     return notification;
   }
 }

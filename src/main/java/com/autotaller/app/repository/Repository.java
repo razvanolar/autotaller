@@ -62,6 +62,11 @@ public class Repository {
     return userService.getUserIdByCredentials(username, password);
   }
 
+  public boolean checkUserPassword(int userId, String password) throws Exception {
+    return userService.checkUserPassword(userId, password);
+  }
+
+
 
   /*
     CarMakesService

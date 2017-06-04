@@ -42,6 +42,27 @@ public class UserService extends GenericService {
     }
   }
 
+  public boolean checkUserPassword(int userId, String password) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet rs = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      String query = "SELECT * FROM users WHERE id = ? and password = ?";
+      statement = connection.prepareStatement(query);
+      statement.setInt(1, userId);
+      statement.setString(2, encriptPassword(password));
+      rs = statement.executeQuery();
+      return rs.next();
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, rs);
+    }
+  }
+
   private String encriptPassword(String password) {
     byte[] bytes = md5.digest(password.getBytes());
     String value = "";

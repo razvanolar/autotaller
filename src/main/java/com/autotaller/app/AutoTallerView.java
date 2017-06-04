@@ -15,6 +15,7 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
   private BorderPane mainContainer;
   private Node carsMenu;
   private Node adminMenu;
+  private Node notificationsMenu;
   private Node exitMenu;
 
   public AutoTallerView() {
@@ -26,7 +27,9 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
     carsMenu = NodeProvider.createAppMenu("Masini", ImageProvider.carMenuIcon());
     Node componentsMenu = NodeProvider.createAppMenu("Componente", ImageProvider.componentMenuIcon());
     Node searchMenu = NodeProvider.createAppMenu("Cautare", ImageProvider.searchMenuIcon());
+    Node clientsMenu = NodeProvider.createAppMenu("Clienti", ImageProvider.clientsMenuIcon());
     adminMenu = NodeProvider.createAppMenu("Administrare", ImageProvider.adminMenuIcon());
+    notificationsMenu = NodeProvider.createAppMenu("Notificari", ImageProvider.notificationMenuIcon());
     Node settingsMenu = NodeProvider.createAppMenu("Setari", ImageProvider.settingsMenuIcon());
     exitMenu = NodeProvider.createAppMenu("Deconectare", ImageProvider.exitMenuIcon());
 
@@ -38,9 +41,11 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
     gridPane.add(carsMenu, 0, 0);
     gridPane.add(componentsMenu, 1, 0);
     gridPane.add(searchMenu, 2, 0);
+    gridPane.add(clientsMenu, 3, 0);
     gridPane.add(adminMenu, 0, 1);
-    gridPane.add(settingsMenu, 1, 1);
-    gridPane.add(exitMenu, 2, 1);
+    gridPane.add(notificationsMenu, 1, 1);
+    gridPane.add(settingsMenu, 2, 1);
+    gridPane.add(exitMenu, 3, 1);
 
     mainContainer = new BorderPane(gridPane);
   }
@@ -51,6 +56,10 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
 
   public Node getAdminMenu() {
     return adminMenu;
+  }
+
+  public Node getNotificationsMenu() {
+    return notificationsMenu;
   }
 
   public Node getExitMenu() {

@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
  */
 public class NodeDialog extends JFXDialog {
 
-  private final JFXOkCancelDialogLayout dialogLayout;
+  private JFXOkCancelDialogLayout dialogLayout;
 
   public NodeDialog(String title, String confirmationText, Node content) {
     dialogLayout = new JFXOkCancelDialogLayout(title, confirmationText, this);

@@ -169,7 +169,7 @@ public class CarComponentsService extends GenericService {
     try {
       componentResultSet = statement.executeQuery();
       List<CarComponentModel> result = new ArrayList<>();
-      String query = "SELECT SUM(sold_pieces) FROM car_component_sales WHERE component_id = ?";
+      String query = "SELECT SUM(sold_pieces) FROM car_component_sales WHERE component_id = ? AND status = 0";
       sellStatement = connection.prepareStatement(query);
       while (componentResultSet.next()) {
         int componentId = componentResultSet.getInt(1);
