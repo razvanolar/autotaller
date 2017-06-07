@@ -1,9 +1,11 @@
 package com.autotaller.app.repository.services.cars;
 
 import com.autotaller.app.model.CarComponentModel;
+import com.autotaller.app.model.notifications.SimpleSellModel;
 import com.autotaller.app.model.utils.PreSellComponentModel;
 import com.autotaller.app.repository.services.GenericService;
 import com.autotaller.app.repository.utils.JDBCUtil;
+import com.autotaller.app.utils.SellModelStatus;
 import com.autotaller.app.utils.StockType;
 import com.autotaller.app.utils.StringValidator;
 import com.autotaller.app.utils.UsageStateType;
@@ -19,8 +21,12 @@ import java.util.List;
  */
 public class CarComponentsService extends GenericService {
 
-  private String SELECT_ALL = "SELECT cc.id, cc.car_id, cc.subkit_id, cc.component_name, cc.code, cc.description, " +
+  private String SELECT_ALL_COMPONENTS = "SELECT cc.id, cc.car_id, cc.subkit_id, cc.component_name, cc.code, cc.description, " +
           "cc.initial_pieces_no, cc.sold_pieces_no, cc.usage_state, cc.price, cc.stock FROM car_components cc";
+
+  private String SELECT_ALL_SIMPLE_SELL_MODELS = "SELECT ccs.id, ccs.component_id, cc.component_name, ccs.sold_pieces, cc.price, ccs.price, ccs.sold_date, ccs.user_id, u.username, ccs.status " +
+          "FROM car_component_sales ccs INNER JOIN car_components cc ON ccs.component_id = cc.id " +
+          "INNER JOIN users u ON ccs.user_id = u.id";
 
   public CarComponentsService(JDBCUtil jdbcUtil) {
     super(jdbcUtil);
@@ -31,7 +37,7 @@ public class CarComponentsService extends GenericService {
     PreparedStatement statement = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = SELECT_ALL;
+      String query = SELECT_ALL_COMPONENTS;
       statement = connection.prepareStatement(query);
       return getCarComponentsFromStatement(connection, statement);
     } catch (Exception e) {
@@ -48,7 +54,7 @@ public class CarComponentsService extends GenericService {
     PreparedStatement statement = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = SELECT_ALL + " WHERE cc.id = ?";
+      String query = SELECT_ALL_COMPONENTS + " WHERE cc.id = ?";
       statement = connection.prepareStatement(query);
       statement.setInt(1, componentId);
       List<CarComponentModel> result = getCarComponentsFromStatement(connection, statement);
@@ -67,7 +73,7 @@ public class CarComponentsService extends GenericService {
     PreparedStatement statement = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = SELECT_ALL + " WHERE cc.car_id = ?";
+      String query = SELECT_ALL_COMPONENTS + " WHERE cc.car_id = ?";
       statement = connection.prepareStatement(query);
       statement.setInt(1, carId);
       return getCarComponentsFromStatement(connection, statement);
@@ -85,7 +91,7 @@ public class CarComponentsService extends GenericService {
     PreparedStatement statement = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = SELECT_ALL + " INNER JOIN car_subkits cs " +
+      String query = SELECT_ALL_COMPONENTS + " INNER JOIN car_subkits cs " +
               "ON cc.subkit_id = cs.id INNER JOIN car_kits ck ON cs.car_kit_id = ck.id WHERE car_id = ? AND ck.id = ?";
       statement = connection.prepareStatement(query);
       statement.setInt(1, carId);
@@ -163,6 +169,27 @@ public class CarComponentsService extends GenericService {
     }
   }
 
+  public List<SimpleSellModel> getSimpleSellModels(SellModelStatus status) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      if (status != SellModelStatus.ALL) {
+        statement = connection.prepareStatement(SELECT_ALL_SIMPLE_SELL_MODELS + " WHERE ccs.status = ?");
+        statement.setInt(1, status.getValue());
+      } else {
+        statement = connection.prepareStatement(SELECT_ALL_SIMPLE_SELL_MODELS);
+      }
+      return getSimpleSellModelsFromStatement(statement);
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
+
   private List<CarComponentModel> getCarComponentsFromStatement(Connection connection, PreparedStatement statement) throws Exception {
     ResultSet componentResultSet = null;
     PreparedStatement sellStatement = null;
@@ -198,6 +225,31 @@ public class CarComponentsService extends GenericService {
     } finally {
       jdbcUtil.closeStatement(sellStatement);
       jdbcUtil.closeResultSet(componentResultSet);
+    }
+  }
+
+  private List<SimpleSellModel> getSimpleSellModelsFromStatement(PreparedStatement statement) throws Exception {
+    ResultSet rs = null;
+    try {
+      rs = statement.executeQuery();
+      List<SimpleSellModel> result = new ArrayList<>();
+      while (rs.next()) {
+        result.add(new SimpleSellModel(
+                rs.getInt(1),
+                rs.getInt(2),
+                rs.getString(3),
+                rs.getInt(4),
+                rs.getInt(5),
+                rs.getInt(6),
+                rs.getDate(7).toLocalDate(),
+                rs.getInt(8),
+                rs.getString(9),
+                rs.getInt(10)
+        ));
+      }
+      return result;
+    } finally {
+      jdbcUtil.closeResultSet(rs);
     }
   }
 }

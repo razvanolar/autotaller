@@ -1,6 +1,7 @@
 package com.autotaller.app.utils.resources;
 
 import com.autotaller.app.model.*;
+import com.autotaller.app.model.notifications.SimpleSellModel;
 import com.autotaller.app.utils.ModelValidator;
 import com.autotaller.app.utils.StockType;
 import com.autotaller.app.utils.UsageStateType;
@@ -16,6 +17,8 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
+
+import java.time.LocalDate;
 
 /**
  * Created by razvanolar on 30.04.2017
@@ -311,6 +314,43 @@ public class TableProvider {
 
   public TableView<CarComponentModel> createCarComponentValidationTable() {
     return createCarComponentTable(false, true, false);
+  }
+
+  @SuppressWarnings("unchecked")
+  public TableView<SimpleSellModel> createSellModelTable() {
+    TableView<SimpleSellModel> table = new TableView<>();
+    TableColumn<SimpleSellModel, String> componentNameColumn = new TableColumn<>("Nume Componenta");
+    TableColumn<SimpleSellModel, Integer> soldPiecesColumn = new TableColumn<>("Bucati Vandute");
+    TableColumn<SimpleSellModel, Integer> stockPriceColumn = new TableColumn<>("Pret Stoc");
+    TableColumn<SimpleSellModel, Integer> soldPriceColumn = new TableColumn<>("Pret Vanzare");
+    TableColumn<SimpleSellModel, LocalDate> soldDateColumn = new TableColumn<>("Data Vanzare");
+    TableColumn<SimpleSellModel, String> userNameColumn = new TableColumn<>("Vandut de");
+
+    DoubleBinding widthProperty = table.widthProperty().multiply(.166);
+    componentNameColumn.prefWidthProperty().bind(widthProperty);
+    soldPiecesColumn.prefWidthProperty().bind(widthProperty);
+    stockPriceColumn.prefWidthProperty().bind(widthProperty);
+    soldPriceColumn.prefWidthProperty().bind(widthProperty);
+    soldDateColumn.prefWidthProperty().bind(widthProperty);
+    userNameColumn.prefWidthProperty().bind(widthProperty);
+
+    componentNameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getComponentName()) : new SimpleStringProperty());
+    soldPiecesColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getSoldPieces()) : new SimpleObjectProperty<>());
+    stockPriceColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getStockPrice()) : new SimpleObjectProperty<>());
+    soldPriceColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getSoldPrice()) : new SimpleObjectProperty<>());
+    soldDateColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getSoldDate()) : new SimpleObjectProperty<>());
+    userNameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getUserName()) : new SimpleStringProperty());
+
+    componentNameColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    soldPiecesColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    stockPriceColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    soldPriceColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    soldDateColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    userNameColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+
+    table.getColumns().addAll(componentNameColumn, soldPiecesColumn, stockPriceColumn, soldPriceColumn, soldDateColumn, userNameColumn);
+
+    return table;
   }
 
 

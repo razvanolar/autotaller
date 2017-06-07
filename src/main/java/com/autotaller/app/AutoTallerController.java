@@ -29,6 +29,7 @@ import com.autotaller.app.utils.resources.ImageProvider;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -121,6 +122,17 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
     }
   }
 
+  private void tryOpenNotificationView(String password) {
+    EventBus.fireEvent(new CheckUserPasswordEvent(activeUser.getId(), password, () -> {
+      Component component = ComponentFactory.createComponent(ComponentType.NOTIFICATIONS_VIEW);
+      if (component != null) {
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.NOTIFICATIONS_VIEW.getTitle()));
+        EventBus.fireEvent(new InjectRepoToAdminEvent(repository));
+        EventBus.fireEvent(new BindLastViewEvent());
+      }
+    }));
+  }
+
   private void initAppViewHandlers() {
     autoTallerView.getCarsMenu().setOnMouseClicked(event -> {
       Component component = ComponentFactory.createComponent(ComponentType.SEARCH_CAR_MAKE_VIEW);
@@ -141,11 +153,15 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
     autoTallerView.getNotificationsMenu().setOnMouseClicked(event -> {
       PasswordDialog dialog = new PasswordDialog("Introduceti parola");
       EventBus.fireEvent(new ShowDialogEvent(dialog));
+      dialog.getPasswordField().setOnKeyPressed(keyEvent -> {
+        if (keyEvent.getCode() == KeyCode.ENTER) {
+          dialog.close();
+          tryOpenNotificationView(dialog.getText());
+        }
+      });
       dialog.getConfirmationButton().setOnAction(dialogEvent -> {
         dialog.close();
-        EventBus.fireEvent(new CheckUserPasswordEvent(activeUser.getId(), dialog.getText(), () -> {
-          
-        }));
+        tryOpenNotificationView(dialog.getText());
       });
     });
 

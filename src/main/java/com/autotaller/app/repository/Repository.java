@@ -2,6 +2,7 @@ package com.autotaller.app.repository;
 
 import com.autotaller.app.components.utils.statistics.CarTypeStatisticsModel;
 import com.autotaller.app.model.*;
+import com.autotaller.app.model.notifications.SimpleSellModel;
 import com.autotaller.app.model.utils.CarDefinedModelsDTO;
 import com.autotaller.app.model.utils.PreSellComponentModel;
 import com.autotaller.app.model.utils.SaveCarResult;
@@ -12,6 +13,7 @@ import com.autotaller.app.repository.utils.CarStatus;
 import com.autotaller.app.repository.utils.ImageStatus;
 import com.autotaller.app.repository.utils.JDBCUtil;
 import com.autotaller.app.repository.utils.RepoFileUtil;
+import com.autotaller.app.utils.SellModelStatus;
 
 import java.io.File;
 import java.util.List;
@@ -205,6 +207,10 @@ public class Repository {
 
   public void addPresellComponent(PreSellComponentModel preSellComponent, int userId) throws Exception {
     carComponentsService.addPreSellComponent(preSellComponent, userId);
+  }
+
+  public List<SimpleSellModel> getSimpleSellModels(SellModelStatus status) throws Exception {
+    return carComponentsService.getSimpleSellModels(status);
   }
 
 

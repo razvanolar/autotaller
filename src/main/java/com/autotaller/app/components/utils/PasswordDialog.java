@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXDialog;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 
 /**
  * Created by razvanolar on 04.06.2017
@@ -29,5 +30,9 @@ public class PasswordDialog extends JFXDialog {
 
   public Button getConfirmationButton() {
     return dialogLayout.getOkButton();
+  }
+
+  public TextField getPasswordField() {
+    return passwordField;
   }
 }

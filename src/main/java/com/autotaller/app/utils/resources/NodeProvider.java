@@ -2,6 +2,7 @@ package com.autotaller.app.utils.resources;
 
 import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.model.*;
+import com.autotaller.app.model.notifications.SimpleSellModel;
 import com.autotaller.app.utils.StringValidator;
 import com.jfoenix.controls.*;
 import javafx.geometry.Insets;
@@ -352,5 +353,9 @@ public class NodeProvider {
 
   public static TableView<CarComponentModel> createCarComponentValidatorTable() {
     return TABLE_PROVIDER.createCarComponentValidationTable();
+  }
+
+  public static TableView<SimpleSellModel> createSellModelTable() {
+    return TABLE_PROVIDER.createSellModelTable();
   }
 }
