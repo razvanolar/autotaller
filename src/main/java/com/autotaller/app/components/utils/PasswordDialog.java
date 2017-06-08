@@ -29,7 +29,7 @@ public class PasswordDialog extends JFXDialog {
   }
 
   public Button getConfirmationButton() {
-    return dialogLayout.getOkButton();
+    return dialogLayout.getConfirmationButton();
   }
 
   public TextField getPasswordField() {

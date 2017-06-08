@@ -196,6 +196,10 @@ public class NodeProvider {
   }
 
   public static VBox createTitlePane(String title, Image image) {
+    return createTitlePane(title, image, null);
+  }
+
+  public static VBox createTitlePane(String title, Image image, String styleClass) {
     VBox node = new VBox();
 
     Text textLabel = createTextLabel(title, 17, false);
@@ -216,6 +220,10 @@ public class NodeProvider {
     node.getChildren().addAll(titleNode, footer);
     node.setAlignment(Pos.CENTER_LEFT);
     node.setPadding(new Insets(5, 10, 5, 10));
+    if (styleClass != null) {
+      node.getStyleClass().add(styleClass);
+      titleNode.getStyleClass().add(styleClass);
+    }
     return node;
   }
 

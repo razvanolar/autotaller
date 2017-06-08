@@ -17,6 +17,9 @@ import java.util.List;
  */
 public class CarKitsService extends GenericService {
 
+  private String SELECT_ALL_CAR_SUBKITS = "SELECT cs.id, cs.name, cs.gasoline, cs.diesel, cs.gpl, cs.electric, k.id, k.name, cc.id, cc.name " +
+          "FROM car_subkits cs INNER JOIN car_kits k ON cs.car_kit_id = k.id INNER JOIN car_kit_categories cc ON k.category = cc.id";
+
   public CarKitsService(JDBCUtil jdbcUtil) {
     super(jdbcUtil);
   }
@@ -78,29 +81,33 @@ public class CarKitsService extends GenericService {
     ResultSet rs = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = "SELECT cs.id, cs.name, cs.gasoline, cs.diesel, cs.gpl, cs.electric, k.id, k.name, cc.id, cc.name " +
-              "FROM car_subkits cs INNER JOIN car_kits k ON cs.car_kit_id = k.id INNER JOIN car_kit_categories cc ON k.category = cc.id";
-      statement = connection.prepareStatement(query);
-      rs = statement.executeQuery();
-      List<CarSubkitModel> result = new ArrayList<>();
-      while (rs.next()) {
-        result.add(new CarSubkitModel(
-                rs.getInt(1),
-                rs.getString(2),
-                new CarKitModel(rs.getInt(7), rs.getString(8), new CarKitCategoryModel(rs.getInt(9), rs.getString(10))),
-                rs.getBoolean(3),
-                rs.getBoolean(4),
-                rs.getBoolean(5),
-                rs.getBoolean(6)
-        ));
-      }
-      return result;
+      statement = connection.prepareStatement(SELECT_ALL_CAR_SUBKITS);
+      return getCarSubkitsFromStatement(statement);
     } catch (Exception e) {
       //TODO handle exception
       e.printStackTrace();
       throw e;
     } finally {
       jdbcUtil.close(connection, statement, rs);
+    }
+  }
+
+  public CarSubkitModel getCarSubkitById(int subkitId) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      String query = SELECT_ALL_CAR_SUBKITS + " WHERE cs.id = ?";
+      statement = connection.prepareStatement(query);
+      statement.setInt(1, subkitId);
+      List<CarSubkitModel> result = getCarSubkitsFromStatement(statement);
+      return result != null && !result.isEmpty() ? result.get(0) : null;
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
     }
   }
 
@@ -143,6 +150,28 @@ public class CarKitsService extends GenericService {
       throw e;
     } finally {
       jdbcUtil.close(connection, statement, null);
+    }
+  }
+
+  private List<CarSubkitModel> getCarSubkitsFromStatement(PreparedStatement statement) throws Exception {
+    ResultSet rs = null;
+    try {
+      rs = statement.executeQuery();
+      List<CarSubkitModel> result = new ArrayList<>();
+      while (rs.next()) {
+        result.add(new CarSubkitModel(
+                rs.getInt(1),
+                rs.getString(2),
+                new CarKitModel(rs.getInt(7), rs.getString(8), new CarKitCategoryModel(rs.getInt(9), rs.getString(10))),
+                rs.getBoolean(3),
+                rs.getBoolean(4),
+                rs.getBoolean(5),
+                rs.getBoolean(6)
+        ));
+      }
+      return result;
+    } finally {
+      jdbcUtil.closeResultSet(rs);
     }
   }
 }

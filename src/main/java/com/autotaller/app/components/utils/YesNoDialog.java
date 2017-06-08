@@ -19,7 +19,7 @@ public class YesNoDialog extends JFXDialog {
   }
 
   public Button getYesButton() {
-    return dialogLayout.getOkButton();
+    return dialogLayout.getConfirmationButton();
   }
 
   public Button getNoButton() {

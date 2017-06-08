@@ -49,7 +49,7 @@ public class CarComponentsService extends GenericService {
     }
   }
 
-  public CarComponentModel getComponentById(int componentId) throws Exception {
+  public CarComponentModel getCarComponentById(int componentId) throws Exception {
     Connection connection = null;
     PreparedStatement statement = null;
     try {
@@ -145,7 +145,7 @@ public class CarComponentsService extends GenericService {
     PreparedStatement statement = null;
     try {
       int componentId = preSellModel.getCarComponent().getId();
-      CarComponentModel component = getComponentById(componentId);
+      CarComponentModel component = getCarComponentById(componentId);
 
       if (component == null)
         throw new Exception("Piesa nu a putut fi gasita. Id: " + componentId);

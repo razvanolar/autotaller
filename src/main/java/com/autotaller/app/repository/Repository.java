@@ -2,6 +2,7 @@ package com.autotaller.app.repository;
 
 import com.autotaller.app.components.utils.statistics.CarTypeStatisticsModel;
 import com.autotaller.app.model.*;
+import com.autotaller.app.model.notifications.DetailedSellModel;
 import com.autotaller.app.model.notifications.SimpleSellModel;
 import com.autotaller.app.model.utils.CarDefinedModelsDTO;
 import com.autotaller.app.model.utils.PreSellComponentModel;
@@ -135,6 +136,15 @@ public class Repository {
     return carSubkitsCache;
   }
 
+  public CarSubkitModel getCarSubkitById(int carSubkitId) throws Exception {
+    List<CarSubkitModel> carSubkits = getCarSubkits();
+    for (CarSubkitModel subkit : carSubkits) {
+      if (subkit.getId() == carSubkitId)
+        return subkit;
+    }
+    return null;
+  }
+
   public void addCarKit(CarKitModel carKit) throws Exception {
     carKitsService.addCarKit(carKit);
     if (carKitsCache != null) {
@@ -163,9 +173,13 @@ public class Repository {
     return carService.getCarsByTypeId(carTypeId, getAllDefinedModels());
   }
 
+  public CarModel getCarById(int carId) throws Exception {
+    return carService.getCarById(carId, getAllDefinedModels());
+  }
+
   public SaveCarResult addCar(CarModel car, List<File> images) throws Exception {
     int carId = carService.addCar(car);
-    CarModel savedCar = carService.getCarById(carId, getAllDefinedModels());
+    CarModel savedCar = getCarById(carId);
     CarStatus carStatus = savedCar != null ? CarStatus.SUCCESS_SAVE : CarStatus.FAILED_SAVE;
     ImageStatus imageStatus;
     try {
@@ -201,6 +215,10 @@ public class Repository {
     return carComponentsService.getComponentsByCarAndKitId(carId, kitId);
   }
 
+  public CarComponentModel getCarComponentById(int componentId) throws Exception {
+    return carComponentsService.getCarComponentById(componentId);
+  }
+
   public void addComponents(List<CarComponentModel> components) throws Exception {
     carComponentsService.addComponents(components);
   }
@@ -211,6 +229,16 @@ public class Repository {
 
   public List<SimpleSellModel> getSimpleSellModels(SellModelStatus status) throws Exception {
     return carComponentsService.getSimpleSellModels(status);
+  }
+
+  public DetailedSellModel getDetailedSellModel(SimpleSellModel sellModel) throws Exception {
+    CarComponentModel carComponent = getCarComponentById(sellModel.getComponentId());
+    return new DetailedSellModel(
+            sellModel.getId(), carComponent, getCarById(carComponent.getCarId()),
+            getCarSubkitById(carComponent.getCarSubkitId()), sellModel.getSoldPieces(), sellModel.getStockPrice(),
+            sellModel.getSoldPrice(), sellModel.getSoldDate(), sellModel.getUserId(), sellModel.getUserName(),
+            sellModel.getStatus()
+    );
   }
 
 

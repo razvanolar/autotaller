@@ -9,7 +9,7 @@ import javafx.scene.text.Text;
 /**
  * Created by razvanolar on 19.04.2017
  */
-public class JFXOkCancelDialogLayout extends JFXDialogLayout {
+public class JFXOkCancelDialogLayout extends JFXDialogLayout implements IJFXOkDialogLayout {
 
   private JFXButton okButton;
   private JFXButton cancelButton;
@@ -55,7 +55,7 @@ public class JFXOkCancelDialogLayout extends JFXDialogLayout {
     super.setBody(node);
   }
 
-  public JFXButton getOkButton() {
+  public JFXButton getConfirmationButton() {
     return okButton;
   }
 

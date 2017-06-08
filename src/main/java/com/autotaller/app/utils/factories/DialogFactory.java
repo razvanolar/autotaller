@@ -14,7 +14,7 @@ public class DialogFactory {
   public static JFXDialog createDialog(DialogComponentType type) {
     JFXDialog dialog = new JFXDialog();
     JFXOkCancelDialogLayout dialogView = new JFXOkCancelDialogLayout(type.getTitle(), type.getActionButtonText(), dialog);
-    Component component = ComponentFactory.createDialogComponent(type, dialogView.getOkButton());
+    Component component = ComponentFactory.createDialogComponent(type, dialogView.getConfirmationButton());
     if (component != null)
       dialogView.setBody(component.getView().asNode());
     dialog.setContent(dialogView);
@@ -29,7 +29,7 @@ public class DialogFactory {
       dialogView.setBody(component.getView().asNode());
       if (component.getController() instanceof DialogController) {
         DialogController controller = (DialogController) component.getController();
-        controller.injectActionButton(dialogView.getOkButton());
+        controller.injectActionButton(dialogView.getConfirmationButton());
       }
     }
     dialog.setContent(dialogView);
