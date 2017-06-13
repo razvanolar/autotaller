@@ -241,6 +241,18 @@ public class Repository {
     );
   }
 
+  public void confirmSellNotification(SimpleSellModel sellModel) throws Exception {
+    CarComponentModel component = getCarComponentById(sellModel.getComponentId());
+    if (component.getLeftPieces() < sellModel.getSoldPieces()) {
+      throw new Exception("Nu exista suficiente bucati pe stoc pentru a valida vanzarea");
+    }
+    carComponentsService.confirmSellModel(sellModel);
+  }
+
+  public void cancelSellNotification(SimpleSellModel sellModel) throws Exception {
+    carComponentsService.cancelSellModel(sellModel.getId());
+  }
+
 
 
   /*

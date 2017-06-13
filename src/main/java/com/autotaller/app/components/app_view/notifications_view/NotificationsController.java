@@ -3,6 +3,7 @@ package com.autotaller.app.components.app_view.notifications_view;
 import com.autotaller.app.EventBus;
 import com.autotaller.app.components.app_view.notifications_view.utils.DetailedSellModelView;
 import com.autotaller.app.components.utils.NodeDialog;
+import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
@@ -30,6 +31,8 @@ public class NotificationsController implements Controller<NotificationsControll
   public interface INotificationsView extends View {
     TableView<SimpleSellModel> getSellModelTable();
     Button getDetailsButton();
+    Button getConfirmSellButton();
+    Button getCancelSellButton();
   }
 
   private INotificationsView view;
@@ -49,9 +52,13 @@ public class NotificationsController implements Controller<NotificationsControll
       }));
     });
 
-    EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> this.repository = event.getRepository());
+    view.getConfirmSellButton().setOnAction(event -> confirmSellNotification());
 
-    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> load());
+    view.getCancelSellButton().setOnAction(event -> cancelSellNotification());
+
+    EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> this.repository = event.getRepository(), true);
+
+    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> load(), true);
 
     initHandlers();
   }
@@ -62,6 +69,61 @@ public class NotificationsController implements Controller<NotificationsControll
       items.clear();
       items.addAll(sellModels);
     }));
+  }
+
+  private void confirmSellNotification() {
+    SimpleSellModel selectedItem = view.getSellModelTable().getSelectionModel().getSelectedItem();
+    if (selectedItem == null)
+      return;
+    try {
+      EventBus.fireEvent(new MaskViewEvent("Confirma Vanzare"));
+      Thread thread = new Thread(() -> {
+        try {
+          repository.confirmSellNotification(selectedItem);
+          Platform.runLater(() -> {
+            EventBus.fireEvent(new UnmaskViewEvent());
+            NotificationsUtil.showInfoNotification("Notificare", "Vanzare confirmata cu succes", 5);
+            load();
+          });
+        } catch (Exception e) {
+          //TODO show error dialog
+          e.printStackTrace();
+          Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+        }
+      });
+      thread.start();
+    } catch (Exception e) {
+      //TODO show error dialog
+      e.printStackTrace();
+      EventBus.fireEvent(new UnmaskViewEvent());
+    }
+  }
+
+  private void cancelSellNotification() {
+    SimpleSellModel selectedItem = view.getSellModelTable().getSelectionModel().getSelectedItem();
+    if (selectedItem == null)
+      return;
+    try {
+      EventBus.fireEvent(new MaskViewEvent("Anuleaza Vanzare"));
+      Thread thread = new Thread(() -> {
+        try {
+          repository.cancelSellNotification(selectedItem);
+          Platform.runLater(() -> {
+            EventBus.fireEvent(new UnmaskViewEvent());
+            load();
+          });
+        } catch (Exception e) {
+          //TODO show error dialog
+          e.printStackTrace();
+          Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+        }
+      });
+      thread.start();
+    } catch (Exception e) {
+      //TODO show error dialog
+      e.printStackTrace();
+      EventBus.fireEvent(new UnmaskViewEvent());
+    }
   }
 
   private void initHandlers() {
@@ -87,7 +149,7 @@ public class NotificationsController implements Controller<NotificationsControll
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
 
     EventBus.addHandler(GetDetailedSellModelEvent.TYPE, (GetDetailedSellModelEventHandler) event -> {
       try {
@@ -111,6 +173,6 @@ public class NotificationsController implements Controller<NotificationsControll
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
   }
 }

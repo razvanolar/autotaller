@@ -128,6 +128,14 @@ public class ImageProvider {
     return getImage("icons/chip_set_close_icon.png");
   }
 
+  public static Image checkIcon() {
+    return getImage("icons/check.png");
+  }
+
+  public static Image lockIcon() {
+    return getImage("icons/lock.png");
+  }
+
   public static Image getImage(String file) {
     String path = ImageProvider.class.getResource(file).getPath();
     if (path.contains("!")) {

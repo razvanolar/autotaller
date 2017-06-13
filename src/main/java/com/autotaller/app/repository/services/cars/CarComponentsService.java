@@ -190,6 +190,51 @@ public class CarComponentsService extends GenericService {
     }
   }
 
+  public void confirmSellModel(SimpleSellModel sellModel) throws Exception {
+    Connection connection = null;
+    PreparedStatement sellStatement = null;
+    PreparedStatement componentStatement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      connection.setAutoCommit(false);
+      sellStatement = connection.prepareStatement("UPDATE car_component_sales SET status = 1 WHERE id = ?");
+      sellStatement.setInt(1, sellModel.getId());
+      sellStatement.executeUpdate();
+      componentStatement = connection.prepareStatement("UPDATE car_components SET sold_pieces_no = sold_pieces_no + ? WHERE id = ?");
+      componentStatement.setInt(1, sellModel.getSoldPieces());
+      componentStatement.setInt(2, sellModel.getComponentId());
+      componentStatement.executeUpdate();
+      connection.commit();
+    } catch (Exception e) {
+      if (connection != null)
+        connection.rollback();
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.closeConnection(connection);
+      jdbcUtil.closeStatement(sellStatement);
+      jdbcUtil.closeStatement(componentStatement);
+    }
+  }
+
+  public void cancelSellModel(int sellNotificationId) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      statement = connection.prepareStatement("DELETE FROM car_component_sales WHERE id = ?");
+      statement.setInt(1, sellNotificationId);
+      statement.executeUpdate();
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
+
   private List<CarComponentModel> getCarComponentsFromStatement(Connection connection, PreparedStatement statement) throws Exception {
     ResultSet componentResultSet = null;
     PreparedStatement sellStatement = null;
