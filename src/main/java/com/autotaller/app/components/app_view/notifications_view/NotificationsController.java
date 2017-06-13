@@ -4,6 +4,7 @@ import com.autotaller.app.EventBus;
 import com.autotaller.app.components.app_view.notifications_view.utils.DetailedSellModelView;
 import com.autotaller.app.components.utils.NodeDialog;
 import com.autotaller.app.components.utils.NotificationsUtil;
+import com.autotaller.app.components.utils.YesNoDialog;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
@@ -52,9 +53,23 @@ public class NotificationsController implements Controller<NotificationsControll
       }));
     });
 
-    view.getConfirmSellButton().setOnAction(event -> confirmSellNotification());
+    view.getConfirmSellButton().setOnAction(event -> {
+      YesNoDialog dialog = new YesNoDialog("Confirmare vanzare", "Sunteti sigur ca doriti sa confirmati vanzarea?");
+      EventBus.fireEvent(new ShowDialogEvent(dialog));
+      dialog.getYesButton().setOnAction(dialogEvent -> {
+        dialog.close();
+        confirmSellNotification();
+      });
+    });
 
-    view.getCancelSellButton().setOnAction(event -> cancelSellNotification());
+    view.getCancelSellButton().setOnAction(event -> {
+      YesNoDialog dialog = new YesNoDialog("Anulare vanzare", "Sunteti sigur ca doriti sa anulati vanzarea?");
+      EventBus.fireEvent(new ShowDialogEvent(dialog));
+      dialog.getYesButton().setOnAction(dialogEvent -> {
+        dialog.close();
+        cancelSellNotification();
+      });
+    });
 
     EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> this.repository = event.getRepository(), true);
 
