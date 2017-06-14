@@ -105,8 +105,8 @@ public class TableProvider {
     TableColumn<CarKitModel, String> nameColumn = new TableColumn<>("Nume");
     TableColumn<CarKitModel, String> categoryColumn = new TableColumn<>("Categorie");
 
-    nameColumn.prefWidthProperty().bind(table.widthProperty().multiply(.5));
-    categoryColumn.prefWidthProperty().bind(table.widthProperty().multiply(.5));
+    nameColumn.prefWidthProperty().bind(table.widthProperty().multiply(.49));
+    categoryColumn.prefWidthProperty().bind(table.widthProperty().multiply(.49));
 
     nameColumn.setCellValueFactory(p -> {
       CarKitModel value = p.getValue();
@@ -143,7 +143,7 @@ public class TableProvider {
     TableColumn<CarSubkitModel, Boolean> electricColumn = new TableColumn<>("Electric");
 
     nameColumn.prefWidthProperty().bind(table.widthProperty().multiply(.3));
-    carKitColumn.prefWidthProperty().bind(table.widthProperty().multiply(.3));
+    carKitColumn.prefWidthProperty().bind(table.widthProperty().multiply(.29));
     gasolineColumn.prefWidthProperty().bind(table.widthProperty().multiply(.1));
     dieselColumn.prefWidthProperty().bind(table.widthProperty().multiply(.1));
     gplColumn.prefWidthProperty().bind(table.widthProperty().multiply(.1));

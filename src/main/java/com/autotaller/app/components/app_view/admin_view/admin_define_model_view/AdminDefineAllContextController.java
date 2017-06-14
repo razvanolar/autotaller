@@ -1,6 +1,15 @@
 package com.autotaller.app.components.app_view.admin_view.admin_define_model_view;
 
 import com.autotaller.app.EventBus;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_kit_view.AdminCarKitController;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_kit_view.AdminCarKitView;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_make_view.AdminCarMakeController;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_make_view.AdminCarMakeView;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_model_view.AdminCarModelController;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_model_view.AdminCarModelView;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_subkit_view.AdminCarSubkitController;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_subkit_view.AdminCarSubkitView;
+import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.utils.IDefineModelController;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.admin_view.*;
@@ -20,7 +29,11 @@ import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.factories.ComponentFactory;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
 
 /**
  * Created by razvanolar on 18.04.2017
@@ -28,30 +41,121 @@ import javafx.scene.Node;
 public class AdminDefineAllContextController implements Controller<AdminDefineAllContextController.IAdminDefineAllContextView> {
 
   public interface IAdminDefineAllContextView extends View {
-    void addToolbarPane(Node toolbarPane);
+    void setContent(Node content);
+    Button getRefreshButton();
+    Button getAddButton();
+    Button getEditButton();
+    Button getDeleteButton();
+    Button getFilterButton();
+    ToggleButton getShowCarMakePaneButton();
+    ToggleButton getShowCarTypePaneButton();
+    ToggleButton getShowCarKitPaneButton();
+    ToggleButton getShowCarSubKitPaneButton();
   }
 
   private IAdminDefineAllContextView view;
   private Repository repository;
 
+  private IDefineModelController carMakeController;
+  private IDefineModelController carTypeController;
+  private IDefineModelController carKitController;
+  private IDefineModelController carSubKitController;
+
   @Override
   public void bind(IAdminDefineAllContextView view) {
     this.view = view;
 
-    initToolbarPanes();
+    ChangeListener<Boolean> viewChangeListener = (observable, oldValue, newValue) -> {
+      BooleanProperty property = (BooleanProperty) observable;
+      Object source = property.getBean();
+      IDefineModelController controller = null;
+      if (source == view.getShowCarMakePaneButton()) {
+        controller = getCarMakeController();
+      } else if (source == view.getShowCarTypePaneButton()) {
+        controller = getCarTypeController();
+      } else if (source == view.getShowCarKitPaneButton()) {
+        controller = getCarKitController();
+      } else if (source == view.getShowCarSubKitPaneButton()) {
+        controller = getCarSubKitController();
+      }
+
+      if (controller != null) {
+        view.setContent(controller.getView().asNode());
+        controller.loadIfEmpty();
+      }
+    };
+
+    view.getShowCarMakePaneButton().selectedProperty().addListener(viewChangeListener);
+    view.getShowCarTypePaneButton().selectedProperty().addListener(viewChangeListener);
+    view.getShowCarKitPaneButton().selectedProperty().addListener(viewChangeListener);
+    view.getShowCarSubKitPaneButton().selectedProperty().addListener(viewChangeListener);
+
+    view.getAddButton().setOnAction(event -> {
+      IDefineModelController controller = getCurrentController();
+      if (controller != null) {
+        controller.addEntity();
+      }
+    });
 
     EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> {
       this.repository = event.getRepository();
       initRepoHandlers();
     }, true);
 
-    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> {
-      loadCarMakes();
-      loadCarModels();
-      loadCarKitCategories();
-      loadCarKits();
-      loadCarSubkits();
-    }, true);
+    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> view.getShowCarMakePaneButton().setSelected(true), true);
+  }
+
+  private IDefineModelController getCarMakeController() {
+    if (carMakeController == null) {
+      AdminCarMakeController controller = new AdminCarMakeController();
+      AdminCarMakeView view = new AdminCarMakeView();
+      controller.bind(view);
+      carMakeController = controller;
+    }
+    return carMakeController;
+  }
+
+  private IDefineModelController getCarTypeController() {
+    if (carTypeController == null) {
+      AdminCarModelController controller = new AdminCarModelController();
+      AdminCarModelView view = new AdminCarModelView();
+      controller.bind(view);
+      carTypeController = controller;
+    }
+    return carTypeController;
+  }
+
+  private IDefineModelController getCarKitController() {
+    if (carKitController == null) {
+      AdminCarKitController controller = new AdminCarKitController();
+      AdminCarKitView view = new AdminCarKitView();
+      controller.bind(view);
+      carKitController = controller;
+    }
+    return carKitController;
+  }
+
+  private IDefineModelController getCarSubKitController() {
+    if (carSubKitController == null) {
+      AdminCarSubkitController controller = new AdminCarSubkitController();
+      AdminCarSubkitView view = new AdminCarSubkitView();
+      controller.bind(view);
+      carSubKitController = controller;
+    }
+    return carSubKitController;
+  }
+
+  private IDefineModelController getCurrentController() {
+    if (view.getShowCarMakePaneButton().isSelected()) {
+      return getCarMakeController();
+    } else if (view.getShowCarTypePaneButton().isSelected()) {
+      return getCarTypeController();
+    } else if (view.getShowCarKitPaneButton().isSelected()) {
+      return getCarKitController();
+    } else if (view.getShowCarSubKitPaneButton().isSelected()) {
+      return getCarSubKitController();
+    }
+    return null;
   }
 
   private void initToolbarPanes() {
@@ -65,10 +169,10 @@ public class AdminDefineAllContextController implements Controller<AdminDefineAl
       return;
     }
 
-    view.addToolbarPane(carMakeComponent.getView().asNode());
-    view.addToolbarPane(carModelComponent.getView().asNode());
-    view.addToolbarPane(carKitComponent.getView().asNode());
-    view.addToolbarPane(carSubkitComponent.getView().asNode());
+    view.setContent(carMakeComponent.getView().asNode());
+    view.setContent(carModelComponent.getView().asNode());
+    view.setContent(carKitComponent.getView().asNode());
+    view.setContent(carSubkitComponent.getView().asNode());
   }
 
   private void initRepoHandlers() {
