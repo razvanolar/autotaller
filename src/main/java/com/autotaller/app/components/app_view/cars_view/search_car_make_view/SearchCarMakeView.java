@@ -6,10 +6,12 @@ import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
@@ -19,7 +21,9 @@ import javafx.scene.layout.HBox;
 public class SearchCarMakeView extends IterableView implements SearchCarMakeController.ISearchCarMakeView {
 
   private BorderPane container;
-  private HBox chipSetContainer;
+  private BorderPane filterHeader;
+  private TextField carMakeNameField;
+  private Button searchCarMakeButton;
   private TableView<CarMakeModel> carMakeTable;
   private Button continueButton;
 
@@ -28,23 +32,23 @@ public class SearchCarMakeView extends IterableView implements SearchCarMakeCont
   }
 
   private void init() {
+    carMakeNameField = NodeProvider.createTextField();
+    searchCarMakeButton = NodeProvider.createButton("Cauta");
     continueButton = NodeProvider.createToolbarButton("Continua", null);
     toolBar.getItems().addAll(new Separator(), new FillToolItem(), continueButton);
 
-    chipSetContainer = new HBox(15);
-    chipSetContainer.setPadding(new Insets(3));
+    HBox filterPane = NodeProvider.createHBox(Pos.CENTER, 10, NodeProvider.createFormTextLabel("Nume marca: "), carMakeNameField, searchCarMakeButton);
+    filterPane.setPadding(new Insets(5, 0, 5, 0));
 
     carMakeTable = NodeProvider.createCarMakeTable();
     container = NodeProvider.createBorderPane();
+    filterHeader = NodeProvider.createBorderPane();
+
+    filterHeader.setTop(filterPane);
 
     container.setCenter(carMakeTable);
-    container.setTop(chipSetContainer);
+    container.setTop(filterHeader);
     borderPane.setCenter(container);
-  }
-
-  @Override
-  public void addChipSet(ChipSet chipSet) {
-    chipSetContainer.getChildren().add(chipSet.asNode());
   }
 
   public TableView<CarMakeModel> getCarMakeTable() {
@@ -53,6 +57,14 @@ public class SearchCarMakeView extends IterableView implements SearchCarMakeCont
 
   public Button getContinueButton() {
     return continueButton;
+  }
+
+  public TextField getCarMakeNameField() {
+    return carMakeNameField;
+  }
+
+  public Button getSearchCarMakeButton() {
+    return searchCarMakeButton;
   }
 
   @Override

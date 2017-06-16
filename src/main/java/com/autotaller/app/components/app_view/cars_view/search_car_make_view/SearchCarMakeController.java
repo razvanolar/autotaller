@@ -1,7 +1,6 @@
 package com.autotaller.app.components.app_view.cars_view.search_car_make_view;
 
 import com.autotaller.app.EventBus;
-import com.autotaller.app.components.utils.ChipSet;
 import com.autotaller.app.components.utils.FilterDialog;
 import com.autotaller.app.components.utils.SimpleDialog;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
@@ -15,16 +14,15 @@ import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.model.utils.CarDefinedModelsDTO;
-import com.autotaller.app.utils.Component;
-import com.autotaller.app.utils.ComponentType;
-import com.autotaller.app.utils.Controller;
-import com.autotaller.app.utils.View;
+import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.factories.ComponentFactory;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,9 +31,10 @@ import java.util.List;
 public class SearchCarMakeController implements Controller<SearchCarMakeController.ISearchCarMakeView> {
 
   public interface ISearchCarMakeView extends View {
-    void addChipSet(ChipSet chipSet);
     TableView<CarMakeModel> getCarMakeTable();
     Button getContinueButton();
+    TextField getCarMakeNameField();
+    Button getSearchCarMakeButton();
   }
 
   private ISearchCarMakeView view;
@@ -45,7 +44,20 @@ public class SearchCarMakeController implements Controller<SearchCarMakeControll
   public void bind(ISearchCarMakeView view) {
     this.view = view;
 
-//    view.addChipSet(new ChipSet("test"));
+    view.getSearchCarMakeButton().setOnAction(event -> {
+      String name = view.getCarMakeNameField().getText();
+      if (!StringValidator.isNullOrEmpty(name)) {
+        List<CarMakeModel> carMakes = new ArrayList<>();
+        String text = name.toLowerCase();
+        for (CarMakeModel carMake : definedModels.getCarMakes()) {
+          if (carMake.getName().toLowerCase().contains(text))
+            carMakes.add(carMake);
+        }
+        load(carMakes);
+      } else {
+        load(definedModels.getCarMakes());
+      }
+    });
 
     view.getContinueButton().setOnAction(event -> {
       CarMakeModel selectedMake = view.getCarMakeTable().getSelectionModel().getSelectedItem();
@@ -77,9 +89,13 @@ public class SearchCarMakeController implements Controller<SearchCarMakeControll
   private void load() {
     EventBus.fireEvent(new GetAllCarDefinedModelsEvent(carModelsDTO -> {
       this.definedModels = carModelsDTO;
-      ObservableList<CarMakeModel> items = view.getCarMakeTable().getItems();
-      items.clear();
-      items.addAll(carModelsDTO.getCarMakes());
+      load(definedModels.getCarMakes());
     }));
+  }
+
+  private void load(List<CarMakeModel> carMakes) {
+    ObservableList<CarMakeModel> items = view.getCarMakeTable().getItems();
+    items.clear();
+    items.addAll(carMakes);
   }
 }

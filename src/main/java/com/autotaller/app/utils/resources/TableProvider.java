@@ -177,11 +177,8 @@ public class TableProvider {
     TableView<CarModel> table = new TableView<>();
     TableColumn<CarModel, String> nameColumn = new TableColumn<>("Nume");
     TableColumn<CarModel, String> modelColumn = new TableColumn<>("Model");
-    TableColumn<CarModel, String> bodyTypeColumn = new TableColumn<>("Caroserie");
     TableColumn<CarModel, String> fromColumn = new TableColumn<>("De la");
     TableColumn<CarModel, String> toColumn = new TableColumn<>("Pana la");
-    TableColumn<CarModel, Integer> productionYear = new TableColumn<>("An Fabricatie");
-    TableColumn<CarModel, Integer> kmColumn = new TableColumn<>("KM");
     TableColumn<CarModel, Integer> kwColumn = new TableColumn<>("KW");
     TableColumn<CarModel, Integer> hpColumn = new TableColumn<>("CP");
     TableColumn<CarModel, Integer> capacityColumn = new TableColumn<>("Cap. cil.");
