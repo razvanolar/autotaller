@@ -12,7 +12,6 @@ public class ModelValidator {
             !StringValidator.isNullOrEmpty(carComponent.getCode()) &&
             carComponent.getCarSubkitId() > 0 &&
             carComponent.getInitialPieces() > 0 &&
-            carComponent.getSoldPieces() > 0 &&
             carComponent.getInitialPieces() >= carComponent.getSoldPieces() &&
             carComponent.getPrice() > 0 &&
             carComponent.getUsageState() != null &&

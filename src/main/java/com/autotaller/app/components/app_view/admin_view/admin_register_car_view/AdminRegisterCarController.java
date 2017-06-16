@@ -244,8 +244,10 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
           } catch (Exception e) {
             //TODO handle exception
             e.printStackTrace();
-            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
-            NotificationsUtil.showErrorNotification("Eroare", "Masina nu a putut fi inregistrata", -1);
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              NotificationsUtil.showErrorNotification("Eroare", "Masina nu a putut fi inregistrata", -1);
+            });
           }
         });
         thread.start();

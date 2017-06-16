@@ -177,8 +177,11 @@ public class TableProvider {
     TableView<CarModel> table = new TableView<>();
     TableColumn<CarModel, String> nameColumn = new TableColumn<>("Nume");
     TableColumn<CarModel, String> modelColumn = new TableColumn<>("Model");
+    TableColumn<CarModel, String> bodyTypeColumn = new TableColumn<>("Caroserie");
     TableColumn<CarModel, String> fromColumn = new TableColumn<>("De la");
     TableColumn<CarModel, String> toColumn = new TableColumn<>("Pana la");
+    TableColumn<CarModel, Integer> productionYear = new TableColumn<>("An Fabricatie");
+    TableColumn<CarModel, Integer> kmColumn = new TableColumn<>("KM");
     TableColumn<CarModel, Integer> kwColumn = new TableColumn<>("KW");
     TableColumn<CarModel, Integer> hpColumn = new TableColumn<>("CP");
     TableColumn<CarModel, Integer> capacityColumn = new TableColumn<>("Cap. cil.");
@@ -199,7 +202,7 @@ public class TableProvider {
     nameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getName()) : new SimpleStringProperty());
     modelColumn.setCellValueFactory(p -> p.getValue() != null && p.getValue().getCarType() != null ? new SimpleStringProperty(p.getValue().getCarType().getName()) : new SimpleStringProperty());
     fromColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getFrom().toString()) : new SimpleStringProperty());
-    toColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getTo().toString()) : new SimpleStringProperty());
+    toColumn.setCellValueFactory(p -> p.getValue() != null && p.getValue().getTo() != null ? new SimpleStringProperty(p.getValue().getTo().toString()) : new SimpleStringProperty());
     kwColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getKw()) : new SimpleObjectProperty<>());
     hpColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>((int)((float)p.getValue().getKw() * 1.34102)) : new SimpleObjectProperty<>());
     capacityColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getCapacity()) : new SimpleObjectProperty<>());
@@ -216,7 +219,7 @@ public class TableProvider {
     cilindersColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     enginesColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
 
-    table.getColumns().addAll(nameColumn, modelColumn, fromColumn, toColumn, kwColumn, hpColumn, capacityColumn, cilindersColumn, enginesColumn);
+    table.getColumns().addAll(modelColumn, nameColumn, fromColumn, toColumn, kwColumn, hpColumn, capacityColumn, cilindersColumn, enginesColumn);
     return table;
   }
 

@@ -8,6 +8,7 @@ import com.autotaller.app.repository.utils.JDBCUtil;
 import com.autotaller.app.utils.CarWheelSideType;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,20 +124,28 @@ public class CarService extends GenericService {
     try {
       connection = jdbcUtil.getNewConnection();
       connection.setAutoCommit(false);
-      String addCarSql = "INSERT INTO cars (model_id, name, produced_from, produced_to, kw, cilindrical_capacity, cilinders, fuel_id, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      String addCarSql = "INSERT INTO cars (model_id, name, body_type_id, produced_from, produced_to, production_year, " +
+              "km, kw, cilindrical_capacity, cilinders, fuel_id, color_code, price, wheel_side, description) " +
+              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
       addCarStatement = connection.prepareStatement(addCarSql);
       addCarStatement.setInt(1, car.getCarType().getId());
       addCarStatement.setString(2, car.getName());
-      addCarStatement.setDate(3, Date.valueOf(car.getFrom()));
-      addCarStatement.setDate(4, Date.valueOf(car.getTo()));
-      addCarStatement.setInt(5, car.getKw());
-      addCarStatement.setInt(6, car.getCapacity());
-      addCarStatement.setInt(7, car.getCilinders());
-      addCarStatement.setInt(8, car.getFuel().getId());
+      addCarStatement.setInt(3, car.getBodyType().getId());
+      setStatementDate(4, car.getFrom(), addCarStatement);
+      setStatementDate(5, car.getTo(), addCarStatement);
+      setStatementDate(6, car.getProductionYear(), addCarStatement);
+      addCarStatement.setInt(7, car.getKm());
+      addCarStatement.setInt(8, car.getKw());
+      addCarStatement.setInt(9, car.getCapacity());
+      addCarStatement.setInt(10, car.getCilinders());
+      addCarStatement.setInt(11, car.getFuel().getId());
+      addCarStatement.setString(12, car.getColorCode());
+      addCarStatement.setInt(13, car.getPrice());
+      addCarStatement.setString(14, car.getWheelSide().getValue());
       if (car.getDescription() != null) {
-        addCarStatement.setString(9, car.getDescription());
+        addCarStatement.setString(15, car.getDescription());
       } else {
-        addCarStatement.setNull(9, Types.VARCHAR);
+        addCarStatement.setNull(15, Types.VARCHAR);
       }
 
       addCarStatement.executeUpdate();
@@ -190,6 +199,14 @@ public class CarService extends GenericService {
     } finally {
       jdbcUtil.closeResultSet(rs);
       jdbcUtil.closeStatement(statement);
+    }
+  }
+
+  private void setStatementDate(int index, LocalDate date, PreparedStatement statement) throws Exception {
+    if (date != null) {
+      statement.setDate(index, Date.valueOf(date));
+    } else {
+      statement.setNull(index, Types.DATE);
     }
   }
 }

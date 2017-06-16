@@ -194,9 +194,8 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     FuelModel carFuel = view.getCarFuelCombo().getValue();
     String priceText = view.getCarPriceField().getText();
     if (selectedCarMake == null || selectedCarType == null || StringValidator.isNullOrEmpty(carName) ||
-            prodYear == null || prodFrom == null || prodTo == null ||
-            !StringValidator.isPositiveInteger(view.getCarKmField().getText()) || carKW == null || carCapacity == null ||
-            carCylinders == null || carFuel == null || bodyType == null) {
+            prodYear == null || prodFrom == null || !StringValidator.isPositiveInteger(view.getCarKmField().getText()) ||
+            carKW == null || carCapacity == null || carCylinders == null || carFuel == null || bodyType == null) {
       return null;
     }
 
