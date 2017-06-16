@@ -90,6 +90,10 @@ public class CarModel {
     return kw;
   }
 
+  public float getHp() {
+    return kw * (float) 1.34102;
+  }
+
   public int getCapacity() {
     return capacity;
   }

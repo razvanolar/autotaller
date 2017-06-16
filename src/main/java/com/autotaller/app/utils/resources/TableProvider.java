@@ -204,7 +204,7 @@ public class TableProvider {
     fromColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getFrom().toString()) : new SimpleStringProperty());
     toColumn.setCellValueFactory(p -> p.getValue() != null && p.getValue().getTo() != null ? new SimpleStringProperty(p.getValue().getTo().toString()) : new SimpleStringProperty());
     kwColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getKw()) : new SimpleObjectProperty<>());
-    hpColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>((int)((float)p.getValue().getKw() * 1.34102)) : new SimpleObjectProperty<>());
+    hpColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>((int)((float)p.getValue().getHp())) : new SimpleObjectProperty<>());
     capacityColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getCapacity()) : new SimpleObjectProperty<>());
     cilindersColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getCilinders()) : new SimpleObjectProperty<>());
     enginesColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getEnginesString()) : new SimpleObjectProperty<>());

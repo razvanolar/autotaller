@@ -2,6 +2,8 @@ package com.autotaller.app.components.app_view.admin_view.admin_register_car_vie
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.components.app_view.admin_view.admin_register_car_view.utils.AdminCarTableViewContextMenu;
+import com.autotaller.app.components.utils.CarDetailesView;
+import com.autotaller.app.components.utils.NodeDialog;
 import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.components.utils.YesNoDialog;
 import com.autotaller.app.components.utils.filter_views.DefaultCarFilterView;
@@ -118,6 +120,14 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
       } else {
         view.hideFilterPane();
       }
+    });
+
+    view.getCarDetailsButton().setOnAction(event -> {
+      CarModel selectedCar = view.getCarTable().getSelectionModel().getSelectedItem();
+      if (selectedCar == null)
+        return;
+      CarDetailesView detailesView = new CarDetailesView(selectedCar);
+      EventBus.fireEvent(new ShowDialogEvent(new NodeDialog("Detalii Masina", "Ok", detailesView.asNode(), false)));
     });
 
     // car make combo listener

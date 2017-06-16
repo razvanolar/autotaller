@@ -1,8 +1,11 @@
 package com.autotaller.app.components.app_view.cars_view.search_car_view;
 
 import com.autotaller.app.EventBus;
+import com.autotaller.app.components.utils.CarDetailesView;
+import com.autotaller.app.components.utils.NodeDialog;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
+import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarsByTypeIdEvent;
 import com.autotaller.app.events.app_view.search_views.InjectCarEvent;
 import com.autotaller.app.events.app_view.search_views.InjectCarTypeEvent;
@@ -26,6 +29,7 @@ public class SearchCarController implements Controller<SearchCarController.ISear
 
   public interface ISearchCarView extends View {
     TableView<CarModel> getCarsTable();
+    Button getDetailsButton();
     Button getContinueButton();
   }
 
@@ -35,6 +39,15 @@ public class SearchCarController implements Controller<SearchCarController.ISear
   @Override
   public void bind(ISearchCarView view) {
     this.view = view;
+
+    view.getDetailsButton().setOnAction(event -> {
+      CarModel selectedCar = view.getCarsTable().getSelectionModel().getSelectedItem();
+      if (selectedCar == null) {
+        return;
+      }
+      CarDetailesView detailesView = new CarDetailesView(selectedCar);
+      EventBus.fireEvent(new ShowDialogEvent(new NodeDialog("Detalii Masina", "Ok", detailesView.asNode(), false)));
+    });
 
     view.getContinueButton().setOnAction(event -> {
       CarModel selectedCar = view.getCarsTable().getSelectionModel().getSelectedItem();
