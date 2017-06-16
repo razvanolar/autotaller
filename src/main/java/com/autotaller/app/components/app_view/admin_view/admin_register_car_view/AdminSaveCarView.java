@@ -79,7 +79,7 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     carFuelCombo = NodeProvider.createFuelCombo(width);
     carColorCodeField = NodeProvider.createTextField(width);
     carPriceField = NodeProvider.createTextField(width);
-    carDescriptionTextArea = NodeProvider.createTextArea(width + 90, 120);
+    carDescriptionTextArea = NodeProvider.createTextArea(width + 190, 120);
     imageGalleryPane = new ImageGalleryPane();
 
     carLeftWheelRadio = new RadioButton(CarWheelSideType.LEFT.getValue());
@@ -128,17 +128,24 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
 
     saveCarFormPane.setPadding(new Insets(5, 0, 10, 0));
 
-    GridPane descriptionPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
-    descriptionPane.add(carDescriptionTextArea, 0, 0);
+    GridPane descriptionGridPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
+    descriptionGridPane.add(carDescriptionTextArea, 0, 0);
+
+    VBox descriptionPane = NodeProvider.createVBox(Pos.CENTER, 10,
+            NodeProvider.createTitlePane("Descriere", ImageProvider.descriptionIcon()), descriptionGridPane);
 
     BorderPane imagesPane = NodeProvider.createBorderPane();
     imagesPane.setTop(NodeProvider.createTitlePane("Imagini", ImageProvider.imageIcon()));
     imagesPane.setCenter(imageGalleryPane.asNode());
 
-    VBox formVBox = NodeProvider.createVBox(5, NodeProvider.createTitlePane("Informatii", ImageProvider.infoIcon()),
-            saveCarFormPane, NodeProvider.createTitlePane("Descriere", ImageProvider.descriptionIcon()), descriptionPane);
+    BorderPane rightPane = NodeProvider.createBorderPane();
+    rightPane.setCenter(imagesPane);
+    rightPane.setTop(descriptionPane);
 
-    SplitPane splitPane = new SplitPane(NodeProvider.createScrollPane(formVBox, true), imagesPane);
+    VBox formVBox = NodeProvider.createVBox(5, NodeProvider.createTitlePane("Informatii", ImageProvider.infoIcon()),
+            saveCarFormPane);
+
+    SplitPane splitPane = new SplitPane(NodeProvider.createScrollPane(formVBox, true), rightPane);
 
     splitPane.setDividerPosition(0, .33);
     SplitPane.setResizableWithParent(formVBox, false);
