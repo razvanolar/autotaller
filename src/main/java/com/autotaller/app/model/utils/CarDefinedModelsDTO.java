@@ -1,5 +1,6 @@
 package com.autotaller.app.model.utils;
 
+import com.autotaller.app.model.CarBodyTypeModel;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.model.FuelModel;
@@ -17,13 +18,15 @@ public class CarDefinedModelsDTO {
   private List<CarMakeModel> carMakes;
   private List<CarTypeModel> carTypes;
   private List<FuelModel> fuels;
+  private List<CarBodyTypeModel> bodyTypes;
 
   private Map<CarMakeModel, List<CarTypeModel>> carMakeTypeListMap;
 
-  public CarDefinedModelsDTO(List<CarMakeModel> carMakes, List<CarTypeModel> carTypes, List<FuelModel> fuels) {
+  public CarDefinedModelsDTO(List<CarMakeModel> carMakes, List<CarTypeModel> carTypes, List<FuelModel> fuels, List<CarBodyTypeModel> bodyTypes) {
     this.carMakes = carMakes;
     this.carTypes = carTypes;
     this.fuels = fuels;
+    this.bodyTypes = bodyTypes;
 
     initCarMakeTypeListMap();
   }
@@ -38,6 +41,10 @@ public class CarDefinedModelsDTO {
 
   public List<FuelModel> getFuels() {
     return fuels;
+  }
+
+  public List<CarBodyTypeModel> getBodyTypes() {
+    return bodyTypes;
   }
 
   public List<CarTypeModel> getCarTypesByMake(CarMakeModel carMake) {

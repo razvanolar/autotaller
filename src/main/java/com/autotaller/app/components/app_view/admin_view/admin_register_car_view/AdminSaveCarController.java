@@ -9,11 +9,9 @@ import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetAllCarDefinedModelsEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEvent;
 import com.autotaller.app.events.view_stack.BackToPreviousViewEvent;
-import com.autotaller.app.model.CarMakeModel;
-import com.autotaller.app.model.CarModel;
-import com.autotaller.app.model.CarTypeModel;
-import com.autotaller.app.model.FuelModel;
+import com.autotaller.app.model.*;
 import com.autotaller.app.model.utils.CarDefinedModelsDTO;
+import com.autotaller.app.utils.CarWheelSideType;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.StringValidator;
 import com.autotaller.app.utils.View;
@@ -23,7 +21,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +42,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     Text getCarMakeText();
     Text getCarTypeText();
     TextField getCarNameField();
+    ComboBox<CarBodyTypeModel> getCarBodyTypeCombo();
     DatePicker getProducedFromPicker();
     DatePicker getProducedToPicker();
     DatePicker getProductionYearPicker();
@@ -54,6 +52,9 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     Spinner<Integer> getCarCylindersSpinner();
     TextField getEnginesTextField();
     ComboBox<FuelModel> getCarFuelCombo();
+    TextField getCarColorCodeField();
+    TextField getCarPriceField();
+    RadioButton getCarLeftWheelRadio();
     TextArea getCarDescriptionTextArea();
     ImageGalleryPane getImageGalleryPane();
   }
@@ -130,9 +131,16 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
       view.getProducedFromPicker().setValue(selectedCarType.getFrom());
       view.getProducedToPicker().setValue(selectedCarType.getTo());
       ObservableList<FuelModel> fuels = view.getCarFuelCombo().getItems();
-      if (fuels.isEmpty()) {
-        fuels.addAll(carSystemModels.getFuels());
-        view.getCarFuelCombo().setValue(carSystemModels.getFuels().get(0));
+      ObservableList<CarBodyTypeModel> bodyTypes = view.getCarBodyTypeCombo().getItems();
+      List<FuelModel> fuelsList = carSystemModels.getFuels();
+      List<CarBodyTypeModel> bodyTypesList = carSystemModels.getBodyTypes();
+      if (fuels.isEmpty() && fuelsList != null && !fuelsList.isEmpty()) {
+        fuels.addAll(fuelsList);
+        view.getCarFuelCombo().setValue(fuelsList.get(0));
+      }
+      if (bodyTypes.isEmpty() && bodyTypesList != null && !bodyTypesList.isEmpty()) {
+        bodyTypes.addAll(bodyTypesList);
+        view.getCarBodyTypeCombo().setValue(bodyTypesList.get(0));
       }
     } else {
       EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Selecteaza" +
@@ -176,6 +184,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
 
   private CarModel collectCar() {
     String carName = view.getCarNameField().getText();
+    CarBodyTypeModel bodyType = view.getCarBodyTypeCombo().getValue();
     LocalDate prodYear = view.getProductionYearPicker().getValue();
     LocalDate prodFrom = view.getProducedFromPicker().getValue();
     LocalDate prodTo = view.getProducedToPicker().getValue();
@@ -183,10 +192,11 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     Integer carCapacity = view.getCarCapacitySpinner().getValue();
     Integer carCylinders = view.getCarCylindersSpinner().getValue();
     FuelModel carFuel = view.getCarFuelCombo().getValue();
+    String priceText = view.getCarPriceField().getText();
     if (selectedCarMake == null || selectedCarType == null || StringValidator.isNullOrEmpty(carName) ||
             prodYear == null || prodFrom == null || prodTo == null ||
             !StringValidator.isPositiveInteger(view.getCarKmField().getText()) || carKW == null || carCapacity == null ||
-            carCylinders == null || carFuel == null) {
+            carCylinders == null || carFuel == null || bodyType == null) {
       return null;
     }
 
@@ -201,7 +211,11 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
       }
     }
 
-    return new CarModel(-1, selectedCarType, carName, prodFrom, prodTo, carKW, carCapacity, carCylinders, engines,
-            carFuel, view.getCarDescriptionTextArea().getText());
+    int price = StringValidator.isPositiveInteger(priceText) ? Integer.parseInt(priceText) : 0;
+    return new CarModel(-1, selectedCarType, carName, bodyType, prodFrom, prodTo, prodYear,
+            Integer.parseInt(view.getCarKmField().getText()), carKW, carCapacity, carCylinders, engines,
+            carFuel, view.getCarColorCodeField().getText().trim(),
+            price, view.getCarLeftWheelRadio().isSelected() ? CarWheelSideType.LEFT : CarWheelSideType.RIGHT,
+            view.getCarDescriptionTextArea().getText());
   }
 }

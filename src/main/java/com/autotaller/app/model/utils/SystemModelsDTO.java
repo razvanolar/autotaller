@@ -15,6 +15,7 @@ public class SystemModelsDTO {
   private List<CarMakeModel> carMakes;
   private List<CarTypeModel> carTypes;
   private List<FuelModel> fuels;
+  private List<CarBodyTypeModel> bodyTypes;
 
   private Map<CarMakeModel, List<CarTypeModel>> carMakeTypeMap;
   private Map<CarKitCategoryModel, List<CarKitModel>> carCategoryKitMap;
@@ -25,13 +26,15 @@ public class SystemModelsDTO {
                          List<CarSubkitModel> carSubkits,
                          List<CarMakeModel> carMakes,
                          List<CarTypeModel> carTypes,
-                         List<FuelModel> fuels) {
+                         List<FuelModel> fuels,
+                         List<CarBodyTypeModel> bodyTypes) {
     this.carKitCategories = carKitCategories;
     this.carKits = carKits;
     this.carSubkits = carSubkits;
     this.carMakes = carMakes;
     this.carTypes = carTypes;
     this.fuels = fuels;
+    this.bodyTypes = bodyTypes;
 
     this.carMakeTypeMap = new HashMap<>();
     this.carCategoryKitMap = new HashMap<>();
@@ -66,6 +69,10 @@ public class SystemModelsDTO {
     return fuels;
   }
 
+  public List<CarBodyTypeModel> getBodyTypes() {
+    return bodyTypes;
+  }
+
   public List<CarTypeModel> getCarTypesByMake(CarMakeModel carMake) {
     return carMakeTypeMap.get(carMake);
   }
@@ -90,6 +97,14 @@ public class SystemModelsDTO {
     for (FuelModel fuel : fuels) {
       if (fuel.getId() == fuelId)
         return fuel;
+    }
+    return null;
+  }
+
+  public CarBodyTypeModel getBodyTypeById(int id) {
+    for (CarBodyTypeModel bodyType : bodyTypes) {
+      if (bodyType.getId() == id)
+        return bodyType;
     }
     return null;
   }

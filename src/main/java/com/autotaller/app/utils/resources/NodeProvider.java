@@ -151,6 +151,16 @@ public class NodeProvider {
     return combo;
   }
 
+  public static ComboBox<CarBodyTypeModel> createCarBodyTypeCombo() {
+    return createCarBodyTypeCombo(DEFAULT_FIELD_WIDTH);
+  }
+
+  public static ComboBox<CarBodyTypeModel> createCarBodyTypeCombo(int width) {
+    ComboBox<CarBodyTypeModel> combo = new ComboBox<>();
+    combo.setPrefWidth(width);
+    return combo;
+  }
+
   public static Text createFormTextLabel(String text) {
     return createTextLabel(text, 13, false);
   }

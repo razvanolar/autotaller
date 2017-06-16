@@ -3,18 +3,18 @@ package com.autotaller.app.components.app_view.admin_view.admin_register_car_vie
 import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.components.utils.ImageGalleryPane;
 import com.autotaller.app.components.utils.IterableView;
+import com.autotaller.app.model.CarBodyTypeModel;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.model.FuelModel;
+import com.autotaller.app.utils.CarWheelSideType;
 import com.autotaller.app.utils.resources.ImageProvider;
 import com.autotaller.app.utils.resources.NodeProvider;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 /**
@@ -30,6 +30,7 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
   private Text carMakeText;
   private Text carTypeText;
   private TextField carNameField;
+  private ComboBox<CarBodyTypeModel> carBodyTypeCombo;
   private DatePicker producedFromPicker;
   private DatePicker producedToPicker;
   private DatePicker productionYearPicker;
@@ -39,6 +40,9 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
   private Spinner<Integer> carCylindersSpinner;
   private TextField enginesTextField;
   private ComboBox<FuelModel> carFuelCombo;
+  private TextField carColorCodeField;
+  private TextField carPriceField;
+  private RadioButton carLeftWheelRadio;
   private TextArea carDescriptionTextArea;
   private ImageGalleryPane imageGalleryPane;
 
@@ -62,7 +66,8 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     int width = NodeProvider.DEFAULT_FIELD_WIDTH + 80;
     carMakeText = NodeProvider.createFormTextLabel("");
     carTypeText = NodeProvider.createFormTextLabel("");
-    carNameField = NodeProvider.createTextField();
+    carNameField = NodeProvider.createTextField(width);
+    carBodyTypeCombo = NodeProvider.createCarBodyTypeCombo(width);
     productionYearPicker = NodeProvider.createDatePicker(width);
     producedFromPicker = NodeProvider.createDatePicker(width);
     producedToPicker = NodeProvider.createDatePicker(width);
@@ -72,8 +77,17 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     carCylindersSpinner = NodeProvider.createSpinner(width,0, 100, 0, 1);
     enginesTextField = NodeProvider.createTextField(width);
     carFuelCombo = NodeProvider.createFuelCombo(width);
+    carColorCodeField = NodeProvider.createTextField(width);
+    carPriceField = NodeProvider.createTextField(width);
     carDescriptionTextArea = NodeProvider.createTextArea(width + 90, 120);
     imageGalleryPane = new ImageGalleryPane();
+
+    carLeftWheelRadio = new RadioButton(CarWheelSideType.LEFT.getValue());
+    RadioButton carRightWheelRadio = new RadioButton(CarWheelSideType.RIGHT.getValue());
+    HBox radioPanel = NodeProvider.createHBox(Pos.CENTER, 10, carLeftWheelRadio, carRightWheelRadio);
+    ToggleGroup group = new ToggleGroup();
+    group.getToggles().addAll(carLeftWheelRadio, carRightWheelRadio);
+    carLeftWheelRadio.setSelected(true);
 
     Tooltip.install(enginesTextField, new Tooltip("Daca mai multe serii de motor sunt disponibile acestea se vor separa prin virgula"));
 
@@ -85,6 +99,8 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     saveCarFormPane.add(carTypeText, 1, row++);
     saveCarFormPane.add(NodeProvider.createFormTextLabel("Motorizare: "), 0, row);
     saveCarFormPane.add(carNameField, 1, row++);
+    saveCarFormPane.add(NodeProvider.createFormTextLabel("Caroserie: "), 0, row);
+    saveCarFormPane.add(carBodyTypeCombo, 1, row++);
     saveCarFormPane.add(NodeProvider.createFormTextLabel("An fabricatie: "), 0, row);
     saveCarFormPane.add(productionYearPicker, 1, row++);
     saveCarFormPane.add(NodeProvider.createFormTextLabel("De la: "), 0, row);
@@ -102,7 +118,15 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     saveCarFormPane.add(NodeProvider.createFormTextLabel("Serii motor: "), 0, row);
     saveCarFormPane.add(enginesTextField, 1, row++);
     saveCarFormPane.add(NodeProvider.createFormTextLabel("Combustibil: "), 0, row);
-    saveCarFormPane.add(carFuelCombo, 1, row);
+    saveCarFormPane.add(carFuelCombo, 1, row++);
+    saveCarFormPane.add(NodeProvider.createFormTextLabel("Cod Culoare: "), 0, row);
+    saveCarFormPane.add(carColorCodeField, 1, row++);
+    saveCarFormPane.add(NodeProvider.createFormTextLabel("Pret Achizitie: "), 0, row);
+    saveCarFormPane.add(carPriceField, 1, row++);
+    saveCarFormPane.add(NodeProvider.createFormTextLabel("Volan: "), 0, row);
+    saveCarFormPane.add(radioPanel, 1, row);
+
+    saveCarFormPane.setPadding(new Insets(5, 0, 10, 0));
 
     GridPane descriptionPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
     descriptionPane.add(carDescriptionTextArea, 0, 0);
@@ -170,6 +194,10 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     return carNameField;
   }
 
+  public ComboBox<CarBodyTypeModel> getCarBodyTypeCombo() {
+    return carBodyTypeCombo;
+  }
+
   public DatePicker getProducedFromPicker() {
     return producedFromPicker;
   }
@@ -204,6 +232,18 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
 
   public ComboBox<FuelModel> getCarFuelCombo() {
     return carFuelCombo;
+  }
+
+  public TextField getCarColorCodeField() {
+    return carColorCodeField;
+  }
+
+  public TextField getCarPriceField() {
+    return carPriceField;
+  }
+
+  public RadioButton getCarLeftWheelRadio() {
+    return carLeftWheelRadio;
   }
 
   public TextArea getCarDescriptionTextArea() {

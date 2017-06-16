@@ -45,6 +45,7 @@ public class Repository {
   private List<CarKitModel> carKitsCache;
   private List<CarSubkitModel> carSubkitsCache;
   private List<FuelModel> carFuelsCache;
+  private List<CarBodyTypeModel> carBodyTypesCache;
 
   public Repository() throws Exception {
     try {
@@ -275,6 +276,13 @@ public class Repository {
     return carFuelsCache;
   }
 
+  public List<CarBodyTypeModel> getCarBodyTypes() throws Exception {
+    if (carBodyTypesCache == null) {
+      carBodyTypesCache = carUtilsService.getCarBodyTypes();
+    }
+    return carBodyTypesCache;
+  }
+
 
   public SystemModelsDTO getAllDefinedModels() throws Exception {
     return new SystemModelsDTO(
@@ -283,12 +291,13 @@ public class Repository {
             getCarSubkits(),
             getAllCarMakes(),
             getCarModels(),
-            getCarFuels()
+            getCarFuels(),
+            getCarBodyTypes()
     );
   }
 
   public CarDefinedModelsDTO getCarDefinedModels() throws Exception {
-    return new CarDefinedModelsDTO(getAllCarMakes(), getCarModels(), getCarFuels());
+    return new CarDefinedModelsDTO(getAllCarMakes(), getCarModels(), getCarFuels(), getCarBodyTypes());
   }
 
 

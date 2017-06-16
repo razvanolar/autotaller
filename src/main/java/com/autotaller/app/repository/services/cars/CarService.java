@@ -1,9 +1,11 @@
 package com.autotaller.app.repository.services.cars;
 
+import com.autotaller.app.model.CarBodyTypeModel;
 import com.autotaller.app.model.CarModel;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.services.GenericService;
 import com.autotaller.app.repository.utils.JDBCUtil;
+import com.autotaller.app.utils.CarWheelSideType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,8 +16,10 @@ import java.util.List;
  */
 public class CarService extends GenericService {
 
-  private String ALL_CARS_QUERY = "SELECT c.id, c.model_id, c.name, c.produced_from, c.produced_to, c.kw, c.cilindrical_capacity, " +
-          "c.cilinders, c.description, cf.id, cf.name FROM cars c INNER JOIN car_fuels cf ON c.fuel_id = cf.id";
+  private String ALL_CARS_QUERY = "SELECT c.id, c.model_id, c.name, cbt.id, cbt.name, c.produced_from, c.produced_to, " +
+          "c.production_year, c.km, c.kw, c.cilindrical_capacity, c.cilinders, c.description, cf.id, cf.name, " +
+          "c.color_code, c.price, c.wheel_side FROM cars c INNER JOIN car_fuels cf ON c.fuel_id = cf.id " +
+          "INNER JOIN car_body_types cbt ON c.body_type_id = cbt.id";
 
   private String CARS_BY_CAR_TYPE_QUERY = ALL_CARS_QUERY + " WHERE c.model_id = ?";
 
@@ -86,11 +90,17 @@ public class CarService extends GenericService {
       while (rs.next()) {
         int carId = rs.getInt(1);
         List<String> engines = getCarEnginesList(carId, connection);
+        Date fromDate = rs.getDate(6);
+        Date toDate = rs.getDate(7);
+        Date productionDate = rs.getDate(8);
         result.add(new CarModel(carId, systemModelsDTO.getCarTypeModelById(rs.getInt(2)),
-                rs.getString(3), rs.getDate(4).toLocalDate(),
-                rs.getDate(5).toLocalDate(), rs.getInt(6), rs.getInt(7),
-                rs.getInt(8), engines, systemModelsDTO.getFuelById(rs.getInt(10)),
-                rs.getString(9)));
+                rs.getString(3), new CarBodyTypeModel(rs.getInt(4), rs.getString(5)),
+                fromDate != null ? fromDate.toLocalDate() : null, toDate != null ? toDate.toLocalDate() : null,
+                productionDate != null ? productionDate.toLocalDate() : null, rs.getInt(9),
+                rs.getInt(10), rs.getInt(11), rs.getInt(12), engines,
+                systemModelsDTO.getFuelById(rs.getInt(14)), rs.getString(16),
+                rs.getInt(17), CarWheelSideType.fromString(rs.getString(18)),
+                rs.getString(13)));
       }
       return result;
     } finally {
