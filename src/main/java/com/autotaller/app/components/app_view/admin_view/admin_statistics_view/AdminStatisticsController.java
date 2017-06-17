@@ -20,7 +20,7 @@ import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.View;
-import com.autotaller.app.utils.filters.car_model_filters.MultiCarModelMakeFilter;
+import com.autotaller.app.utils.filters.car_filters.MultiCarModelMakeFilter;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;

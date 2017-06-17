@@ -1,4 +1,4 @@
-package com.autotaller.app.utils.filters.car_model_filters;
+package com.autotaller.app.utils.filters.car_filters.car_model_filters;
 
 import com.autotaller.app.model.CarModel;
 
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by razvanolar on 11.05.2017
  */
-public class CarModelKWFilter implements CarModelFilter {
+public class CarModelCapacityFilter implements CarModelFilter {
 
   private int from;
   private int to;
@@ -33,9 +33,10 @@ public class CarModelKWFilter implements CarModelFilter {
       upperLimit = Integer.MAX_VALUE;
     List<CarModel> result = new ArrayList<>();
     for (CarModel car : cars) {
-      if (lowerLimit <= car.getKw() && car.getKw() <= upperLimit)
+      if (lowerLimit <= car.getCapacity() && car.getCapacity() <= upperLimit)
         result.add(car);
     }
     return result;
   }
+
 }

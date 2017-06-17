@@ -36,7 +36,7 @@ import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.callbacks.EmptyCallback;
 import com.autotaller.app.utils.factories.ComponentFactory;
 import com.autotaller.app.utils.filters.ModelFilter;
-import com.autotaller.app.utils.filters.car_model_filters.*;
+import com.autotaller.app.utils.filters.car_filters.car_model_filters.*;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;

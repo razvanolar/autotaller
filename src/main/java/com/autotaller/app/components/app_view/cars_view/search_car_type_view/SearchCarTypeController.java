@@ -15,11 +15,14 @@ import com.autotaller.app.utils.ComponentType;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.factories.ComponentFactory;
-import com.autotaller.app.utils.filters.car_model_filters.CarTypeModelYearsFilter;
+import com.autotaller.app.utils.filters.car_filters.car_type_model_filters.CarTypeModelFrameFilter;
+import com.autotaller.app.utils.filters.car_filters.car_type_model_filters.CarTypeModelNameFilter;
+import com.autotaller.app.utils.filters.car_filters.car_type_model_filters.CarTypeModelYearsFilter;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,19 +36,33 @@ public class SearchCarTypeController implements Controller<SearchCarTypeControll
     TableView<CarTypeModel> getCarTypeTable();
     Button getContinueButton();
     FilterPanelView<Integer> getYearFilterPane();
+    TextField getSearchNameField();
+    Button getSearchNameButton();
+    TextField getSearchFrameField();
+    Button getSearchFrameButton();
   }
 
   private ISearchCarTypeView view;
   private List<CarTypeModel> carTypes;
 
   private CarTypeModelYearsFilter carTypeModelYearsFilter;
+  private CarTypeModelNameFilter carTypeModelNameFilter;
+  private CarTypeModelFrameFilter carTypeModelFrameFilter;
 
   @Override
   public void bind(ISearchCarTypeView view) {
     this.view = view;
 
     carTypeModelYearsFilter = new CarTypeModelYearsFilter();
+    carTypeModelNameFilter = new CarTypeModelNameFilter();
+    carTypeModelFrameFilter = new CarTypeModelFrameFilter();
+
     carTypeModelYearsFilter.getFields().addListener((ListChangeListener<Integer>) c -> filter());
+    view.getSearchNameField().textProperty().addListener((observable, oldValue, newValue) -> carTypeModelNameFilter.setName(newValue));
+    view.getSearchFrameField().textProperty().addListener((observable, oldValue, newValue) -> carTypeModelFrameFilter.setFrame(newValue));
+
+    view.getSearchNameButton().setOnAction(event -> filter());
+    view.getSearchFrameButton().setOnAction(event -> filter());
 
     view.getContinueButton().setOnAction(event -> {
       CarTypeModel selectedCarType = view.getCarTypeTable().getSelectionModel().getSelectedItem();
@@ -79,6 +96,8 @@ public class SearchCarTypeController implements Controller<SearchCarTypeControll
 
   private void filter() {
     List<CarTypeModel> result = carTypeModelYearsFilter.filter(carTypes);
+    result = carTypeModelNameFilter.filter(result);
+    result = carTypeModelFrameFilter.filter(result);
     loadCarTypes(result);
   }
 

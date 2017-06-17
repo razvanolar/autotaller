@@ -3,7 +3,7 @@ package com.autotaller.app.utils.filters;
 import com.autotaller.app.EventBus;
 import com.autotaller.app.events.app_view.admin_view.GetCarSubkitsEvent;
 import com.autotaller.app.model.*;
-import com.autotaller.app.utils.filters.car_model_filters.CarModelFilter;
+import com.autotaller.app.utils.filters.car_filters.car_model_filters.CarModelFilter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
