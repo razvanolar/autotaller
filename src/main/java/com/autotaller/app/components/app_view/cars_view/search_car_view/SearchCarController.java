@@ -90,7 +90,7 @@ public class SearchCarController implements Controller<SearchCarController.ISear
       items.clear();
       items.addAll(cars);
       defaultCarController.setCars(cars);
-      EventBus.fireEvent(new GetAllSystemDefinedModelsEvent(models -> defaultCarController.setSystemModels(models)));
+      EventBus.fireEvent(new GetAllSystemDefinedModelsEvent(models -> defaultCarController.setSystemModels(models, carType)));
     }));
   }
 }

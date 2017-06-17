@@ -114,6 +114,14 @@ public class DefaultCarController implements Controller<DefaultCarController.IDe
     view.getYearFilterPane().showFilterPanels(getYearRange().toList());
   }
 
+  public void setSystemModels(SystemModelsDTO models, CarTypeModel carTypeLock) {
+    setSystemModels(models);
+    view.getFilterView().getMakeCombo().setValue(carTypeLock.getCarMake());
+    view.getFilterView().getTypeCombo().setValue(carTypeLock);
+    view.getFilterView().getMakeCombo().setDisable(true);
+    view.getFilterView().getTypeCombo().setDisable(true);
+  }
+
   public void setSystemModels(SystemModelsDTO models) {
     this.modelsDTO = models;
 
