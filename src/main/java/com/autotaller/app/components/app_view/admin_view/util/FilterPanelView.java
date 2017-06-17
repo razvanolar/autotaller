@@ -3,6 +3,7 @@ package com.autotaller.app.components.app_view.admin_view.util;
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.filters.Filter;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
@@ -36,6 +37,7 @@ public class FilterPanelView<T> implements View {
     flowPane.setAlignment(Pos.TOP_CENTER);
     flowPane.setHgap(5);
     flowPane.setVgap(5);
+    flowPane.setPadding(new Insets(3));
     if (flowPaneWidth > 0)
       flowPane.setPrefWidth(flowPaneWidth);
 

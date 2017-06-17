@@ -28,7 +28,7 @@ public class FilterView<T> implements View {
   }
 
   private void init(int width, int height) {
-    Text text = NodeProvider.createTextLabel(value.toString(), 11, false);
+    Text text = NodeProvider.createTextLabel(value.toString(), 13, false);
     panel = new HBox(text);
     panel.setAlignment(Pos.CENTER);
     panel.setPadding(new Insets(0, 5, 0, 5));
