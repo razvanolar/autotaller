@@ -28,10 +28,10 @@ public class FilterView<T> implements View {
   }
 
   private void init(int width, int height) {
-    Text text = NodeProvider.createTextLabel(value.toString(), 13, false);
+    Text text = NodeProvider.createTextLabel(value.toString(), 14, false);
     panel = new HBox(text);
     panel.setAlignment(Pos.CENTER);
-    panel.setPadding(new Insets(0, 5, 0, 5));
+    panel.setPadding(new Insets(2, 5, 2, 5));
     if (width > 0)
       panel.setPrefWidth(width);
     if (height > 0)

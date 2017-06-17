@@ -29,6 +29,8 @@ public class DefaultCarController implements Controller<DefaultCarController.IDe
     TableView<CarModel> getCarsTable();
     FilterPanelView<Integer> getYearFilterPane();
     DefaultCarFilterView getFilterView();
+    void showFilterPane();
+    void hideFilterPane();
   }
 
   private CarModelYearsFilter carModelYearsFilter;

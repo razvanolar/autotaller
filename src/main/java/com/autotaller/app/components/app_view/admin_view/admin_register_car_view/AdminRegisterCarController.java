@@ -75,6 +75,14 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
       }
     });
 
+    view.getShowFilterCarButton().setOnAction(event -> {
+      if (view.getShowFilterCarButton().isSelected()) {
+        view.getDefaultCarView().showFilterPane();
+      } else {
+        view.getDefaultCarView().hideFilterPane();
+      }
+    });
+
     view.getComponentsButton().setOnAction(event -> {
       CarModel selectedCar = view.getDefaultCarView().getCarsTable().getSelectionModel().getSelectedItem();
       if (selectedCar == null)

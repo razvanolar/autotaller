@@ -8,6 +8,7 @@ import com.autotaller.app.components.utils.NodeDialog;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
+import com.autotaller.app.events.app_view.admin_view.GetAllSystemDefinedModelsEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarsByTypeIdEvent;
 import com.autotaller.app.events.app_view.search_views.InjectCarEvent;
 import com.autotaller.app.events.app_view.search_views.InjectCarTypeEvent;
@@ -22,6 +23,7 @@ import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.factories.ComponentFactory;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
 
 /**
  * Created by razvanolar on 02.06.2017
@@ -30,6 +32,7 @@ public class SearchCarController implements Controller<SearchCarController.ISear
 
   public interface ISearchCarView extends View {
     DefaultCarView getDefaultCarView();
+    ToggleButton getShowFilterButton();
     Button getDetailsButton();
     Button getContinueButton();
   }
@@ -45,6 +48,14 @@ public class SearchCarController implements Controller<SearchCarController.ISear
 
     defaultCarController = new DefaultCarController();
     defaultCarController.bind(view.getDefaultCarView());
+
+    view.getShowFilterButton().setOnAction(event -> {
+      if (view.getShowFilterButton().isSelected()) {
+        view.getDefaultCarView().showFilterPane();
+      } else {
+        view.getDefaultCarView().hideFilterPane();
+      }
+    });
 
     view.getDetailsButton().setOnAction(event -> {
       CarModel selectedCar = defaultCarController.getSelectedCar();
@@ -79,6 +90,7 @@ public class SearchCarController implements Controller<SearchCarController.ISear
       items.clear();
       items.addAll(cars);
       defaultCarController.setCars(cars);
+      EventBus.fireEvent(new GetAllSystemDefinedModelsEvent(models -> defaultCarController.setSystemModels(models)));
     }));
   }
 }

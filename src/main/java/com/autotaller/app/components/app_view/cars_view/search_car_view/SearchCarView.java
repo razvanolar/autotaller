@@ -3,13 +3,12 @@ package com.autotaller.app.components.app_view.cars_view.search_car_view;
 import com.autotaller.app.components.app_view.utils.DefaultCarView;
 import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.components.utils.IterableView;
-import com.autotaller.app.model.CarModel;
 import com.autotaller.app.utils.resources.ImageProvider;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
 
 /**
  * Created by razvanolar on 02.06.2017
@@ -17,17 +16,19 @@ import javafx.scene.control.TableView;
 public class SearchCarView extends IterableView implements SearchCarController.ISearchCarView {
 
   private DefaultCarView defaultCarView;
-  private Button continueButton;
+  private ToggleButton showFilterButton;
   private Button detailsButton;
+  private Button continueButton;
 
   public SearchCarView() {
     init();
   }
 
   private void init() {
+    showFilterButton = NodeProvider.createToolbarToggleButton("Filtreaza", ImageProvider.filterIcon());
     detailsButton = NodeProvider.createToolbarButton("Detalii", ImageProvider.detailsIcon());
     continueButton = NodeProvider.createToolbarButton("Continua", null);
-    toolBar.getItems().addAll(new Separator(), detailsButton, new FillToolItem(), continueButton);
+    toolBar.getItems().addAll(new Separator(), showFilterButton, detailsButton, new FillToolItem(), continueButton);
 
     defaultCarView = new DefaultCarView();
     borderPane.setCenter(defaultCarView.asNode());
@@ -35,6 +36,10 @@ public class SearchCarView extends IterableView implements SearchCarController.I
 
   public DefaultCarView getDefaultCarView() {
     return defaultCarView;
+  }
+
+  public ToggleButton getShowFilterButton() {
+    return showFilterButton;
   }
 
   public Button getDetailsButton() {

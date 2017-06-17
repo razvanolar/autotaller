@@ -1,10 +1,8 @@
 package com.autotaller.app.components.utils.filter_views;
 
-import com.autotaller.app.components.app_view.admin_view.util.FilterPanelView;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.model.FuelModel;
-import com.autotaller.app.model.utils.YearsRange;
 import com.autotaller.app.utils.StringValidator;
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.resources.NodeProvider;
@@ -25,7 +23,6 @@ import javafx.scene.layout.Region;
 public class DefaultCarFilterView implements View {
 
   private GridPane gridPane;
-  private FilterPanelView<Integer> filterPanelView;
   private ComboBox<CarMakeModel> makeCombo;
   private ComboBox<CarTypeModel> typeCombo;
   private TextField nameField;
@@ -49,8 +46,6 @@ public class DefaultCarFilterView implements View {
 
   private void init() {
     int spinnerWidth = 80;
-    filterPanelView = new FilterPanelView<>(NodeProvider.DEFAULT_FIELD_WIDTH + 100);
-    filterPanelView.showFilterPanels(new YearsRange(1990, 2017).toList());
     makeCombo = NodeProvider.createCarMakesCombo();
     typeCombo = NodeProvider.createCarTypesCombo();
     nameField = NodeProvider.createTextField();
@@ -88,7 +83,6 @@ public class DefaultCarFilterView implements View {
 
     gridPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
     int row = 0;
-    gridPane.add(filterPanelView.asNode(), 0, row++, 2, 1);
     gridPane.add(createSeparator(), 0, row++, 2, 1);
     gridPane.add(NodeProvider.createFormTextLabel("Marca: "), 0, row);
     gridPane.add(makeCombo, 1, row++);
@@ -113,6 +107,7 @@ public class DefaultCarFilterView implements View {
     gridPane.add(NodeProvider.createFormTextLabel("Serie sasiu: "), 0, row);
     gridPane.add(frameTextField, 1, row++);
     gridPane.add(frameButtonContainer, 0, row++, 2, 1);
+    gridPane.add(createSeparator(), 0, row++, 2, 1);
   }
 
   private void initHandlers() {
@@ -138,10 +133,6 @@ public class DefaultCarFilterView implements View {
     hBox.setPrefHeight(8);
     hBox.getStyleClass().add(StyleProvider.ADMIN_SUB_TOOLBAR_PANE_CLASS);
     return hBox;
-  }
-
-  public FilterPanelView<Integer> getFilterPanelView() {
-    return filterPanelView;
   }
 
   public ComboBox<CarMakeModel> getMakeCombo() {
