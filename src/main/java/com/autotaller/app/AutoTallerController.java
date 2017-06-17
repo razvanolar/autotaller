@@ -24,7 +24,6 @@ import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.factories.ComponentFactory;
-import com.autotaller.app.utils.filters.ModelFilter;
 import com.autotaller.app.utils.resources.ImageProvider;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -326,7 +325,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
 
     EventBus.addHandler(GetAllSystemDefinedModelsEvent.TYPE, (GetAllSystemDefinedModelsEventHandler) event -> {
       try {
-        EventBus.fireEvent(new MaskViewEvent("Incarcare Model"));
+        EventBus.fireEvent(new MaskViewEvent("Incarcare Model Sistem"));
         Thread thread = new Thread(() -> {
           try {
             SystemModelsDTO allDefinedModels = repository.getAllDefinedModels();
@@ -547,6 +546,6 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
   }
 
   private void initAutotallerUtilities() {
-    ModelFilter.init();
+
   }
 }

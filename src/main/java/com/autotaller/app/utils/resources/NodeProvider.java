@@ -3,6 +3,7 @@ package com.autotaller.app.utils.resources;
 import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.model.*;
 import com.autotaller.app.model.notifications.SimpleSellModel;
+import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.utils.StringValidator;
 import com.jfoenix.controls.*;
 import javafx.geometry.Insets;

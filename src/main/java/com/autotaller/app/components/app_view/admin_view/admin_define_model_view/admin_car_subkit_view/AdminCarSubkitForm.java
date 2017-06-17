@@ -2,7 +2,7 @@ package com.autotaller.app.components.app_view.admin_view.admin_define_model_vie
 
 import com.autotaller.app.model.CarKitCategoryModel;
 import com.autotaller.app.model.CarKitModel;
-import com.autotaller.app.utils.filters.ModelFilter;
+import com.autotaller.app.utils.filters.SystemModelsFilter;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -68,7 +68,7 @@ public class AdminCarSubkitForm implements IAdminCarSubkitFormView {
   }
 
   private void initHandlers() {
-    carKitCategoriesCombo.valueProperty().addListener((observable, oldValue, newValue) -> populateCarKitsCombo(ModelFilter.filterCarKitsByCategory(carKits, newValue)));
+    carKitCategoriesCombo.valueProperty().addListener((observable, oldValue, newValue) -> populateCarKitsCombo(SystemModelsFilter.filterCarKitsByCategory(carKits, newValue)));
   }
 
   private void populateCarKitsCombo(List<CarKitModel> filteredData) {
@@ -88,7 +88,7 @@ public class AdminCarSubkitForm implements IAdminCarSubkitFormView {
     if (!carKitCategories.isEmpty()) {
       CarKitCategoryModel value = carKitCategories.get(0);
       carKitCategoriesCombo.setValue(value);
-      populateCarKitsCombo(ModelFilter.filterCarKitsByCategory(carKits, value));
+      populateCarKitsCombo(SystemModelsFilter.filterCarKitsByCategory(carKits, value));
     }
   }
 

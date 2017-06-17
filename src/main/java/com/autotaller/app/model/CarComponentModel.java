@@ -11,6 +11,7 @@ public class CarComponentModel {
   private int id;
   private int carId;
   private int carSubkitId;
+  private String carSubkitName;
   private String name;
   private String code;
   private String description;
@@ -20,11 +21,12 @@ public class CarComponentModel {
   private int price;
   private StockType stock;
 
-  public CarComponentModel(int id, int carId, int carSubkitId, String name, String code, String description,
+  public CarComponentModel(int id, int carId, int carSubkitId, String carSubkitName, String name, String code, String description,
                            int initial_pieces, int sold_pieces, UsageStateType usageState, int price, StockType stock) {
     this.id = id;
     this.carId = carId;
     this.carSubkitId = carSubkitId;
+    this.carSubkitName = carSubkitName;
     this.name = name;
     this.code = code;
     this.description = description;
@@ -51,6 +53,10 @@ public class CarComponentModel {
 
   public int getCarSubkitId() {
     return carSubkitId;
+  }
+
+  public String getCarSubkitName() {
+    return carSubkitName;
   }
 
   public String getName() {

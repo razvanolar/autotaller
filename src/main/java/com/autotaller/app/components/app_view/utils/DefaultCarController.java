@@ -10,7 +10,7 @@ import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.model.utils.YearsRange;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.View;
-import com.autotaller.app.utils.filters.ModelFilter;
+import com.autotaller.app.utils.filters.SystemModelsFilter;
 import com.autotaller.app.utils.filters.car_filters.car_model_filters.*;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -170,7 +170,7 @@ public class DefaultCarController implements Controller<DefaultCarController.IDe
   }
 
   private void filter() {
-    load(ModelFilter.filterCars(cars, carModelYearsFilter, carModelMakeFilter, carModelTypeFilter,
+    load(SystemModelsFilter.filterCars(cars, carModelYearsFilter, carModelMakeFilter, carModelTypeFilter,
             carModelNameFilter, carModelKWFilter, carModelCapacityFilter, carModelCilindersFilter, carModelFuelFilter));
   }
 

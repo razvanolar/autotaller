@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class CarComponentsService extends GenericService {
 
-  private String SELECT_ALL_COMPONENTS = "SELECT cc.id, cc.car_id, cc.subkit_id, cc.component_name, cc.code, cc.description, " +
-          "cc.initial_pieces_no, cc.sold_pieces_no, cc.usage_state, cc.price, cc.stock FROM car_components cc";
+  private String SELECT_ALL_COMPONENTS = "SELECT cc.id, cc.car_id, cs.id, cs.name, cc.component_name, cc.code, cc.description, " +
+          "cc.initial_pieces_no, cc.sold_pieces_no, cc.usage_state, cc.price, cc.stock FROM car_components cc INNER JOIN car_subkits cs ON cc.subkit_id = cs.id";
 
   private String SELECT_ALL_SIMPLE_SELL_MODELS = "SELECT ccs.id, ccs.component_id, cc.component_name, ccs.sold_pieces, cc.price, ccs.price, ccs.sold_date, ccs.user_id, u.username, ccs.status " +
           "FROM car_component_sales ccs INNER JOIN car_components cc ON ccs.component_id = cc.id " +
@@ -91,8 +91,7 @@ public class CarComponentsService extends GenericService {
     PreparedStatement statement = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = SELECT_ALL_COMPONENTS + " INNER JOIN car_subkits cs " +
-              "ON cc.subkit_id = cs.id INNER JOIN car_kits ck ON cs.car_kit_id = ck.id WHERE car_id = ? AND ck.id = ?";
+      String query = SELECT_ALL_COMPONENTS + " INNER JOIN car_kits ck ON cs.car_kit_id = ck.id WHERE car_id = ? AND ck.id = ?";
       statement = connection.prepareStatement(query);
       statement.setInt(1, carId);
       statement.setInt(2, kitId);
@@ -252,11 +251,12 @@ public class CarComponentsService extends GenericService {
                 componentResultSet.getString(4),
                 componentResultSet.getString(5),
                 componentResultSet.getString(6),
-                componentResultSet.getInt(7),
+                componentResultSet.getString(7),
                 componentResultSet.getInt(8),
-                UsageStateType.fromId(componentResultSet.getInt(9)),
-                componentResultSet.getInt(10),
-                StockType.fromId(componentResultSet.getInt(11))
+                componentResultSet.getInt(9),
+                UsageStateType.fromId(componentResultSet.getInt(10)),
+                componentResultSet.getInt(11),
+                StockType.fromId(componentResultSet.getInt(12))
         );
         sellStatement.setInt(1, componentId);
         ResultSet resultSet = sellStatement.executeQuery();

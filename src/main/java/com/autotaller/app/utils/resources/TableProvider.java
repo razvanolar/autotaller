@@ -5,7 +5,6 @@ import com.autotaller.app.model.notifications.SimpleSellModel;
 import com.autotaller.app.utils.ModelValidator;
 import com.autotaller.app.utils.StockType;
 import com.autotaller.app.utils.UsageStateType;
-import com.autotaller.app.utils.filters.ModelFilter;
 import com.autotaller.app.utils.StringValidator;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.*;
@@ -243,13 +242,7 @@ public class TableProvider {
     nameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getName()) : new SimpleStringProperty());
     codeCoulmn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getCode()) : new SimpleStringProperty());
     stockColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getStock()) : new SimpleObjectProperty<>());
-    subkitColumn.setCellValueFactory(p -> {
-      if (p.getValue() != null) {
-        CarSubkitModel carSubkit = ModelFilter.getCarSubkitModelById(p.getValue().getCarSubkitId());
-        return carSubkit != null ? new SimpleStringProperty(carSubkit.getName()) : new SimpleStringProperty();
-      }
-      return new SimpleStringProperty();
-    });
+    subkitColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getCarSubkitName()) : new SimpleStringProperty());
     if (isEditable) {
       piecesColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getInitialPieces()) : new SimpleObjectProperty<>());
     } else {
