@@ -54,6 +54,9 @@ public class FilterPanelView<T> implements View {
       children.add(filterView.asNode());
       filterViews.add(filterView);
     }
+
+    if (filter != null)
+      filter.getFields().clear();
   }
 
   public void onFieldsSelectionChanged(T value, boolean isSelected) {

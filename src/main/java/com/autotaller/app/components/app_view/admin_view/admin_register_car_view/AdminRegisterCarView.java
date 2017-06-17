@@ -1,5 +1,6 @@
 package com.autotaller.app.components.app_view.admin_view.admin_register_car_view;
 
+import com.autotaller.app.components.app_view.utils.DefaultCarView;
 import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.components.utils.filter_views.DefaultCarFilterView;
 import com.autotaller.app.model.CarModel;
@@ -14,18 +15,13 @@ import javafx.scene.control.*;
  */
 public class AdminRegisterCarView extends IterableView implements AdminRegisterCarController.IAdminRegisterCarView {
 
-  private SplitPane splitPane;
-  private DefaultCarFilterView filterView;
-  private TableView<CarModel> carTable;
-  private ScrollPane filterScrollPane;
+  private DefaultCarView defaultCarView;
   private Button addCarButton;
   private Button editCarButton;
   private Button deleteCarButton;
   private ToggleButton showFilterCarButton;
   private Button carDetailsButton;
   private Button componentsButton;
-
-  private double lastFilterDividerPosition = 0.30;
 
   public AdminRegisterCarView() {
     init();
@@ -50,22 +46,12 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
             componentsButton
     );
 
-    filterView = new DefaultCarFilterView();
-    filterScrollPane = NodeProvider.createScrollPane(filterView.asRegion(), true);
-
-    carTable = NodeProvider.createCarTable();
-    splitPane = new SplitPane(carTable);
-    borderPane.setCenter(splitPane);
-
-    SplitPane.setResizableWithParent(filterScrollPane, false);
+    defaultCarView = new DefaultCarView();
+    borderPane.setCenter(defaultCarView.asNode());
   }
 
-  public TableView<CarModel> getCarTable() {
-    return carTable;
-  }
-
-  public DefaultCarFilterView getFilterView() {
-    return filterView;
+  public DefaultCarView getDefaultCarView() {
+    return defaultCarView;
   }
 
   public Button getAddCarButton() {
@@ -90,24 +76,6 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
 
   public Button getComponentsButton() {
     return componentsButton;
-  }
-
-  public void showFilterPane() {
-    ObservableList<Node> items = splitPane.getItems();
-    if (!items.contains(filterScrollPane)) {
-      items.add(0, filterScrollPane);
-      splitPane.setDividerPosition(0, lastFilterDividerPosition);
-    }
-  }
-
-  public void hideFilterPane() {
-    ObservableList<Node> items = splitPane.getItems();
-    if (items.contains(filterScrollPane)) {
-      double[] dividers = splitPane.getDividerPositions();
-      if (dividers != null && dividers.length > 0)
-        lastFilterDividerPosition = dividers[0];
-      items.remove(filterScrollPane);
-    }
   }
 
   @Override

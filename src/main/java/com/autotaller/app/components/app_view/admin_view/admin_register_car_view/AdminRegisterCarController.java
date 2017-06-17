@@ -2,11 +2,12 @@ package com.autotaller.app.components.app_view.admin_view.admin_register_car_vie
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.components.app_view.admin_view.admin_register_car_view.utils.AdminCarTableViewContextMenu;
+import com.autotaller.app.components.app_view.utils.DefaultCarController;
+import com.autotaller.app.components.app_view.utils.DefaultCarView;
 import com.autotaller.app.components.utils.CarDetailesView;
 import com.autotaller.app.components.utils.NodeDialog;
 import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.components.utils.YesNoDialog;
-import com.autotaller.app.components.utils.filter_views.DefaultCarFilterView;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.OpenCarImageGalleryEvent;
@@ -23,26 +24,17 @@ import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.events.view_stack.BackToPreviousViewEvent;
-import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarModel;
-import com.autotaller.app.model.CarTypeModel;
-import com.autotaller.app.model.FuelModel;
 import com.autotaller.app.model.utils.SaveCarResult;
-import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.Repository;
 import com.autotaller.app.repository.utils.CarStatus;
 import com.autotaller.app.repository.utils.ImageStatus;
 import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.callbacks.EmptyCallback;
 import com.autotaller.app.utils.factories.ComponentFactory;
-import com.autotaller.app.utils.filters.ModelFilter;
-import com.autotaller.app.utils.filters.car_filters.car_model_filters.*;
 import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
 
 import java.util.List;
@@ -52,52 +44,28 @@ import java.util.List;
  */
 public class AdminRegisterCarController implements Controller<AdminRegisterCarController.IAdminRegisterCarView> {
 
-  private CarModelYearsFilter carModelYearsFilter;
-  private CarModelMakeFilter carModelMakeFilter;
-  private CarModelTypeFilter carModelTypeFilter;
-  private CarModelNameFilter carModelNameFilter;
-  private CarModelKWFilter carModelKWFilter;
-  private CarModelCapacityFilter carModelCapacityFilter;
-  private CarModelCilindersFilter carModelCilindersFilter;
-  private CarModelFuelFilter carModelFuelFilter;
-
   public interface IAdminRegisterCarView extends View {
-    TableView<CarModel> getCarTable();
-    DefaultCarFilterView getFilterView();
+    DefaultCarView getDefaultCarView();
     Button getAddCarButton();
     Button getEditCarButton();
     Button getDeleteCarButton();
     ToggleButton getShowFilterCarButton();
     Button getCarDetailsButton();
     Button getComponentsButton();
-    void showFilterPane();
-    void hideFilterPane();
   }
 
   private IAdminRegisterCarView view;
   private Repository repository;
   private List<CarModel> allCars;
-  private SystemModelsDTO modelsDTO;
 
-  private CarMakeModel allMakes = new CarMakeModel(-1, "--Toate--");
-  private CarTypeModel allTypes = new CarTypeModel(-1, allMakes, "--Toate--", null, null, null);
-  private FuelModel allFuels = new FuelModel(-1, "--Toate--");
+  private DefaultCarController defaultCarController;
 
   @Override
   public void bind(IAdminRegisterCarView view) {
     this.view = view;
 
-    carModelYearsFilter = new CarModelYearsFilter();
-    carModelMakeFilter = new CarModelMakeFilter();
-    carModelTypeFilter = new CarModelTypeFilter();
-    carModelNameFilter = new CarModelNameFilter();
-    carModelKWFilter = new CarModelKWFilter();
-    carModelCapacityFilter = new CarModelCapacityFilter();
-    carModelCilindersFilter = new CarModelCilindersFilter();
-    carModelFuelFilter = new CarModelFuelFilter();
-
-    view.getFilterView().getFilterPanelView().setFilterObject(carModelYearsFilter);
-    carModelYearsFilter.getFields().addListener((ListChangeListener<Integer>) c -> filterCars());
+    defaultCarController = new DefaultCarController();
+    defaultCarController.bind(view.getDefaultCarView());
 
     view.getAddCarButton().setOnAction(event -> {
       Component component = ComponentFactory.createComponent(ComponentType.ADMIN_SAVE_CAR_VIEW);
@@ -108,75 +76,25 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     });
 
     view.getComponentsButton().setOnAction(event -> {
-      CarModel selectedCar = view.getCarTable().getSelectionModel().getSelectedItem();
+      CarModel selectedCar = view.getDefaultCarView().getCarsTable().getSelectionModel().getSelectedItem();
       if (selectedCar == null)
         return;
       showCarComponentsView(selectedCar, null);
     });
 
-    view.getShowFilterCarButton().setOnAction(event -> {
-      if (view.getShowFilterCarButton().isSelected()) {
-        view.showFilterPane();
-      } else {
-        view.hideFilterPane();
-      }
-    });
-
     view.getCarDetailsButton().setOnAction(event -> {
-      CarModel selectedCar = view.getCarTable().getSelectionModel().getSelectedItem();
+      CarModel selectedCar = view.getDefaultCarView().getCarsTable().getSelectionModel().getSelectedItem();
       if (selectedCar == null)
         return;
       CarDetailesView detailesView = new CarDetailesView(selectedCar);
       EventBus.fireEvent(new ShowDialogEvent(new NodeDialog("Detalii Masina", "Ok", detailesView.asNode(), false)));
     });
 
-    // car make combo listener
-    view.getFilterView().getMakeCombo().valueProperty().addListener((observable, oldValue, newValue) -> {
-      populateCarModelsCombo(newValue);
-      carModelMakeFilter.setCarMake(newValue);
-    });
-
-    // car type combo listener
-    view.getFilterView().getTypeCombo().valueProperty().addListener((observable, oldValue, newValue) -> carModelTypeFilter.setCarType(newValue));
-
-    // car name field listener
-    view.getFilterView().getNameField().textProperty().addListener((observable, oldValue, newValue) -> carModelNameFilter.setName(newValue));
-
-    // car kw value listeners
-    view.getFilterView().getKwFromSpinner().valueProperty().addListener((observable, oldValue, newValue) -> carModelKWFilter.setFrom(newValue));
-    view.getFilterView().getKwToSpinner().valueProperty().addListener((observable, oldValue, newValue) -> carModelKWFilter.setTo(newValue));
-
-    // car capacity value listeners
-    view.getFilterView().getCapacityFromSpinner().valueProperty().addListener((observable, oldValue, newValue) -> carModelCapacityFilter.setFrom(newValue));
-    view.getFilterView().getCapacityToSpinner().valueProperty().addListener((observable, oldValue, newValue) -> carModelCapacityFilter.setTo(newValue));
-
-    // car cylinders value listener
-    view.getFilterView().getCilindersSpinner().valueProperty().addListener((observable, oldValue, newValue) -> carModelCilindersFilter.setCilinders(newValue));
-
-    // car fuel combo listener
-    view.getFilterView().getFuelCombo().valueProperty().addListener((observable, oldValue, newValue) -> carModelFuelFilter.setFuel(newValue));
-
-    // filter cars listeners
-    view.getFilterView().getSearchButton().setOnAction(event -> filterCars());
-
-    view.getFilterView().getResetFiltersButton().setOnAction(event -> {
-      DefaultCarFilterView filterView = view.getFilterView();
-      filterView.getMakeCombo().setValue(allMakes);
-      filterView.getNameField().setText("");
-      filterView.getKwFromSpinner().getValueFactory().setValue(0);
-      filterView.getKwToSpinner().getValueFactory().setValue(0);
-      filterView.getCapacityFromSpinner().getValueFactory().setValue(0);
-      filterView.getCapacityToSpinner().getValueFactory().setValue(0);
-      filterView.getCilindersSpinner().getValueFactory().setValue(0);
-      filterView.getFuelCombo().setValue(allFuels);
-      filterCars();
-    });
-
     // set table context menu
     AdminCarTableViewContextMenu contextMenu = new AdminCarTableViewContextMenu();
-    view.getCarTable().setContextMenu(contextMenu.getContextMenu());
+    view.getDefaultCarView().getCarsTable().setContextMenu(contextMenu.getContextMenu());
     contextMenu.getGalleryMenuItem().setOnAction(event -> {
-      CarModel selectedCar = view.getCarTable().getSelectionModel().getSelectedItem();
+      CarModel selectedCar = view.getDefaultCarView().getCarsTable().getSelectionModel().getSelectedItem();
       if (selectedCar != null)
         EventBus.fireEvent(new OpenCarImageGalleryEvent(selectedCar.getId()));
     });
@@ -188,26 +106,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
 
     EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> {
       load(null);
-      EventBus.fireEvent(new GetAllSystemDefinedModelsEvent(models -> {
-        this.modelsDTO = models;
-
-        List<CarMakeModel> carMakes = models.getCarMakes();
-        if (carMakes != null && !carMakes.isEmpty()) {
-          ComboBox<CarMakeModel> makesCombo = view.getFilterView().getMakeCombo();
-          makesCombo.getItems().add(allMakes);
-          makesCombo.getItems().addAll(carMakes);
-          makesCombo.setValue(allMakes);
-          populateCarModelsCombo(allMakes);
-        }
-
-        List<FuelModel> fuels = models.getFuels();
-        if (fuels != null && !fuels.isEmpty()) {
-          ComboBox<FuelModel> fuelCombo = view.getFilterView().getFuelCombo();
-          fuelCombo.getItems().add(allFuels);
-          fuelCombo.getItems().addAll(fuels);
-          fuelCombo.setValue(allFuels);
-        }
-      }));
+      EventBus.fireEvent(new GetAllSystemDefinedModelsEvent(models -> defaultCarController.setSystemModels(models)));
     }, true);
   }
 
@@ -286,41 +185,16 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
   private void load(EmptyCallback callback) {
     EventBus.fireEvent(new GetCarsEvent(cars -> {
       this.allCars = cars;
-      filterCars();
+      defaultCarController.setCars(allCars);
+      loadCars(allCars);
       if (callback != null)
         callback.call();
     }));
   }
 
-  private void filterCars() {
-    List<CarModel> cars = ModelFilter.filterCars(allCars, carModelYearsFilter, carModelMakeFilter, carModelTypeFilter,
-            carModelNameFilter, carModelKWFilter, carModelCapacityFilter, carModelCilindersFilter, carModelFuelFilter);
-    loadCars(cars);
-  }
-
   private void loadCars(List<CarModel> cars) {
-    ObservableList<CarModel> items = view.getCarTable().getItems();
+    ObservableList<CarModel> items = view.getDefaultCarView().getCarsTable().getItems();
     items.clear();
     items.addAll(cars);
-  }
-
-  private void populateCarModelsCombo(CarMakeModel carMake) {
-    if (carMake != null && modelsDTO != null) {
-      List<CarTypeModel> carTypes;
-      if (carMake.getId() == -1) {
-        carTypes = modelsDTO.getCarTypes();
-      } else {
-        carTypes = modelsDTO.getCarTypesByMake(carMake);
-      }
-      ComboBox<CarTypeModel> typesCombo = view.getFilterView().getTypeCombo();
-      ObservableList<CarTypeModel> items = typesCombo.getItems();
-      items.clear();
-      items.add(allTypes);
-      if (!carTypes.isEmpty()) {
-        items.addAll(carTypes);
-        typesCombo.setValue(carTypes.get(0));
-      }
-      typesCombo.setValue(allTypes);
-    }
   }
 }

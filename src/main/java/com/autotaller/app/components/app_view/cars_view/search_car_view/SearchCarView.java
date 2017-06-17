@@ -1,5 +1,6 @@
 package com.autotaller.app.components.app_view.cars_view.search_car_view;
 
+import com.autotaller.app.components.app_view.utils.DefaultCarView;
 import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.model.CarModel;
@@ -15,7 +16,7 @@ import javafx.scene.control.TableView;
  */
 public class SearchCarView extends IterableView implements SearchCarController.ISearchCarView {
 
-  private TableView<CarModel> carsTable;
+  private DefaultCarView defaultCarView;
   private Button continueButton;
   private Button detailsButton;
 
@@ -28,12 +29,12 @@ public class SearchCarView extends IterableView implements SearchCarController.I
     continueButton = NodeProvider.createToolbarButton("Continua", null);
     toolBar.getItems().addAll(new Separator(), detailsButton, new FillToolItem(), continueButton);
 
-    carsTable = NodeProvider.createCarTable();
-    borderPane.setCenter(carsTable);
+    defaultCarView = new DefaultCarView();
+    borderPane.setCenter(defaultCarView.asNode());
   }
 
-  public TableView<CarModel> getCarsTable() {
-    return carsTable;
+  public DefaultCarView getDefaultCarView() {
+    return defaultCarView;
   }
 
   public Button getDetailsButton() {
