@@ -65,7 +65,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
             // remove the handler after the db connection was tested successfully
             EventBus.removeHandlersByType(TestConnectionEvent.TYPE);
             EventBus.fireEvent(new ShowLoginScreenEvent());
-            EventBus.fireEvent(new TestCredentialsEvent("admin", "admin"));
+//            EventBus.fireEvent(new TestCredentialsEvent("admin", "admin"));
           });
         } catch (Exception e) {
           e.printStackTrace();

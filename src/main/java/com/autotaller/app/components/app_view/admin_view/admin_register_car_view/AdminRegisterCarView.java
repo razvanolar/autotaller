@@ -2,11 +2,8 @@ package com.autotaller.app.components.app_view.admin_view.admin_register_car_vie
 
 import com.autotaller.app.components.app_view.utils.DefaultCarView;
 import com.autotaller.app.components.utils.IterableView;
-import com.autotaller.app.components.utils.filter_views.DefaultCarFilterView;
-import com.autotaller.app.model.CarModel;
 import com.autotaller.app.utils.resources.ImageProvider;
 import com.autotaller.app.utils.resources.NodeProvider;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 
@@ -22,6 +19,7 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
   private ToggleButton showFilterCarButton;
   private Button carDetailsButton;
   private Button componentsButton;
+  private Button statisticsButton;
 
   public AdminRegisterCarView() {
     init();
@@ -34,6 +32,7 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
     showFilterCarButton = NodeProvider.createToolbarToggleButton("Filtreaza", ImageProvider.filterIcon());
     carDetailsButton = NodeProvider.createToolbarButton("Detalii", ImageProvider.detailsIcon());
     componentsButton = NodeProvider.createToolbarButton("Componente", ImageProvider.componentsIcon());
+    statisticsButton = NodeProvider.createToolbarButton("Statistici", null);
 
     toolBar.getItems().addAll(
             new Separator(),
@@ -42,8 +41,10 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
             deleteCarButton,
             new Separator(),
             showFilterCarButton,
+            new Separator(),
             carDetailsButton,
-            componentsButton
+            componentsButton,
+            statisticsButton
     );
 
     defaultCarView = new DefaultCarView();
@@ -76,6 +77,10 @@ public class AdminRegisterCarView extends IterableView implements AdminRegisterC
 
   public Button getComponentsButton() {
     return componentsButton;
+  }
+
+  public Button getStatisticsButton() {
+    return statisticsButton;
   }
 
   @Override

@@ -20,6 +20,7 @@ import com.autotaller.app.events.app_view.admin_view.admin_car_components.Inject
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.ShowSaveCarComponentsEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEventHandler;
+import com.autotaller.app.events.app_view.search_views.InjectCarEvent;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
@@ -52,6 +53,7 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     ToggleButton getShowFilterCarButton();
     Button getCarDetailsButton();
     Button getComponentsButton();
+    Button getStatisticsButton();
   }
 
   private IAdminRegisterCarView view;
@@ -84,18 +86,30 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
     });
 
     view.getComponentsButton().setOnAction(event -> {
-      CarModel selectedCar = view.getDefaultCarView().getCarsTable().getSelectionModel().getSelectedItem();
+      CarModel selectedCar = defaultCarController.getSelectedCar();
       if (selectedCar == null)
         return;
       showCarComponentsView(selectedCar, null);
     });
 
     view.getCarDetailsButton().setOnAction(event -> {
-      CarModel selectedCar = view.getDefaultCarView().getCarsTable().getSelectionModel().getSelectedItem();
+      CarModel selectedCar = defaultCarController.getSelectedCar();
       if (selectedCar == null)
         return;
       CarDetailesView detailesView = new CarDetailesView(selectedCar);
       EventBus.fireEvent(new ShowDialogEvent(new NodeDialog("Detalii Masina", "Ok", detailesView.asNode(), false)));
+    });
+
+    view.getStatisticsButton().setOnAction(event -> {
+      CarModel selectedCar = defaultCarController.getSelectedCar();
+      if (selectedCar == null)
+        return;
+      Component component = ComponentFactory.createComponent(ComponentType.CAR_STATISTICS_VIEW);
+      if (component != null) {
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.CAR_STATISTICS_VIEW + " (" + selectedCar.getName() + ")"));
+        EventBus.fireEvent(new InjectCarEvent(selectedCar));
+        EventBus.fireEvent(new BindLastViewEvent());
+      }
     });
 
     // set table context menu

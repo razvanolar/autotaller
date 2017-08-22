@@ -14,6 +14,7 @@ import com.autotaller.app.components.app_view.admin_view.admin_define_model_view
 import com.autotaller.app.components.app_view.admin_view.admin_register_car_view.AdminRegisterCarView;
 import com.autotaller.app.components.app_view.admin_view.admin_register_car_view.AdminSaveCarView;
 import com.autotaller.app.components.app_view.admin_view.admin_statistics_view.AdminStatisticsView;
+import com.autotaller.app.components.app_view.cars_view.car_statistics_view.CarStatisticsView;
 import com.autotaller.app.components.app_view.cars_view.search_car_components_view.SearchCarComponentsView;
 import com.autotaller.app.components.app_view.cars_view.search_car_make_view.SearchCarMakeView;
 import com.autotaller.app.components.app_view.cars_view.search_car_type_view.SearchCarTypeView;
@@ -76,6 +77,8 @@ public class ViewFactory {
         return new SearchCarComponentsView();
       case NOTIFICATIONS_VIEW:
         return new NotificationsView();
+      case CAR_STATISTICS_VIEW:
+        return new CarStatisticsView();
     }
     return null;
   }
