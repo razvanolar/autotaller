@@ -11,8 +11,11 @@ public class JDBCUtil {
 //  private String host = "jdbc:mysql://localhost:3306/autotaller?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8&useUnicode=true&sessionVariables=storage_engine%3DInnoDB&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
   private String host = "jdbc:mysql://www.dezmembrari-atct.ro:3306/r46307de_autotaller?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8&useUnicode=true&sessionVariables=storage_engine%3DInnoDB&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
   //jdbc:mysql://www.dezmembrari-atct.ro:3306/r46307de_autotaller
+
   private String user = "r46307de_root";
+//  private String user = "root";
   private String password = "Root123";
+//  private String password = "root";
 
   private int retry = 5;
 

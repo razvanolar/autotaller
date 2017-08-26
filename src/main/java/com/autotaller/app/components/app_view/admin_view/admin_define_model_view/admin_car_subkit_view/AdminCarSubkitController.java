@@ -90,6 +90,11 @@ public class AdminCarSubkitController implements Controller<AdminCarSubkitContro
   }
 
   @Override
+  public void deleteEntity() {
+
+  }
+
+  @Override
   public View getView() {
     return view;
   }

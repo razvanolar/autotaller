@@ -22,6 +22,12 @@ public class CarService extends GenericService {
           "c.color_code, c.price, c.wheel_side FROM cars c INNER JOIN car_fuels cf ON c.fuel_id = cf.id " +
           "INNER JOIN car_body_types cbt ON c.body_type_id = cbt.id";
 
+  private String DELETE_CAR_BY_ID_SQL = "DELETE FROM cars WHERE id = ?";
+
+  private String DELETE_CAR_BY_CAR_MAKE_ID_SQL = "DELETE FROM cars WHERE model_id = ?";
+
+  private String DELETE_ENGINES_FOR_CAR_ID_SQL = "DELETE FROM car_engines WHERE car_id = ?";
+
   private String CARS_BY_CAR_TYPE_QUERY = ALL_CARS_QUERY + " WHERE c.model_id = ?";
 
   private String CAR_BY_ID_QUERY = ALL_CARS_QUERY + " WHERE c.id = ?";
@@ -62,6 +68,23 @@ public class CarService extends GenericService {
       throw e;
     } finally {
       jdbcUtil.close(connection, statement, null);
+    }
+  }
+
+  private List<Integer> getCarIdsByTypeId(Connection connection, int carTypeId) throws Exception {
+    PreparedStatement statement = null;
+    ResultSet rs = null;
+    try {
+      statement = connection.prepareStatement(CARS_BY_CAR_TYPE_QUERY);
+      statement.setInt(1, carTypeId);
+      rs = statement.executeQuery();
+      List<Integer> result = new ArrayList<>();
+      while (rs.next()) {
+        result.add(rs.getInt(1));
+      }
+      return result;
+    } finally {
+      jdbcUtil.close(null, statement, rs);
     }
   }
 
@@ -182,6 +205,52 @@ public class CarService extends GenericService {
       jdbcUtil.closePrepareStatement(carIdStatement);
       jdbcUtil.closePrepareStatement(addEnginesStatement);
       jdbcUtil.closeResultSet(rs);
+    }
+  }
+
+  public void deleteCar(CarModel car) throws Exception {
+    Connection connection = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      connection.setAutoCommit(false);
+
+      deleteCarById(connection, car.getId());
+
+      connection.commit();
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      if (connection != null)
+        connection.rollback();
+      throw e;
+    } finally {
+      jdbcUtil.closeConnection(connection);
+    }
+  }
+
+  public void deleteCarById(Connection connection, int carId) throws Exception {
+    PreparedStatement deleteEnginesStatement = null;
+    PreparedStatement deleteCarsStatement = null;
+    try {
+      //TODO delete also the car components associated whit this car
+
+      deleteEnginesStatement = connection.prepareStatement(DELETE_ENGINES_FOR_CAR_ID_SQL);
+      deleteEnginesStatement.setInt(1, carId);
+      deleteEnginesStatement.executeUpdate();
+
+      deleteCarsStatement = connection.prepareStatement(DELETE_CAR_BY_ID_SQL);
+      deleteCarsStatement.setInt(1, carId);
+      deleteCarsStatement.executeUpdate();
+    } finally {
+      jdbcUtil.closePrepareStatement(deleteEnginesStatement);
+      jdbcUtil.closePrepareStatement(deleteCarsStatement);
+    }
+  }
+
+  public void deleteCarsByTypeId(Connection connection, int carTypeId) throws Exception {
+    List<Integer> carIds = getCarIdsByTypeId(connection, carTypeId);
+    for (Integer id : carIds) {
+      deleteCarById(connection, id);
     }
   }
 

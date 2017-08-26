@@ -2,6 +2,8 @@ package com.autotaller.app.components.app_view.admin_view.admin_define_model_vie
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.utils.IDefineModelController;
+import com.autotaller.app.components.utils.SimpleDialog;
+import com.autotaller.app.components.utils.YesNoDialog;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarMakesEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarModelsEvent;
@@ -9,6 +11,7 @@ import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLo
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLoadCarMakesEventHandler;
 import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AdminLoadCarModelsEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AdminLoadCarModelsEventHandler;
+import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.DeleteCarModelEvent;
 import com.autotaller.app.model.CarMakeModel;
 import com.autotaller.app.model.CarTypeModel;
 import com.autotaller.app.utils.*;
@@ -75,6 +78,21 @@ public class AdminCarModelController implements Controller<AdminCarModelControll
     AddCarModelDialogView dialogView = new AddCarModelDialogView();
     Component component = new Component(controller, dialogView);
     EventBus.fireEvent(new ShowDialogEvent(DialogFactory.createDialog(DialogComponentType.ADD_CAR_MODEL_DIALOG, component)));
+  }
+
+  @Override
+  public void deleteEntity() {
+    CarTypeModel selectedCarModel = view.getCarModelTable().getSelectionModel().getSelectedItem();
+    if (selectedCarModel != null) {
+      YesNoDialog dialog = new YesNoDialog("Atentie", "Esti sigur ca vrei sa stergi modelul " + selectedCarModel.getName() + " si inregistrarile legate de acesta?");
+      dialog.getYesButton().setOnAction(event -> {
+        dialog.close();
+        EventBus.fireEvent(new DeleteCarModelEvent(selectedCarModel));
+      });
+      EventBus.fireEvent(new ShowDialogEvent(dialog));
+    } else {
+      EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Te rugam selecteaza un model")));
+    }
   }
 
   @Override

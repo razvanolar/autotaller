@@ -8,5 +8,6 @@ import com.autotaller.app.utils.View;
 public interface IDefineModelController {
   void loadIfEmpty();
   void addEntity();
+  void deleteEntity();
   View getView();
 }

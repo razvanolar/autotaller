@@ -4,10 +4,7 @@ import com.autotaller.app.EventBus;
 import com.autotaller.app.components.app_view.admin_view.admin_register_car_view.utils.AdminCarTableViewContextMenu;
 import com.autotaller.app.components.app_view.utils.DefaultCarController;
 import com.autotaller.app.components.app_view.utils.DefaultCarView;
-import com.autotaller.app.components.utils.CarDetailesView;
-import com.autotaller.app.components.utils.NodeDialog;
-import com.autotaller.app.components.utils.NotificationsUtil;
-import com.autotaller.app.components.utils.YesNoDialog;
+import com.autotaller.app.components.utils.*;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.OpenCarImageGalleryEvent;
@@ -20,6 +17,8 @@ import com.autotaller.app.events.app_view.admin_view.admin_car_components.Inject
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.ShowSaveCarComponentsEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_view.AddCarEventHandler;
+import com.autotaller.app.events.app_view.admin_view.admin_car_view.DeleteCarEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_view.DeleteCarEventHandler;
 import com.autotaller.app.events.app_view.search_views.InjectCarEvent;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
@@ -74,6 +73,20 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
       if (component != null) {
         EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.ADMIN_SAVE_CAR_VIEW.getTitle()));
         EventBus.fireEvent(new BindLastViewEvent());
+      }
+    });
+
+    view.getDeleteCarButton().setOnAction(event -> {
+      CarModel selectedCar = view.getDefaultCarView().getCarsTable().getSelectionModel().getSelectedItem();
+      if (selectedCar != null) {
+        YesNoDialog dialog = new YesNoDialog("Atentie", "Esti sugur ca vrei sa stergi aceasta inregistrare?");
+        dialog.getYesButton().setOnAction(event1 -> {
+          dialog.close();
+          EventBus.fireEvent(new DeleteCarEvent(selectedCar));
+        });
+        EventBus.fireEvent(new ShowDialogEvent(dialog));
+      } else {
+        EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Te rugam selecteaza o masina")));
       }
     });
 
@@ -187,6 +200,35 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
         NotificationsUtil.showErrorNotification("Eroare", "Masina nu a putut fi inregistrata", -1);
+      }
+    }, true);
+
+    EventBus.addHandler(DeleteCarEvent.TYPE, (DeleteCarEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Stergere masina"));
+        Thread thread = new Thread(() -> {
+          try {
+            repository.deleteCar(event.getCar());
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              NotificationsUtil.showInfoNotification("Info", "Masina a fost stearsa cu succes", 10);
+              load(null);
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              NotificationsUtil.showErrorNotification("Eroare", "Masina selectata nu a putut fi stearsa", -1);
+            });
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+        NotificationsUtil.showErrorNotification("Eroare", "Masina selectata nu a putut fi stearsa", -1);
       }
     }, true);
   }

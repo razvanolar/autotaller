@@ -2,12 +2,14 @@ package com.autotaller.app.components.app_view.admin_view.admin_define_model_vie
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.utils.IDefineModelController;
+import com.autotaller.app.components.utils.SimpleDialog;
+import com.autotaller.app.components.utils.YesNoDialog;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarMakesEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLoadCarMakesEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLoadCarMakesEventHandler;
+import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.DeleteCarMakeEvent;
 import com.autotaller.app.model.CarMakeModel;
-import com.autotaller.app.utils.AdminToolbarView;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.DialogComponentType;
 import com.autotaller.app.utils.View;
@@ -55,6 +57,21 @@ public class AdminCarMakeController implements Controller<AdminCarMakeController
   @Override
   public void addEntity() {
     EventBus.fireEvent(new ShowDialogEvent(DialogFactory.createDialog(DialogComponentType.ADD_CAR_MAKE_DIALOG)));
+  }
+
+  @Override
+  public void deleteEntity() {
+    CarMakeModel selectedCarMake = view.getCarMakeTable().getSelectionModel().getSelectedItem();
+    if (selectedCarMake != null) {
+      YesNoDialog dialog = new YesNoDialog("Atentie", "Esti sigur ca vrei sa stergi marca " + selectedCarMake.getName() + " si toate inregistrarile legate de aceasta?");
+      dialog.getYesButton().setOnAction(event -> {
+        dialog.close();
+        EventBus.fireEvent(new DeleteCarMakeEvent(selectedCarMake));
+      });
+      EventBus.fireEvent(new ShowDialogEvent(dialog));
+    } else {
+      EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Te rugam selecteaza o marca")));
+    }
   }
 
   @Override

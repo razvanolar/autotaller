@@ -10,16 +10,13 @@ import com.autotaller.app.components.app_view.admin_view.admin_define_model_view
 import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_subkit_view.AdminCarSubkitController;
 import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.admin_car_subkit_view.AdminCarSubkitView;
 import com.autotaller.app.components.app_view.admin_view.admin_define_model_view.utils.IDefineModelController;
+import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.admin_view.*;
 import com.autotaller.app.events.app_view.admin_view.admin_car_kit_view.*;
-import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AddCarMakeEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AddCarMakeEventHandler;
-import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.AdminLoadCarMakesEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AddCarModelEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AddCarModelEventHandler;
-import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.AdminLoadCarModelsEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_make_view.*;
+import com.autotaller.app.events.app_view.admin_view.admin_car_model_view.*;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
 import com.autotaller.app.repository.Repository;
@@ -94,6 +91,13 @@ public class AdminDefineAllContextController implements Controller<AdminDefineAl
       IDefineModelController controller = getCurrentController();
       if (controller != null) {
         controller.addEntity();
+      }
+    });
+
+    view.getDeleteButton().setOnAction(event -> {
+      IDefineModelController controller = getCurrentController();
+      if (controller != null) {
+        controller.deleteEntity();
       }
     });
 
@@ -189,6 +193,7 @@ public class AdminDefineAllContextController implements Controller<AdminDefineAl
           } catch (Exception e) {
             //TODO handle exception
             e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
           }
         });
         thread.start();
@@ -196,6 +201,36 @@ public class AdminDefineAllContextController implements Controller<AdminDefineAl
         //TODO handle exception
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    }, true);
+
+    EventBus.addHandler(DeleteCarMakeEvent.TYPE, (DeleteCarMakeEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Stergere Marca"));
+        Thread thread = new Thread(() -> {
+          try {
+            repository.deleteCarMake(event.getCarMake());
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              NotificationsUtil.showInfoNotification("Info", "Inregistrarile pentru " + event.getCarMake().getName() + " au fost sterse cu succes.", 10);
+              loadCarMakes();
+              loadCarModels();
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              NotificationsUtil.showErrorNotification("Eroare", "Marca selectata nu a putut fi stearsa", -1);
+            });
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+        NotificationsUtil.showErrorNotification("Eroare", "Marca selectata nu a putut fi stearsa", -1);
       }
     }, true);
 
@@ -220,6 +255,35 @@ public class AdminDefineAllContextController implements Controller<AdminDefineAl
         //TODO handle exception
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    }, true);
+
+    EventBus.addHandler(DeleteCarModelEvent.TYPE, (DeleteCarModelEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Stergere model"));
+        Thread thread = new Thread(() -> {
+          try {
+            repository.deleteCarType(event.getCarType());
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              NotificationsUtil.showInfoNotification("Info", "Inregistrarile pentru " + event.getCarType().getName() + " au fost sterse cu succes.", 10);
+              loadCarModels();
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              NotificationsUtil.showErrorNotification("Eroare", "Modelul selectat nu a putut fi sters", -1);
+            });
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+        NotificationsUtil.showErrorNotification("Eroare", "Modelul selectat nu a putut fi sters", -1);
       }
     }, true);
 

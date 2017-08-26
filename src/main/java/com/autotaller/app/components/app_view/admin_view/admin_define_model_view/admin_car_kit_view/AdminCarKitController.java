@@ -85,6 +85,11 @@ public class AdminCarKitController implements Controller<AdminCarKitController.I
   }
 
   @Override
+  public void deleteEntity() {
+
+  }
+
+  @Override
   public View getView() {
     return view;
   }

@@ -91,6 +91,18 @@ public class Repository {
     }
   }
 
+  public void deleteCarMake(CarMakeModel carMake) throws Exception {
+    carMakesService.deleteCarMake(carMake);
+    if (carMakesCache != null) {
+      carMakesCache.clear();
+      carMakesCache = null;
+    }
+    if (carTypesCache != null) {
+      carTypesCache.clear();
+      carTypesCache = null;
+    }
+  }
+
 
   /*
     CarModelService
@@ -105,6 +117,14 @@ public class Repository {
 
   public void addCarModel(CarTypeModel carModel) throws Exception {
     carModelService.addCarModel(carModel);
+    if (carTypesCache != null) {
+      carTypesCache.clear();
+      carTypesCache = null;
+    }
+  }
+
+  public void deleteCarType(CarTypeModel carType) throws Exception {
+    carModelService.deleteCarType(carType);
     if (carTypesCache != null) {
       carTypesCache.clear();
       carTypesCache = null;
@@ -198,6 +218,10 @@ public class Repository {
       imageStatus = ImageStatus.FAILED_IMAGE_SAVE;
     }
     return new SaveCarResult(savedCar, carStatus, imageStatus);
+  }
+
+  public void deleteCar(CarModel car) throws Exception {
+    carService.deleteCar(car);
   }
 
 
@@ -316,12 +340,12 @@ public class Repository {
 
   private void initServices() throws Exception {
     userService = new UserService(jdbcUtil);
-    carMakesService = new CarMakesService(jdbcUtil);
-    carModelService = new CarModelService(jdbcUtil);
+    carService = new CarService(jdbcUtil);
+    carModelService = new CarModelService(jdbcUtil, carService);
+    carMakesService = new CarMakesService(jdbcUtil, carModelService);
     carKitsService = new CarKitsService(jdbcUtil);
     carUtilsService = new CarUtilsService(jdbcUtil);
     carStatisticsService = new CarStatisticsService(jdbcUtil);
-    carService = new CarService(jdbcUtil);
     carComponentsService = new CarComponentsService(jdbcUtil);
 
     //init all the caches

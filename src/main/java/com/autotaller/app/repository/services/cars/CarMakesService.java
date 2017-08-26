@@ -15,8 +15,11 @@ import java.util.List;
  */
 public class CarMakesService extends GenericService {
 
-  public CarMakesService(JDBCUtil jdbcUtil) {
+  private CarModelService carModelService;
+
+  public CarMakesService(JDBCUtil jdbcUtil, CarModelService carModelService) {
     super(jdbcUtil);
+    this.carModelService = carModelService;
   }
 
   public List<CarMakeModel> getAllCarMakes() throws Exception {
@@ -88,6 +91,38 @@ public class CarMakesService extends GenericService {
       throw e;
     } finally {
       jdbcUtil.close(connection, statement, null);
+    }
+  }
+
+  public void deleteCarMake(CarMakeModel carMake) throws Exception {
+    Connection connection = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      connection.setAutoCommit(false);
+
+      deleteCarMakeById(connection, carMake.getId());
+
+      connection.commit();
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      if (connection != null)
+        connection.rollback();
+      throw e;
+    } finally {
+      jdbcUtil.closeConnection(connection);
+    }
+  }
+
+  public void deleteCarMakeById(Connection connection, int carMakeId) throws Exception {
+    PreparedStatement statement = null;
+    try {
+      carModelService.deleteCarTypesByMakeId(connection, carMakeId);
+      statement = connection.prepareStatement("DELETE FROM car_makes WHERE id = ?");
+      statement.setInt(1, carMakeId);
+      statement.executeUpdate();
+    } finally {
+      jdbcUtil.closePrepareStatement(statement);
     }
   }
 }
