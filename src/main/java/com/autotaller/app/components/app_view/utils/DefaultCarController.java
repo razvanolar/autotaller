@@ -47,7 +47,7 @@ public class DefaultCarController implements Controller<DefaultCarController.IDe
 
   private SystemModelsDTO modelsDTO;
   private CarMakeModel allMakes = new CarMakeModel(-1, "--Toate--");
-  private CarTypeModel allTypes = new CarTypeModel(-1, allMakes, "--Toate--", null, null, null);
+  private CarTypeModel allTypes = new CarTypeModel(-1, allMakes, "--Toate--", null, null);
   private FuelModel allFuels = new FuelModel(-1, "--Toate--");
 
   @Override

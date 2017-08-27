@@ -42,7 +42,7 @@ public class TableProvider {
   @SuppressWarnings("unchecked")
   public TableView<CarTypeModel> createCarModelTable() {
     TableView<CarTypeModel> table = new TableView<>();
-    TableColumn<CarTypeModel, String> nameColumn = new TableColumn<>("Nume Model");
+    TableColumn<CarTypeModel, String> nameColumn = new TableColumn<>("Model");
     TableColumn<CarTypeModel, String> fromColumn = new TableColumn<>("De la");
     TableColumn<CarTypeModel, String> toColumn = new TableColumn<>("Pana la");
     TableColumn<CarTypeModel, String> makeColumn = new TableColumn<>("Marca");
@@ -52,18 +52,7 @@ public class TableProvider {
     toColumn.prefWidthProperty().bind(table.widthProperty().multiply(.17));
     makeColumn.prefWidthProperty().bind(table.widthProperty().multiply(.32));
 
-    nameColumn.setCellValueFactory(p -> {
-      CarTypeModel value = p.getValue();
-      if (value != null) {
-        if (!StringValidator.isNullOrEmpty(value.getFrames())) {
-          return new SimpleStringProperty(value.getName() + " (" + value.getFrames() + ")");
-        } else {
-          return new SimpleStringProperty(value.getName());
-        }
-      } else {
-        return new SimpleStringProperty();
-      }
-    });
+    nameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getName()) : new SimpleStringProperty());
     fromColumn.setCellValueFactory(p -> {
       CarTypeModel value = p.getValue();
       if (value != null && value.getFrom() != null) {
@@ -174,7 +163,7 @@ public class TableProvider {
   @SuppressWarnings("unchecked")
   public TableView<CarModel> createCarTable() {
     TableView<CarModel> table = new TableView<>();
-    TableColumn<CarModel, String> nameColumn = new TableColumn<>("Nume");
+    TableColumn<CarModel, String> makeColumn = new TableColumn<>("Marca");
     TableColumn<CarModel, String> modelColumn = new TableColumn<>("Model");
     TableColumn<CarModel, String> fromColumn = new TableColumn<>("De la");
     TableColumn<CarModel, String> toColumn = new TableColumn<>("Pana la");
@@ -184,7 +173,7 @@ public class TableProvider {
     TableColumn<CarModel, Integer> cilindersColumn = new TableColumn<>("Cilindrii");
     TableColumn<CarModel, String> enginesColumn = new TableColumn<>("Cod motor");
 
-    nameColumn.prefWidthProperty().bind(table.widthProperty().multiply(.15));
+    makeColumn.prefWidthProperty().bind(table.widthProperty().multiply(.15));
     modelColumn.prefWidthProperty().bind(table.widthProperty().multiply(.15));
     cilindersColumn.prefWidthProperty().bind(table.widthProperty().multiply(.07));
     DoubleBinding widthProp = table.widthProperty().multiply(.1);
@@ -195,7 +184,7 @@ public class TableProvider {
     capacityColumn.prefWidthProperty().bind(widthProp);
     enginesColumn.prefWidthProperty().bind(widthProp);
 
-    nameColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getName()) : new SimpleStringProperty());
+    makeColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getCarType().getCarMake().getName()) : new SimpleStringProperty());
     modelColumn.setCellValueFactory(p -> p.getValue() != null && p.getValue().getCarType() != null ? new SimpleStringProperty(p.getValue().getCarType().getName()) : new SimpleStringProperty());
     fromColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getFrom().toString()) : new SimpleStringProperty());
     toColumn.setCellValueFactory(p -> p.getValue() != null && p.getValue().getTo() != null ? new SimpleStringProperty(p.getValue().getTo().toString()) : new SimpleStringProperty());
@@ -205,7 +194,7 @@ public class TableProvider {
     cilindersColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getCilinders()) : new SimpleObjectProperty<>());
     enginesColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getEnginesString()) : new SimpleObjectProperty<>());
 
-    nameColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    makeColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     modelColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     fromColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     toColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
@@ -215,7 +204,7 @@ public class TableProvider {
     cilindersColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     enginesColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
 
-    table.getColumns().addAll(modelColumn, nameColumn, fromColumn, toColumn, kwColumn, hpColumn, capacityColumn, cilindersColumn, enginesColumn);
+    table.getColumns().addAll(makeColumn, modelColumn, fromColumn, toColumn, kwColumn, hpColumn, capacityColumn, cilindersColumn, enginesColumn);
     return table;
   }
 

@@ -115,7 +115,7 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     saveCarFormPane.add(carCapacitySpinner, 1, row++);
     saveCarFormPane.add(NodeProvider.createFormTextLabel("Cilindrii: "), 0, row);
     saveCarFormPane.add(carCylindersSpinner, 1, row++);
-    saveCarFormPane.add(NodeProvider.createFormTextLabel("Serii motor: "), 0, row);
+    saveCarFormPane.add(NodeProvider.createFormTextLabel("Tip motor: "), 0, row);
     saveCarFormPane.add(enginesTextField, 1, row++);
     saveCarFormPane.add(NodeProvider.createFormTextLabel("Combustibil: "), 0, row);
     saveCarFormPane.add(carFuelCombo, 1, row++);

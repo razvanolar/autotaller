@@ -28,7 +28,6 @@ public class CarModelService extends GenericService {
   public List<CarTypeModel> getCarModels() throws Exception {
     Connection connection = null;
     PreparedStatement statement = null;
-    PreparedStatement frameStatement = null;
     ResultSet rs = null;
     try {
       connection = jdbcUtil.getNewConnection();
@@ -36,9 +35,8 @@ public class CarModelService extends GenericService {
       statement = connection.prepareStatement(query);
       rs = statement.executeQuery();
       List<CarTypeModel> result = new ArrayList<>();
-      frameStatement = connection.prepareStatement("SELECT frame_name FROM car_model_frames WHERE car_model_id = ?");
       while (rs.next()) {
-        result.add(collect(rs, frameStatement));
+        result.add(collect(rs));
       }
       return result;
     } catch (Exception e) {
@@ -47,7 +45,6 @@ public class CarModelService extends GenericService {
       throw e;
     } finally {
       jdbcUtil.close(connection, statement, rs);
-      jdbcUtil.closePrepareStatement(frameStatement);
     }
   }
 
@@ -67,20 +64,17 @@ public class CarModelService extends GenericService {
 
   public CarTypeModel getCarModelById(Connection connection, int carModelId) throws Exception {
     Statement statement = null;
-    PreparedStatement frameStatement = null;
     ResultSet rs = null;
     try {
       statement = connection.createStatement();
-      frameStatement = connection.prepareStatement("SELECT frame_name FROM car_model_frames WHERE car_model_id = ?");
       rs = statement.executeQuery(GET_CAR_MODELS + " WHERE c1.id = " + carModelId);
-      return rs.next() ? collect(rs, frameStatement) : null;
+      return rs.next() ? collect(rs) : null;
     } catch (Exception e) {
       //TODO handle exception
       e.printStackTrace();
       throw e;
     } finally {
       jdbcUtil.closeResultSet(rs);
-      jdbcUtil.closePrepareStatement(frameStatement);
       jdbcUtil.closeStatement(statement);
     }
   }
@@ -131,18 +125,6 @@ public class CarModelService extends GenericService {
       if (!rs.next()) {
         connection.rollback();
         throw new Exception("Unable to determine car model id");
-      }
-      int carModelId = rs.getInt(1);
-
-      List<String> frameNames = carModel.getFrameNames();
-      if (frameNames != null && !frameNames.isEmpty()) {
-        sql = "INSERT INTO car_model_frames (car_model_id, frame_name) VALUES (?, ?)";
-        frameStatement = connection.prepareStatement(sql);
-        frameStatement.setInt(1, carModelId);
-        for (String farame : frameNames) {
-          frameStatement.setString(2, farame);
-          frameStatement.executeUpdate();
-        }
       }
 
       connection.commit();
@@ -206,7 +188,7 @@ public class CarModelService extends GenericService {
     }
   }
 
-  private CarTypeModel collect(ResultSet rs, PreparedStatement frameStatement) throws Exception {
+  private CarTypeModel collect(ResultSet rs) throws Exception {
     int id = rs.getInt(1);
     Date toDate = rs.getDate(4);
     return new CarTypeModel(
@@ -214,23 +196,7 @@ public class CarModelService extends GenericService {
             new CarMakeModel(rs.getInt(5), rs.getString(6)),
             rs.getString(2),
             rs.getDate(3).toLocalDate(),
-            toDate != null ? toDate.toLocalDate() : null,
-            getFramesForCarModelId(id, frameStatement)
+            toDate != null ? toDate.toLocalDate() : null
     );
-  }
-
-  private List<String> getFramesForCarModelId(int carModelId, PreparedStatement statement) throws Exception {
-    ResultSet rs = null;
-    try {
-      statement.setInt(1, carModelId);
-      rs = statement.executeQuery();
-      List<String> frame = new ArrayList<>();
-      while (rs.next()) {
-        frame.add(rs.getString(1));
-      }
-      return frame;
-    } finally {
-      jdbcUtil.closeResultSet(rs);
-    }
   }
 }

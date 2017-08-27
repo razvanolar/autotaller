@@ -15,7 +15,6 @@ import com.autotaller.app.utils.ComponentType;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.factories.ComponentFactory;
-import com.autotaller.app.utils.filters.car_filters.car_type_model_filters.CarTypeModelFrameFilter;
 import com.autotaller.app.utils.filters.car_filters.car_type_model_filters.CarTypeModelNameFilter;
 import com.autotaller.app.utils.filters.car_filters.car_type_model_filters.CarTypeModelYearsFilter;
 import javafx.collections.ListChangeListener;
@@ -47,7 +46,6 @@ public class SearchCarTypeController implements Controller<SearchCarTypeControll
 
   private CarTypeModelYearsFilter carTypeModelYearsFilter;
   private CarTypeModelNameFilter carTypeModelNameFilter;
-  private CarTypeModelFrameFilter carTypeModelFrameFilter;
 
   @Override
   public void bind(ISearchCarTypeView view) {
@@ -55,11 +53,9 @@ public class SearchCarTypeController implements Controller<SearchCarTypeControll
 
     carTypeModelYearsFilter = new CarTypeModelYearsFilter();
     carTypeModelNameFilter = new CarTypeModelNameFilter();
-    carTypeModelFrameFilter = new CarTypeModelFrameFilter();
 
     carTypeModelYearsFilter.getFields().addListener((ListChangeListener<Integer>) c -> filter());
     view.getSearchNameField().textProperty().addListener((observable, oldValue, newValue) -> carTypeModelNameFilter.setName(newValue));
-    view.getSearchFrameField().textProperty().addListener((observable, oldValue, newValue) -> carTypeModelFrameFilter.setFrame(newValue));
 
     view.getSearchNameButton().setOnAction(event -> filter());
     view.getSearchFrameButton().setOnAction(event -> filter());
@@ -97,7 +93,6 @@ public class SearchCarTypeController implements Controller<SearchCarTypeControll
   private void filter() {
     List<CarTypeModel> result = carTypeModelYearsFilter.filter(carTypes);
     result = carTypeModelNameFilter.filter(result);
-    result = carTypeModelFrameFilter.filter(result);
     loadCarTypes(result);
   }
 

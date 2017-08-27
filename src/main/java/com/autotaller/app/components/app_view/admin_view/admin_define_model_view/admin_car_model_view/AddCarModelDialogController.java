@@ -28,7 +28,6 @@ public class AddCarModelDialogController implements Controller<AddCarModelDialog
     TextField getNameTextField();
     DatePicker getFromDatePicker();
     DatePicker getToDatePicker();
-    List<TextField> getEngineTextFields();
   }
 
   private IAddCarModelDialogView view;
@@ -70,21 +69,10 @@ public class AddCarModelDialogController implements Controller<AddCarModelDialog
   }
 
   private CarTypeModel collect() {
-    List<TextField> engineTextFields = view.getEngineTextFields();
-    List<String> engines = null;
-    if (engineTextFields != null && !engineTextFields.isEmpty()) {
-      engines = new ArrayList<>(engineTextFields.size());
-      for (TextField field : engineTextFields) {
-        if (!StringValidator.isNullOrEmpty(field.getText())) {
-          engines.add(field.getText());
-        }
-      }
-    }
     return new CarTypeModel(-1, view.getCarMakesCombo().getValue(),
             view.getNameTextField().getText(),
             view.getFromDatePicker().getValue(),
-            view.getToDatePicker().getValue(),
-            engines);
+            view.getToDatePicker().getValue());
   }
 
   private boolean isValidSelection() {
