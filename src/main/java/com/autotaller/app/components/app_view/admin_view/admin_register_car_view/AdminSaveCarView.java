@@ -34,6 +34,7 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
   private DatePicker producedFromPicker;
   private DatePicker producedToPicker;
   private DatePicker productionYearPicker;
+  private TextField carParkNumberField;
   private TextField carKmField;
   private Spinner<Integer> carKwSpinner;
   private Spinner<Integer> carCapacitySpinner;
@@ -71,6 +72,7 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     productionYearPicker = NodeProvider.createDatePicker(width);
     producedFromPicker = NodeProvider.createDatePicker(width);
     producedToPicker = NodeProvider.createDatePicker(width);
+    carParkNumberField = NodeProvider.createTextField(width);
     carKmField = NodeProvider.createTextField(width);
     carKwSpinner = NodeProvider.createSpinner(width,0, 1000, 0, 1);
     carCapacitySpinner = NodeProvider.createSpinner(width,0, 10000, 0, 1);
@@ -107,6 +109,8 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
     saveCarFormPane.add(producedFromPicker, 1, row++);
     saveCarFormPane.add(NodeProvider.createFormTextLabel("Pana la: "), 0, row);
     saveCarFormPane.add(producedToPicker, 1, row++);
+    saveCarFormPane.add(NodeProvider.createFormTextLabel("Numar parc: "), 0, row);
+    saveCarFormPane.add(carParkNumberField, 1, row++);
     saveCarFormPane.add(NodeProvider.createFormTextLabel("Km parcursi: "), 0, row);
     saveCarFormPane.add(carKmField, 1, row++);
     saveCarFormPane.add(NodeProvider.createFormTextLabel("KW: "), 0, row);
@@ -215,6 +219,10 @@ public class AdminSaveCarView extends IterableView implements AdminSaveCarContro
 
   public DatePicker getProductionYearPicker() {
     return productionYearPicker;
+  }
+
+  public TextField getCarParkNumberField() {
+    return carParkNumberField;
   }
 
   public TextField getCarKmField() {

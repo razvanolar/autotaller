@@ -46,6 +46,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     DatePicker getProducedFromPicker();
     DatePicker getProducedToPicker();
     DatePicker getProductionYearPicker();
+    TextField getCarParkNumberField();
     TextField getCarKmField();
     Spinner<Integer> getCarKwSpinner();
     Spinner<Integer> getCarCapacitySpinner();
@@ -195,6 +196,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     String priceText = view.getCarPriceField().getText();
     if (selectedCarMake == null || selectedCarType == null || StringValidator.isNullOrEmpty(carName) ||
             prodYear == null || prodFrom == null || !StringValidator.isPositiveInteger(view.getCarKmField().getText()) ||
+            !StringValidator.isPositiveInteger(view.getCarParkNumberField().getText()) ||
             carKW == null || carCapacity == null || carCylinders == null || carFuel == null || bodyType == null) {
       return null;
     }
@@ -212,6 +214,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
 
     int price = StringValidator.isPositiveInteger(priceText) ? Integer.parseInt(priceText) : 0;
     return new CarModel(-1, selectedCarType, carName, bodyType, prodFrom, prodTo, prodYear,
+            Integer.parseInt(view.getCarParkNumberField().getText()),
             Integer.parseInt(view.getCarKmField().getText()), carKW, carCapacity, carCylinders, engines,
             carFuel, view.getCarColorCodeField().getText().trim(),
             price, view.getCarLeftWheelRadio().isSelected() ? CarWheelSideType.LEFT : CarWheelSideType.RIGHT,

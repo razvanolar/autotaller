@@ -18,7 +18,7 @@ import java.util.List;
 public class CarService extends GenericService {
 
   private String ALL_CARS_QUERY = "SELECT c.id, c.model_id, c.name, cbt.id, cbt.name, c.produced_from, c.produced_to, " +
-          "c.production_year, c.km, c.kw, c.cilindrical_capacity, c.cilinders, c.description, cf.id, cf.name, " +
+          "c.production_year, c.parkNumber, c.km, c.kw, c.cilindrical_capacity, c.cilinders, c.description, cf.id, cf.name, " +
           "c.color_code, c.price, c.wheel_side FROM cars c INNER JOIN car_fuels cf ON c.fuel_id = cf.id " +
           "INNER JOIN car_body_types cbt ON c.body_type_id = cbt.id";
 
@@ -120,11 +120,11 @@ public class CarService extends GenericService {
         result.add(new CarModel(carId, systemModelsDTO.getCarTypeModelById(rs.getInt(2)),
                 rs.getString(3), new CarBodyTypeModel(rs.getInt(4), rs.getString(5)),
                 fromDate != null ? fromDate.toLocalDate() : null, toDate != null ? toDate.toLocalDate() : null,
-                productionDate != null ? productionDate.toLocalDate() : null, rs.getInt(9),
-                rs.getInt(10), rs.getInt(11), rs.getInt(12), engines,
-                systemModelsDTO.getFuelById(rs.getInt(14)), rs.getString(16),
-                rs.getInt(17), CarWheelSideType.fromString(rs.getString(18)),
-                rs.getString(13)));
+                productionDate != null ? productionDate.toLocalDate() : null, rs.getInt(9), rs.getInt(10),
+                rs.getInt(11), rs.getInt(12), rs.getInt(13), engines,
+                systemModelsDTO.getFuelById(rs.getInt(15)), rs.getString(17),
+                rs.getInt(18), CarWheelSideType.fromString(rs.getString(19)),
+                rs.getString(14)));
       }
       return result;
     } finally {
@@ -148,8 +148,8 @@ public class CarService extends GenericService {
       connection = jdbcUtil.getNewConnection();
       connection.setAutoCommit(false);
       String addCarSql = "INSERT INTO cars (model_id, name, body_type_id, produced_from, produced_to, production_year, " +
-              "km, kw, cilindrical_capacity, cilinders, fuel_id, color_code, price, wheel_side, description) " +
-              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+              "parkNumber, km, kw, cilindrical_capacity, cilinders, fuel_id, color_code, price, wheel_side, description) " +
+              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
       addCarStatement = connection.prepareStatement(addCarSql);
       addCarStatement.setInt(1, car.getCarType().getId());
       addCarStatement.setString(2, car.getName());
@@ -157,18 +157,19 @@ public class CarService extends GenericService {
       setStatementDate(4, car.getFrom(), addCarStatement);
       setStatementDate(5, car.getTo(), addCarStatement);
       setStatementDate(6, car.getProductionYear(), addCarStatement);
-      addCarStatement.setInt(7, car.getKm());
-      addCarStatement.setInt(8, car.getKw());
-      addCarStatement.setInt(9, car.getCapacity());
-      addCarStatement.setInt(10, car.getCilinders());
-      addCarStatement.setInt(11, car.getFuel().getId());
-      addCarStatement.setString(12, car.getColorCode());
-      addCarStatement.setInt(13, car.getPrice());
-      addCarStatement.setString(14, car.getWheelSide().getValue());
+      addCarStatement.setInt(7, car.getParkNumber());
+      addCarStatement.setInt(8, car.getKm());
+      addCarStatement.setInt(9, car.getKw());
+      addCarStatement.setInt(10, car.getCapacity());
+      addCarStatement.setInt(11, car.getCilinders());
+      addCarStatement.setInt(12, car.getFuel().getId());
+      addCarStatement.setString(13, car.getColorCode());
+      addCarStatement.setInt(14, car.getPrice());
+      addCarStatement.setString(15, car.getWheelSide().getValue());
       if (car.getDescription() != null) {
-        addCarStatement.setString(15, car.getDescription());
+        addCarStatement.setString(16, car.getDescription());
       } else {
-        addCarStatement.setNull(15, Types.VARCHAR);
+        addCarStatement.setNull(16, Types.VARCHAR);
       }
 
       addCarStatement.executeUpdate();

@@ -167,6 +167,8 @@ public class TableProvider {
     TableColumn<CarModel, String> modelColumn = new TableColumn<>("Model");
     TableColumn<CarModel, String> fromColumn = new TableColumn<>("De la");
     TableColumn<CarModel, String> toColumn = new TableColumn<>("Pana la");
+    TableColumn<CarModel, Integer> parkNumberColumn = new TableColumn<>("Nr. Parc");
+    TableColumn<CarModel, Integer> kmColumn = new TableColumn<>("Km");
     TableColumn<CarModel, Integer> kwColumn = new TableColumn<>("KW");
     TableColumn<CarModel, Integer> hpColumn = new TableColumn<>("CP");
     TableColumn<CarModel, Integer> capacityColumn = new TableColumn<>("Cap. cil.");
@@ -176,9 +178,11 @@ public class TableProvider {
     makeColumn.prefWidthProperty().bind(table.widthProperty().multiply(.15));
     modelColumn.prefWidthProperty().bind(table.widthProperty().multiply(.15));
     cilindersColumn.prefWidthProperty().bind(table.widthProperty().multiply(.07));
-    DoubleBinding widthProp = table.widthProperty().multiply(.1);
+    DoubleBinding widthProp = table.widthProperty().multiply(.075);
     fromColumn.prefWidthProperty().bind(widthProp);
     toColumn.prefWidthProperty().bind(widthProp);
+    parkNumberColumn.prefWidthProperty().bind(widthProp);
+    kmColumn.prefWidthProperty().bind(widthProp);
     kwColumn.prefWidthProperty().bind(widthProp);
     hpColumn.prefWidthProperty().bind(widthProp);
     capacityColumn.prefWidthProperty().bind(widthProp);
@@ -188,6 +192,8 @@ public class TableProvider {
     modelColumn.setCellValueFactory(p -> p.getValue() != null && p.getValue().getCarType() != null ? new SimpleStringProperty(p.getValue().getCarType().getName()) : new SimpleStringProperty());
     fromColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleStringProperty(p.getValue().getFrom().toString()) : new SimpleStringProperty());
     toColumn.setCellValueFactory(p -> p.getValue() != null && p.getValue().getTo() != null ? new SimpleStringProperty(p.getValue().getTo().toString()) : new SimpleStringProperty());
+    parkNumberColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getParkNumber()) : new SimpleObjectProperty<>());
+    kmColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getKm()) : new SimpleObjectProperty<>());;
     kwColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getKw()) : new SimpleObjectProperty<>());
     hpColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>((int)((float)p.getValue().getHp())) : new SimpleObjectProperty<>());
     capacityColumn.setCellValueFactory(p -> p.getValue() != null ? new SimpleObjectProperty<>(p.getValue().getCapacity()) : new SimpleObjectProperty<>());
@@ -198,13 +204,16 @@ public class TableProvider {
     modelColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     fromColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     toColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    parkNumberColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
+    kmColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     kwColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     hpColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     capacityColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     cilindersColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
     enginesColumn.setStyle(StyleProvider.CENTERED_TABLE_CELL_TEXT_CSS);
 
-    table.getColumns().addAll(makeColumn, modelColumn, fromColumn, toColumn, kwColumn, hpColumn, capacityColumn, cilindersColumn, enginesColumn);
+    table.getColumns().addAll(makeColumn, modelColumn, fromColumn, toColumn, parkNumberColumn, kmColumn, kwColumn,
+            hpColumn, capacityColumn, cilindersColumn, enginesColumn);
     return table;
   }
 

@@ -55,7 +55,7 @@ public class CarDetailesView implements View {
     pane.add(NodeProvider.createFormTextLabel("An Fabricatie: "), 0, row);
     pane.add(NodeProvider.createFormTextLabel(car.getProductionYear() != null ? car.getProductionYear().toString() : "---"), 1, row++);
     pane.add(NodeProvider.createFormTextLabel("KM: "), 0, row);
-    pane.add(NodeProvider.createFormTextLabel(String.valueOf(car.getKm())), 1, row++);
+    pane.add(NodeProvider.createFormTextLabel(String.valueOf(car.getParkNumber())), 1, row++);
     pane.add(NodeProvider.createFormTextLabel("KW: "), 0, row);
     pane.add(NodeProvider.createFormTextLabel(String.valueOf(car.getKw())), 1, row++);
     pane.add(NodeProvider.createFormTextLabel("CP: "), 0, row);

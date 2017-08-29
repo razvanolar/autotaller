@@ -17,6 +17,7 @@ public class CarModel {
   private LocalDate from;
   private LocalDate to;
   private LocalDate productionYear;
+  private int parkNumber;
   private int km;
   private int kw;
   private int capacity;
@@ -31,7 +32,7 @@ public class CarModel {
   private String enginesString;
 
   public CarModel(int id, CarTypeModel carType, String name, CarBodyTypeModel bodyType, LocalDate from, LocalDate to,
-                  LocalDate productionYear, int km, int kw, int capacity, int cilinders, List<String> enginesList,
+                  LocalDate productionYear, int parkNumber, int km, int kw, int capacity, int cilinders, List<String> enginesList,
                   FuelModel fuel, String colorCode, int price, CarWheelSideType wheelSide, String description) {
     this.id = id;
     this.carType = carType;
@@ -40,6 +41,7 @@ public class CarModel {
     this.from = from;
     this.to = to;
     this.productionYear = productionYear;
+    this.parkNumber = parkNumber;
     this.km = km;
     this.kw = kw;
     this.capacity = capacity;
@@ -80,6 +82,10 @@ public class CarModel {
 
   public LocalDate getProductionYear() {
     return productionYear;
+  }
+
+  public int getParkNumber() {
+    return parkNumber;
   }
 
   public int getKm() {
