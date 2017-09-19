@@ -9,10 +9,7 @@ import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.utils.resources.ImageProvider;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Separator;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 
@@ -57,8 +54,9 @@ public class AdminSaveComponentsView extends IterableView implements AdminSaveCo
   public void initButtonsBar(SystemModelsDTO systemModelsDTO) {
     carKitCategoriesTabView = new CarKitCategoriesTabView(systemModelsDTO);
     Region node = carKitCategoriesTabView.asNode();
-    saveBorderPane.setTop(node);
-    node.prefWidthProperty().bind(saveBorderPane.widthProperty());
+    ScrollPane scrollPane = new ScrollPane(node);
+    saveBorderPane.setTop(scrollPane);
+//    node.prefWidthProperty().bind(saveBorderPane.widthProperty());
   }
 
   public Button getPreviousKitButton() {

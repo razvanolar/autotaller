@@ -76,6 +76,15 @@ public class AdminRegisterCarController implements Controller<AdminRegisterCarCo
       }
     });
 
+    view.getEditCarButton().setOnAction(event -> {
+      CarModel selectedCar = view.getDefaultCarView().getCarsTable().getSelectionModel().getSelectedItem();
+      if (selectedCar != null) {
+
+      } else {
+        EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Te rugam selecteaza o masina")));
+      }
+    });
+
     view.getDeleteCarButton().setOnAction(event -> {
       CarModel selectedCar = view.getDefaultCarView().getCarsTable().getSelectionModel().getSelectedItem();
       if (selectedCar != null) {

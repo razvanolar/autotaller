@@ -1,6 +1,7 @@
 package com.autotaller.app.components.app_view.admin_view.admin_register_car_view;
 
 import com.autotaller.app.EventBus;
+import com.autotaller.app.components.app_view.admin_view.admin_register_car_view.utils.CarFormView;
 import com.autotaller.app.components.utils.ImageGalleryPane;
 import com.autotaller.app.components.utils.SimpleDialog;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
@@ -33,29 +34,13 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
   public interface IAdminSaveCarView extends View {
     TableView<CarMakeModel> getCarMakesTable();
     TableView<CarTypeModel> getCarTypesTable();
-    Region getSaveCarForm();
+    CarFormView getCarFormView();
+    Region getSaveCarRegion();
     Button getContinueButton();
     Button getBackButton();
     void setActiveNode(Region node);
     Region getActiveNode();
     Text getPathText();
-    Text getCarMakeText();
-    Text getCarTypeText();
-    TextField getCarNameField();
-    ComboBox<CarBodyTypeModel> getCarBodyTypeCombo();
-    DatePicker getProducedFromPicker();
-    DatePicker getProducedToPicker();
-    DatePicker getProductionYearPicker();
-    TextField getCarParkNumberField();
-    TextField getCarKmField();
-    Spinner<Integer> getCarKwSpinner();
-    Spinner<Integer> getCarCapacitySpinner();
-    Spinner<Integer> getCarCylindersSpinner();
-    TextField getEnginesTextField();
-    ComboBox<FuelModel> getCarFuelCombo();
-    TextField getCarColorCodeField();
-    TextField getCarPriceField();
-    RadioButton getCarLeftWheelRadio();
     TextArea getCarDescriptionTextArea();
     ImageGalleryPane getImageGalleryPane();
   }
@@ -76,7 +61,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
         continueAfterCarMakeSelection();
       } else if (activeNode == view.getCarTypesTable()) {
         continueAfterCarTypeSelection();
-      } else if (activeNode == view.getSaveCarForm()) {
+      } else if (activeNode == view.getSaveCarRegion()) {
         continueAfterSaveCarForm();
       }
     });
@@ -87,7 +72,7 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
         EventBus.fireEvent(new BackToPreviousViewEvent());
       } else if (activeNode == view.getCarTypesTable()) {
         backFromCarTypeView();
-      } else if (activeNode == view.getSaveCarForm()) {
+      } else if (activeNode == view.getSaveCarRegion()) {
         backFromSaveCarFormView();
       }
     });
@@ -125,23 +110,23 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
     CarTypeModel selectedType = view.getCarTypesTable().getSelectionModel().getSelectedItem();
     if (selectedType != null) {
       selectedCarType = selectedType;
-      view.setActiveNode(view.getSaveCarForm());
+      view.setActiveNode(view.getSaveCarRegion());
       setPathInfo();
-      view.getCarMakeText().setText(selectedCarMake.getName());
-      view.getCarTypeText().setText(selectedCarType.getName());
-      view.getProducedFromPicker().setValue(selectedCarType.getFrom());
-      view.getProducedToPicker().setValue(selectedCarType.getTo());
-      ObservableList<FuelModel> fuels = view.getCarFuelCombo().getItems();
-      ObservableList<CarBodyTypeModel> bodyTypes = view.getCarBodyTypeCombo().getItems();
+      view.getCarFormView().getCarMakeText().setText(selectedCarMake.getName());
+      view.getCarFormView().getCarTypeText().setText(selectedCarType.getName());
+      view.getCarFormView().getProducedFromPicker().setValue(selectedCarType.getFrom());
+      view.getCarFormView().getProducedToPicker().setValue(selectedCarType.getTo());
+      ObservableList<FuelModel> fuels = view.getCarFormView().getCarFuelCombo().getItems();
+      ObservableList<CarBodyTypeModel> bodyTypes = view.getCarFormView().getCarBodyTypeCombo().getItems();
       List<FuelModel> fuelsList = carSystemModels.getFuels();
       List<CarBodyTypeModel> bodyTypesList = carSystemModels.getBodyTypes();
       if (fuels.isEmpty() && fuelsList != null && !fuelsList.isEmpty()) {
         fuels.addAll(fuelsList);
-        view.getCarFuelCombo().setValue(fuelsList.get(0));
+        view.getCarFormView().getCarFuelCombo().setValue(fuelsList.get(0));
       }
       if (bodyTypes.isEmpty() && bodyTypesList != null && !bodyTypesList.isEmpty()) {
         bodyTypes.addAll(bodyTypesList);
-        view.getCarBodyTypeCombo().setValue(bodyTypesList.get(0));
+        view.getCarFormView().getCarBodyTypeCombo().setValue(bodyTypesList.get(0));
       }
     } else {
       EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Selecteaza" +
@@ -184,24 +169,25 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
   }
 
   private CarModel collectCar() {
-    String carName = view.getCarNameField().getText();
-    CarBodyTypeModel bodyType = view.getCarBodyTypeCombo().getValue();
-    LocalDate prodYear = view.getProductionYearPicker().getValue();
-    LocalDate prodFrom = view.getProducedFromPicker().getValue();
-    LocalDate prodTo = view.getProducedToPicker().getValue();
-    Integer carKW = view.getCarKwSpinner().getValue();
-    Integer carCapacity = view.getCarCapacitySpinner().getValue();
-    Integer carCylinders = view.getCarCylindersSpinner().getValue();
-    FuelModel carFuel = view.getCarFuelCombo().getValue();
-    String priceText = view.getCarPriceField().getText();
+    CarFormView carFormView = view.getCarFormView();
+    String carName = carFormView.getCarNameField().getText();
+    CarBodyTypeModel bodyType = carFormView.getCarBodyTypeCombo().getValue();
+    LocalDate prodYear = carFormView.getProductionYearPicker().getValue();
+    LocalDate prodFrom = carFormView.getProducedFromPicker().getValue();
+    LocalDate prodTo = carFormView.getProducedToPicker().getValue();
+    Integer carKW = carFormView.getCarKwSpinner().getValue();
+    Integer carCapacity = carFormView.getCarCapacitySpinner().getValue();
+    Integer carCylinders = carFormView.getCarCylindersSpinner().getValue();
+    FuelModel carFuel = carFormView.getCarFuelCombo().getValue();
+    String priceText = carFormView.getCarPriceField().getText();
     if (selectedCarMake == null || selectedCarType == null || StringValidator.isNullOrEmpty(carName) ||
-            prodYear == null || prodFrom == null || !StringValidator.isPositiveInteger(view.getCarKmField().getText()) ||
-            !StringValidator.isPositiveInteger(view.getCarParkNumberField().getText()) ||
+            prodYear == null || prodFrom == null || !StringValidator.isPositiveInteger(carFormView.getCarKmField().getText()) ||
+            !StringValidator.isPositiveInteger(carFormView.getCarParkNumberField().getText()) ||
             carKW == null || carCapacity == null || carCylinders == null || carFuel == null || bodyType == null) {
       return null;
     }
 
-    String enginesText = view.getEnginesTextField().getText();
+    String enginesText = carFormView.getEnginesTextField().getText();
     List<String> engines = null;
     if (!StringValidator.isNullOrEmpty(enginesText)) {
       String[] values = enginesText.trim().split(",");
@@ -214,10 +200,10 @@ public class AdminSaveCarController implements Controller<AdminSaveCarController
 
     int price = StringValidator.isPositiveInteger(priceText) ? Integer.parseInt(priceText) : 0;
     return new CarModel(-1, selectedCarType, carName, bodyType, prodFrom, prodTo, prodYear,
-            Integer.parseInt(view.getCarParkNumberField().getText()),
-            Integer.parseInt(view.getCarKmField().getText()), carKW, carCapacity, carCylinders, engines,
-            carFuel, view.getCarColorCodeField().getText().trim(),
-            price, view.getCarLeftWheelRadio().isSelected() ? CarWheelSideType.LEFT : CarWheelSideType.RIGHT,
+            Integer.parseInt(carFormView.getCarParkNumberField().getText()),
+            Integer.parseInt(carFormView.getCarKmField().getText()), carKW, carCapacity, carCylinders, engines,
+            carFuel, carFormView.getCarColorCodeField().getText().trim(),
+            price, carFormView.getCarLeftWheelRadio().isSelected() ? CarWheelSideType.LEFT : CarWheelSideType.RIGHT,
             view.getCarDescriptionTextArea().getText());
   }
 }
