@@ -29,7 +29,7 @@ public class CarComponentModel {
     this.carSubkitName = carSubkitName;
     this.name = name;
     this.code = code;
-    this.description = description;
+    this.description = description == null ? "" : description;
     this.initial_pieces = initial_pieces;
     this.sold_pieces = sold_pieces;
     this.usageState = usageState;
@@ -104,7 +104,7 @@ public class CarComponentModel {
   }
 
   public void setDescription(String description) {
-    this.description = description;
+    this.description = description == null ? "" : description;
   }
 
   public void setInitialPieces(int initial_pieces) {
