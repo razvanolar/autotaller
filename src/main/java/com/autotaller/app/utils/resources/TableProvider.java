@@ -229,7 +229,7 @@ public class TableProvider {
     TableColumn<CarComponentModel, Integer> priceColumn = new TableColumn<>("Pret");
     TableColumn<CarComponentModel, String> descriptionColumn = new TableColumn<>("Descriere");
 
-    DoubleBinding widthProperty = table.widthProperty().multiply(.124);
+    DoubleBinding widthProperty = table.widthProperty().multiply(.123);
     nameColumn.prefWidthProperty().bind(widthProperty);
     codeCoulmn.prefWidthProperty().bind(widthProperty);
     stockColumn.prefWidthProperty().bind(widthProperty);

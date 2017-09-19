@@ -130,4 +130,9 @@ public class CarComponentModel {
   public void setPrice(int price) {
     this.price = price;
   }
+
+  public CarComponentModel duplicate() {
+    return new CarComponentModel(id, carId, carSubkitId, carSubkitName, name, code, description, initial_pieces, sold_pieces,
+            usageState, price, stock);
+  }
 }

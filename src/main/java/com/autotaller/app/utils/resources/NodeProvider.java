@@ -4,7 +4,9 @@ import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.model.*;
 import com.autotaller.app.model.notifications.SimpleSellModel;
 import com.autotaller.app.model.utils.SystemModelsDTO;
+import com.autotaller.app.utils.StockType;
 import com.autotaller.app.utils.StringValidator;
+import com.autotaller.app.utils.UsageStateType;
 import com.jfoenix.controls.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -158,6 +160,26 @@ public class NodeProvider {
 
   public static ComboBox<CarBodyTypeModel> createCarBodyTypeCombo(int width) {
     ComboBox<CarBodyTypeModel> combo = new ComboBox<>();
+    combo.setPrefWidth(width);
+    return combo;
+  }
+
+  public static ComboBox<StockType> createCarComponentStockTypeCombo() {
+    return createCarComponentStockTypeCombo(DEFAULT_FIELD_WIDTH);
+  }
+
+  public static ComboBox<StockType> createCarComponentStockTypeCombo(int width) {
+    ComboBox<StockType> combo = new ComboBox<>();
+    combo.setPrefWidth(width);
+    return combo;
+  }
+
+  public static ComboBox<UsageStateType> createCarComponentUsageTypeCombo() {
+    return createCarComponentUsageTypeCombo(DEFAULT_FIELD_WIDTH);
+  }
+
+  public static ComboBox<UsageStateType> createCarComponentUsageTypeCombo(int width) {
+    ComboBox<UsageStateType> combo = new ComboBox<>();
     combo.setPrefWidth(width);
     return combo;
   }

@@ -1,9 +1,13 @@
 package com.autotaller.app.components.app_view.admin_view.admin_components_view;
 
 import com.autotaller.app.EventBus;
+import com.autotaller.app.components.app_view.admin_view.admin_components_view.utils.AdminEditComponentView;
+import com.autotaller.app.components.utils.NodeDialog;
 import com.autotaller.app.components.utils.NotificationsUtil;
+import com.autotaller.app.components.utils.SimpleDialog;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
+import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarComponentsEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEvent;
 import com.autotaller.app.events.app_view.admin_view.InjectRepoToAdminEventHandler;
@@ -54,6 +58,8 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
 
     view.getAddComponentButton().setOnAction(event -> EventBus.fireEvent(new ShowSaveCarComponentsEvent()));
 
+    view.getEditComponentButton().setOnAction(event -> onEditComponentEvent(view.getCarComponentsTable().getSelectionModel().getSelectedItem()));
+
     EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> {
       this.repository = event.getRepository();
       initHandlers();
@@ -71,6 +77,20 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     EventBus.addHandler(InjectCarInformationEvent.TYPE, (InjectCarInformationEventHandler) event -> this.injectedCarId = event.getCarId(), true);
 
     EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> load(event.getCallback()), true);
+  }
+
+  private void onEditComponentEvent(CarComponentModel carComponent) {
+    if (carComponent == null) {
+      EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Te rugam selecteaza o componenta")));
+      return;
+    }
+
+    AdminEditComponentView editView = new AdminEditComponentView(carComponent.duplicate());
+    NodeDialog dialog = new NodeDialog("Editare Componenta", "Editeaza", editView.asNode());
+    EventBus.fireEvent(new ShowDialogEvent(dialog));
+    dialog.getConfirmationButton().setOnAction(event -> {
+      
+    });
   }
 
   private void initHandlers() {
