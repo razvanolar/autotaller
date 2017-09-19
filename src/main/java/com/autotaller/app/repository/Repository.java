@@ -278,6 +278,10 @@ public class Repository {
     carComponentsService.cancelSellModel(sellModel.getId());
   }
 
+  public void editComponent(CarComponentModel carComponent) throws Exception {
+    carComponentsService.editComponent(carComponent);
+  }
+
 
 
   /*

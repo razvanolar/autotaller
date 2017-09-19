@@ -234,6 +234,31 @@ public class CarComponentsService extends GenericService {
     }
   }
 
+  public void editComponent(CarComponentModel carComponent) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      String sql = "UPDATE car_components SET component_name = ?, code = ?, description = ?, stock = ?, initial_pieces_no = ?, usage_state = ?, price = ? WHERE id = ?";
+      connection = jdbcUtil.getNewConnection();
+      statement = connection.prepareStatement(sql);
+      statement.setString(1, carComponent.getName());
+      statement.setString(2, carComponent.getCode());
+      statement.setString(3, carComponent.getDescription());
+      statement.setInt(4, carComponent.getStock().getId());
+      statement.setInt(5, carComponent.getInitialPieces());
+      statement.setInt(6, carComponent.getUsageState().getId());
+      statement.setInt(7, carComponent.getPrice());
+      statement.setInt(8, carComponent.getId());
+      statement.executeUpdate();
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
+
   private List<CarComponentModel> getCarComponentsFromStatement(Connection connection, PreparedStatement statement) throws Exception {
     ResultSet componentResultSet = null;
     PreparedStatement sellStatement = null;

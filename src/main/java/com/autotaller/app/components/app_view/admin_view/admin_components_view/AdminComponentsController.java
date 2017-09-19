@@ -18,10 +18,7 @@ import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.events.view_stack.BackToPreviousViewEvent;
 import com.autotaller.app.model.CarComponentModel;
 import com.autotaller.app.repository.Repository;
-import com.autotaller.app.utils.Component;
-import com.autotaller.app.utils.ComponentType;
-import com.autotaller.app.utils.Controller;
-import com.autotaller.app.utils.View;
+import com.autotaller.app.utils.*;
 import com.autotaller.app.utils.callbacks.EmptyCallback;
 import com.autotaller.app.utils.factories.ComponentFactory;
 import javafx.application.Platform;
@@ -89,7 +86,13 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     NodeDialog dialog = new NodeDialog("Editare Componenta", "Editeaza", editView.asNode());
     EventBus.fireEvent(new ShowDialogEvent(dialog));
     dialog.getConfirmationButton().setOnAction(event -> {
-      
+      CarComponentModel component = editView.getCarComponent();
+      if (!ModelValidator.isValidCarComponent(component)) {
+        EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Unele campuri nu sunt completate corect")));
+        return;
+      }
+      EventBus.fireEvent(new EditCarComponentEvent(component));
+      dialog.close();
     });
   }
 
@@ -118,6 +121,32 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
         NotificationsUtil.showErrorNotification("Eroare", "A aparut o eroare la adaugarea componentelor", -1);
+      }
+    }, true);
+
+    EventBus.addHandler(EditCarComponentEvent.TYPE, (EditCarComponentEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Editare componenta..."));
+        Thread thread = new Thread(() -> {
+          try {
+            repository.editComponent(event.getCarComponent());
+            Platform.runLater(() -> {
+              NotificationsUtil.showInfoNotification("Info", "Componenta a fost editata cu succes", 5);
+              EventBus.fireEvent(new UnmaskViewEvent());
+              load(null);
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+        NotificationsUtil.showErrorNotification("Eroare", "A aparut o eroare la editarea componentei", -1);
       }
     }, true);
   }
