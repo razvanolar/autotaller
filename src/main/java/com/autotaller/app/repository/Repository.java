@@ -282,6 +282,11 @@ public class Repository {
     carComponentsService.editComponent(carComponent);
   }
 
+  public void deleteComponent(CarComponentModel carComponent) throws Exception {
+    carComponentsService.deleteComponent(carComponent);
+  }
+
+
 
 
   /*

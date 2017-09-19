@@ -5,6 +5,7 @@ import com.autotaller.app.components.app_view.admin_view.admin_components_view.u
 import com.autotaller.app.components.utils.NodeDialog;
 import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.components.utils.SimpleDialog;
+import com.autotaller.app.components.utils.YesNoDialog;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
@@ -57,6 +58,8 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
 
     view.getEditComponentButton().setOnAction(event -> onEditComponentEvent(view.getCarComponentsTable().getSelectionModel().getSelectedItem()));
 
+    view.getDeleteComponentButton().setOnAction(event -> onDeleteComponentEvent(view.getCarComponentsTable().getSelectionModel().getSelectedItem()));
+
     EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> {
       this.repository = event.getRepository();
       initHandlers();
@@ -92,6 +95,20 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
         return;
       }
       EventBus.fireEvent(new EditCarComponentEvent(component));
+      dialog.close();
+    });
+  }
+
+  private void onDeleteComponentEvent(CarComponentModel carComponent) {
+    if (carComponent == null) {
+      EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Te rugam selecteaza o componenta")));
+      return;
+    }
+
+    YesNoDialog dialog = new YesNoDialog("Atentie", "Esti sigur ca vrei sa stergi componenta: " + carComponent.getName() + "?");
+    EventBus.fireEvent(new ShowDialogEvent(dialog));
+    dialog.getYesButton().setOnAction(event -> {
+      EventBus.fireEvent(new DeleteCarComponentEvent(carComponent));
       dialog.close();
     });
   }
@@ -147,6 +164,32 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
         NotificationsUtil.showErrorNotification("Eroare", "A aparut o eroare la editarea componentei", -1);
+      }
+    }, true);
+
+    EventBus.addHandler(DeleteCarComponentEvent.TYPE, (DeleteCarComponentEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Stergere componenta..."));
+        Thread thread = new Thread(() -> {
+          try {
+            repository.deleteComponent(event.getCarComponent());
+            Platform.runLater(() -> {
+              NotificationsUtil.showInfoNotification("Info", "Componenta a fost stearsa cu succes", 5);
+              EventBus.fireEvent(new UnmaskViewEvent());
+              load(null);
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+        NotificationsUtil.showErrorNotification("Eroare", "A aparut o eroare la stergerea componentei", -1);
       }
     }, true);
   }

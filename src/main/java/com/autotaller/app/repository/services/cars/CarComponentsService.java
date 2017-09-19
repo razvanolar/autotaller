@@ -238,8 +238,8 @@ public class CarComponentsService extends GenericService {
     Connection connection = null;
     PreparedStatement statement = null;
     try {
-      String sql = "UPDATE car_components SET component_name = ?, code = ?, description = ?, stock = ?, initial_pieces_no = ?, usage_state = ?, price = ? WHERE id = ?";
       connection = jdbcUtil.getNewConnection();
+      String sql = "UPDATE car_components SET component_name = ?, code = ?, description = ?, stock = ?, initial_pieces_no = ?, usage_state = ?, price = ? WHERE id = ?";
       statement = connection.prepareStatement(sql);
       statement.setString(1, carComponent.getName());
       statement.setString(2, carComponent.getCode());
@@ -249,6 +249,24 @@ public class CarComponentsService extends GenericService {
       statement.setInt(6, carComponent.getUsageState().getId());
       statement.setInt(7, carComponent.getPrice());
       statement.setInt(8, carComponent.getId());
+      statement.executeUpdate();
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
+
+  public void deleteComponent(CarComponentModel carComponent) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      String sql = "DELETE FROM car_components WHERE id = ?";
+      statement = connection.prepareStatement(sql);
+      statement.setInt(1, carComponent.getId());
       statement.executeUpdate();
     } catch (Exception e) {
       //TODO handle exception

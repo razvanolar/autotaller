@@ -26,6 +26,7 @@ public class AdminEditComponentView implements View {
   private Spinner<Integer> piecesSpinner;
   private ComboBox<UsageStateType> usageComboBox;
   private Spinner<Integer> priceSpinner;
+  private TextField descriptionTextField;
 
   private int minPiecesNo;
 
@@ -43,6 +44,7 @@ public class AdminEditComponentView implements View {
     piecesSpinner = NodeProvider.createSpinner(minPiecesNo, Integer.MAX_VALUE, carComponent.getInitialPieces(), 1);
     usageComboBox = NodeProvider.createCarComponentUsageTypeCombo();
     priceSpinner = NodeProvider.createSpinner(1, Integer.MAX_VALUE, carComponent.getPrice(), 1);
+    descriptionTextField = NodeProvider.createTextField();
 
     nameTextField.setText(carComponent.getName());
     codeTextField.setText(carComponent.getCode());
@@ -69,7 +71,9 @@ public class AdminEditComponentView implements View {
     mainContainer.add(NodeProvider.createFormTextLabel("Grad uzura: "), 0, row);
     mainContainer.add(usageComboBox, 1, row++);
     mainContainer.add(NodeProvider.createFormTextLabel("Pret: "), 0, row);
-    mainContainer.add(priceSpinner, 1, row);
+    mainContainer.add(priceSpinner, 1, row++);
+    mainContainer.add(NodeProvider.createFormTextLabel("Descriere: "), 0, row);
+    mainContainer.add(descriptionTextField, 1, row);
   }
 
   private void addListeners() {
@@ -79,6 +83,7 @@ public class AdminEditComponentView implements View {
     usageComboBox.valueProperty().addListener((observable, oldValue, newValue) -> carComponent.setUsageState(newValue));
     piecesSpinner.valueProperty().addListener((observable, oldValue, newValue) -> carComponent.setInitialPieces(newValue));
     priceSpinner.valueProperty().addListener((observable, oldValue, newValue) -> carComponent.setPrice(newValue));
+    descriptionTextField.textProperty().addListener((observable, oldValue, newValue) -> carComponent.setDescription(newValue));
     piecesSpinner.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
       if (!StringValidator.isPositiveInteger(newValue)) {
         return;
