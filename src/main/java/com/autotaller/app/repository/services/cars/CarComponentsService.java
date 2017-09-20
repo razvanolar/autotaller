@@ -32,12 +32,38 @@ public class CarComponentsService extends GenericService {
     super(jdbcUtil);
   }
 
-  public List<CarComponentModel> getCarComponents() throws Exception {
+  public int getCarComponentsCount() throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet rs = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      String query = "SELECT count(*) FROM car_components";
+      statement = connection.prepareStatement(query);
+      rs = statement.executeQuery();
+      return rs.next() ? rs.getInt(1) : 0;
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, rs);
+    }
+  }
+
+  /**
+   * Retrieve car components in the specified bound. If @offset is -1 then all DB entries will be selected
+   * @param limit  - number of entries to be returned
+   * @param offset - select entries starting from the specified offset
+   * @return a list of car components
+   * @throws Exception if their will be some unexpected sql error
+   */
+  public List<CarComponentModel> getCarComponents(int limit, int offset) throws Exception {
     Connection connection = null;
     PreparedStatement statement = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = SELECT_ALL_COMPONENTS;
+      String query = SELECT_ALL_COMPONENTS + (offset >= 0 ? " LIMIT " + limit + " OFFSET " + offset : "");
       statement = connection.prepareStatement(query);
       return getCarComponentsFromStatement(connection, statement);
     } catch (Exception e) {

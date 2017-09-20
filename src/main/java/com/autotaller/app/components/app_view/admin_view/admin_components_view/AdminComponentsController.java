@@ -27,6 +27,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.text.Text;
 
 import java.util.List;
 
@@ -42,13 +43,21 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     ToggleButton getFilterComponentsButton();
     Button getDetailsButton();
     TableView<CarComponentModel> getCarComponentsTable();
+    Text getPagesCounterLabel();
+    Button getPreviousPageButton();
+    Button getNextPageButton();
   }
+
+  private static int ENTRIES_PER_PAGE = 100;
 
   private Repository repository;
   private int injectedCarId = -1;
   private IAdminComponentsView view;
 
   private List<CarComponentModel> carComponents;
+  private int componentsCount;
+  private int totalPages;
+  private int currentPage;
 
   @Override
   public void bind(IAdminComponentsView view) {
@@ -59,6 +68,11 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     view.getEditComponentButton().setOnAction(event -> onEditComponentEvent(view.getCarComponentsTable().getSelectionModel().getSelectedItem()));
 
     view.getDeleteComponentButton().setOnAction(event -> onDeleteComponentEvent(view.getCarComponentsTable().getSelectionModel().getSelectedItem()));
+
+    view.getPreviousPageButton().setOnAction(event -> onPreviousPageEvent());
+
+    view.getNextPageButton().setOnAction(event -> onNextPageEvent());
+
 
     EventBus.addHandler(InjectRepoToAdminEvent.TYPE, (InjectRepoToAdminEventHandler) event -> {
       this.repository = event.getRepository();
@@ -76,7 +90,7 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
 
     EventBus.addHandler(InjectCarInformationEvent.TYPE, (InjectCarInformationEventHandler) event -> this.injectedCarId = event.getCarId(), true);
 
-    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> load(event.getCallback()), true);
+    EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> load(event.getCallback(), true), true);
   }
 
   private void onEditComponentEvent(CarComponentModel carComponent) {
@@ -113,6 +127,24 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     });
   }
 
+  private void onPreviousPageEvent() {
+    if (currentPage <= 1) {
+      return;
+    }
+    currentPage--;
+    updatePageCounter();
+    load(null, false);
+  }
+
+  private void onNextPageEvent() {
+    if (currentPage >= totalPages) {
+      return;
+    }
+    currentPage++;
+    updatePageCounter();
+    load(null, false);
+  }
+
   private void initHandlers() {
     EventBus.addHandler(AddCarComponentsEvent.TYPE, (AddCarComponentsEventHandler) event -> {
       try {
@@ -124,7 +156,7 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
               NotificationsUtil.showInfoNotification("Info", "Componentele au fost adaugate cu succes", 5);
               EventBus.fireEvent(new UnmaskViewEvent());
               EventBus.fireEvent(new BackToPreviousViewEvent());
-              load(null);
+              load(null, true);
             });
           } catch (Exception e) {
             //TODO handle exception
@@ -150,7 +182,7 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
             Platform.runLater(() -> {
               NotificationsUtil.showInfoNotification("Info", "Componenta a fost editata cu succes", 5);
               EventBus.fireEvent(new UnmaskViewEvent());
-              load(null);
+              load(null, false);
             });
           } catch (Exception e) {
             //TODO handle exception
@@ -176,7 +208,7 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
             Platform.runLater(() -> {
               NotificationsUtil.showInfoNotification("Info", "Componenta a fost stearsa cu succes", 5);
               EventBus.fireEvent(new UnmaskViewEvent());
-              load(null);
+              load(null, true);
             });
           } catch (Exception e) {
             //TODO handle exception
@@ -194,13 +226,22 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     }, true);
   }
 
-  private void load(EmptyCallback callback) {
+  private void load(EmptyCallback callback, boolean resetPageCounter) {
     if (injectedCarId <= 0) {
-      EventBus.fireEvent(new GetCarComponentsEvent(components -> {
-        loadComponents(components);
-        if (callback != null)
-          callback.call();
-      }));
+      if (resetPageCounter) {
+        EventBus.fireEvent(new GetCarComponentsCountEvent(componentsCount -> {
+          if (componentsCount == 0) {
+            return;
+          }
+          this.componentsCount = componentsCount;
+          totalPages = computePagesNumber(componentsCount);
+          currentPage = 1;
+          updatePageCounter();
+          loadComponents(callback);
+        }));
+      } else {
+        loadComponents(callback);
+      }
     } else {
       EventBus.fireEvent(new GetCarComponentsByCarIdEvent(injectedCarId, components -> {
         loadComponents(components);
@@ -210,10 +251,27 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     }
   }
 
+  private void loadComponents(EmptyCallback callback) {
+    EventBus.fireEvent(new GetCarComponentsEvent(components -> {
+      loadComponents(components);
+      if (callback != null)
+        callback.call();
+    }, ENTRIES_PER_PAGE, currentPage > 0 ? (currentPage - 1) * ENTRIES_PER_PAGE : -1));
+  }
+
   private void loadComponents(List<CarComponentModel> carComponents) {
     this.carComponents = carComponents;
     ObservableList<CarComponentModel> items = view.getCarComponentsTable().getItems();
     items.clear();
     items.addAll(carComponents);
+  }
+
+  private void updatePageCounter() {
+    view.getPagesCounterLabel().setText("Pagina: " + currentPage + "/" + totalPages);
+  }
+
+  private int computePagesNumber(int totalEntries) {
+    int pages = totalEntries / ENTRIES_PER_PAGE;
+    return totalEntries % ENTRIES_PER_PAGE > 0 ? pages + 1 : pages;
   }
 }

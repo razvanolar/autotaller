@@ -228,8 +228,12 @@ public class Repository {
   /*
     CarComponentsService
    */
-  public List<CarComponentModel> getCarComponents() throws Exception {
-    return carComponentsService.getCarComponents();
+  public int getCarComponentsCount() throws Exception {
+    return carComponentsService.getCarComponentsCount();
+  }
+
+  public List<CarComponentModel> getCarComponents(int limit, int offset) throws Exception {
+    return carComponentsService.getCarComponents(limit, offset);
   }
 
   public List<CarComponentModel> getCarComponentsByCarId(int carId) throws Exception {

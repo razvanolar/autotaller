@@ -1,5 +1,6 @@
 package com.autotaller.app.components.app_view.admin_view.admin_components_view;
 
+import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.model.CarComponentModel;
 import com.autotaller.app.utils.resources.ImageProvider;
@@ -8,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 /**
  * Created by razvanolar on 13.05.2017
@@ -24,6 +26,10 @@ public class AdminComponentsView extends IterableView implements AdminComponents
   private ToggleButton filterComponentsButton;
   private Button detailsButton;
 
+  private Text pagesCounterLabel;
+  private Button previousPageButton;
+  private Button nextPageButton;
+
   private double lastDividerPosition = 0.3;
 
   public AdminComponentsView() {
@@ -36,9 +42,13 @@ public class AdminComponentsView extends IterableView implements AdminComponents
     deleteComponentButton = NodeProvider.createToolbarButton("Sterge", ImageProvider.deleteIcon());
     filterComponentsButton = NodeProvider.createToolbarToggleButton("Filtreaza", ImageProvider.filterIcon());
     detailsButton = NodeProvider.createToolbarButton("Detalii", ImageProvider.detailsIcon());
+    pagesCounterLabel = NodeProvider.createTextLabel("Pagina 0/0", 12, false);
+    previousPageButton = NodeProvider.createToolbarButton("Pagina Anterioara", ImageProvider.backIcon());
+    nextPageButton = NodeProvider.createToolbarButton("Pagina Urmatoare", ImageProvider.nextIcon());
 
     toolBar.getItems().addAll(new Separator(), addComponentButton, editComponentButton, deleteComponentButton,
-            new Separator(), filterComponentsButton, detailsButton);
+            new Separator(), filterComponentsButton, detailsButton, new FillToolItem(), pagesCounterLabel,
+            new Separator(), previousPageButton, nextPageButton);
 
     carComponentsTable = NodeProvider.createCarComponentTable(true);
     filterPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
@@ -47,6 +57,7 @@ public class AdminComponentsView extends IterableView implements AdminComponents
     mainSplitPane.setDividerPosition(0, lastDividerPosition);
 
     borderPane.setCenter(mainSplitPane);
+    nextPageButton.setContentDisplay(ContentDisplay.RIGHT);
   }
 
   public Button getAddComponentButton() {
@@ -71,6 +82,18 @@ public class AdminComponentsView extends IterableView implements AdminComponents
 
   public TableView<CarComponentModel> getCarComponentsTable() {
     return carComponentsTable;
+  }
+
+  public Text getPagesCounterLabel() {
+    return pagesCounterLabel;
+  }
+
+  public Button getPreviousPageButton() {
+    return previousPageButton;
+  }
+
+  public Button getNextPageButton() {
+    return nextPageButton;
   }
 
   @Override

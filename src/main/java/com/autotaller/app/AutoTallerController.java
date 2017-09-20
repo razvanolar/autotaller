@@ -5,10 +5,7 @@ import com.autotaller.app.components.utils.NotificationsUtil;
 import com.autotaller.app.components.utils.PasswordDialog;
 import com.autotaller.app.events.app_view.*;
 import com.autotaller.app.events.app_view.admin_view.*;
-import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarAndKitIdEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarAndKitIdEventHandler;
-import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_components.GetCarComponentsByCarIdEventHandler;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.*;
 import com.autotaller.app.events.app_view.search_views.AddPreSellComponentEvent;
 import com.autotaller.app.events.app_view.search_views.AddPreSellComponentEventHandler;
 import com.autotaller.app.events.login_view.*;
@@ -65,7 +62,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
             // remove the handler after the db connection was tested successfully
             EventBus.removeHandlersByType(TestConnectionEvent.TYPE);
             EventBus.fireEvent(new ShowLoginScreenEvent());
-//            EventBus.fireEvent(new TestCredentialsEvent("admin", "admin"));
+            EventBus.fireEvent(new TestCredentialsEvent("admin", "admin"));
           });
         } catch (Exception e) {
           e.printStackTrace();
@@ -399,7 +396,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         EventBus.fireEvent(new MaskViewEvent("Incarcare Componente"));
         Thread thread = new Thread(() -> {
           try {
-            List<CarComponentModel> result = repository.getCarComponents();
+            List<CarComponentModel> result = repository.getCarComponents(event.getLimit(), event.getOffset());
             Platform.runLater(() -> {
               EventBus.fireEvent(new UnmaskViewEvent());
               event.getCallback().call(result);
@@ -542,7 +539,31 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
+
+    EventBus.addHandler(GetCarComponentsCountEvent.TYPE, (GetCarComponentsCountEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Interogare numar componente..."));
+        Thread thread = new Thread(() -> {
+          try {
+            int carComponentsCount = repository.getCarComponentsCount();
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(carComponentsCount);
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    }, true);
   }
 
   private void initAutotallerUtilities() {

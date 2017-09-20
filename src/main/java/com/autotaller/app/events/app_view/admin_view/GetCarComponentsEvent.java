@@ -12,13 +12,25 @@ public class GetCarComponentsEvent extends Event<GetCarComponentsEventHandler> {
   public static EventType<GetCarComponentsEventHandler> TYPE = new EventType<>();
 
   private LoadCarComponentsCallback callback;
+  private int limit;
+  private int offset;
 
-  public GetCarComponentsEvent(LoadCarComponentsCallback callback) {
+  public GetCarComponentsEvent(LoadCarComponentsCallback callback, int limit, int offset) {
     this.callback = callback;
+    this.limit = limit;
+    this.offset = offset;
   }
 
   public LoadCarComponentsCallback getCallback() {
     return callback;
+  }
+
+  public int getLimit() {
+    return limit;
+  }
+
+  public int getOffset() {
+    return offset;
   }
 
   @Override
