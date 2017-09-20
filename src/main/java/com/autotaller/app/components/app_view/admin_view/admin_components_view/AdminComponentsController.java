@@ -46,6 +46,7 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     Text getPagesCounterLabel();
     Button getPreviousPageButton();
     Button getNextPageButton();
+    void hidePaginatingComponents();
   }
 
   private static int ENTRIES_PER_PAGE = 100;
@@ -243,6 +244,7 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
         loadComponents(callback);
       }
     } else {
+      view.hidePaginatingComponents();
       EventBus.fireEvent(new GetCarComponentsByCarIdEvent(injectedCarId, components -> {
         loadComponents(components);
         if (callback != null)

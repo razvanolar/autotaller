@@ -31,6 +31,7 @@ public class AdminComponentsView extends IterableView implements AdminComponents
   private Button nextPageButton;
 
   private double lastDividerPosition = 0.3;
+  private Separator separator;
 
   public AdminComponentsView() {
     init();
@@ -46,9 +47,10 @@ public class AdminComponentsView extends IterableView implements AdminComponents
     previousPageButton = NodeProvider.createToolbarButton("Pagina Anterioara", ImageProvider.backIcon());
     nextPageButton = NodeProvider.createToolbarButton("Pagina Urmatoare", ImageProvider.nextIcon());
 
+    separator = new Separator();
     toolBar.getItems().addAll(new Separator(), addComponentButton, editComponentButton, deleteComponentButton,
             new Separator(), filterComponentsButton, detailsButton, new FillToolItem(), pagesCounterLabel,
-            new Separator(), previousPageButton, nextPageButton);
+            separator, previousPageButton, nextPageButton);
 
     carComponentsTable = NodeProvider.createCarComponentTable(true);
     filterPane = NodeProvider.createGridPane(Pos.CENTER, 10, 10);
@@ -58,6 +60,10 @@ public class AdminComponentsView extends IterableView implements AdminComponents
 
     borderPane.setCenter(mainSplitPane);
     nextPageButton.setContentDisplay(ContentDisplay.RIGHT);
+  }
+
+  public void hidePaginatingComponents() {
+    toolBar.getItems().removeAll(pagesCounterLabel, separator, previousPageButton, nextPageButton);
   }
 
   public Button getAddComponentButton() {
