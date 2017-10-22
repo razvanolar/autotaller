@@ -112,15 +112,23 @@ public class CarComponentsService extends GenericService {
     }
   }
 
+  /**
+   *  If @carId is 0 then we will select the components only by @kitId
+   */
   public List<CarComponentModel> getComponentsByCarAndKitId(int carId, int kitId) throws Exception {
     Connection connection = null;
     PreparedStatement statement = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = SELECT_ALL_COMPONENTS + " INNER JOIN car_kits ck ON cs.car_kit_id = ck.id WHERE car_id = ? AND ck.id = ?";
+      String query = SELECT_ALL_COMPONENTS + " INNER JOIN car_kits ck ON cs.car_kit_id = ck.id WHERE ck.id = ?";
+      if (carId > 0) {
+        query += " car_id = ?";
+      }
       statement = connection.prepareStatement(query);
-      statement.setInt(1, carId);
-      statement.setInt(2, kitId);
+      statement.setInt(1, kitId);
+      if (carId > 0) {
+        statement.setInt(2, carId);
+      }
       return getCarComponentsFromStatement(connection, statement);
     } catch (Exception e) {
       //TODO handle exception

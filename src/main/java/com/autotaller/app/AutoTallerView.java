@@ -17,6 +17,7 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
   private Node adminMenu;
   private Node notificationsMenu;
   private Node exitMenu;
+  private Node componentsMenu;
 
   public AutoTallerView() {
     super();
@@ -25,7 +26,7 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
 
   private void init() {
     carsMenu = NodeProvider.createAppMenu("Masini", ImageProvider.carMenuIcon());
-    Node componentsMenu = NodeProvider.createAppMenu("Componente", ImageProvider.componentMenuIcon());
+    componentsMenu = NodeProvider.createAppMenu("Componente", ImageProvider.componentMenuIcon());
     Node searchMenu = NodeProvider.createAppMenu("Cautare", ImageProvider.searchMenuIcon());
     Node clientsMenu = NodeProvider.createAppMenu("Clienti", ImageProvider.clientsMenuIcon());
     adminMenu = NodeProvider.createAppMenu("Administrare", ImageProvider.adminMenuIcon());
@@ -52,6 +53,10 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
 
   public Node getCarsMenu() {
     return carsMenu;
+  }
+
+  public Node getComponentsMenu() {
+    return componentsMenu;
   }
 
   public Node getAdminMenu() {

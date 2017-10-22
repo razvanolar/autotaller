@@ -39,6 +39,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
 
   public interface IAutoTallerView extends View {
     Node getCarsMenu();
+    Node getComponentsMenu();
     Node getAdminMenu();
     Node getNotificationsMenu();
     Node getExitMenu();
@@ -62,7 +63,7 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
             // remove the handler after the db connection was tested successfully
             EventBus.removeHandlersByType(TestConnectionEvent.TYPE);
             EventBus.fireEvent(new ShowLoginScreenEvent());
-            EventBus.fireEvent(new TestCredentialsEvent("admin", "admin"));
+//            EventBus.fireEvent(new TestCredentialsEvent("admin", "admin"));
           });
         } catch (Exception e) {
           e.printStackTrace();
@@ -135,6 +136,13 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
       if (component != null) {
         EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.SEARCH_CAR_MAKE_VIEW.getTitle()));
         EventBus.fireEvent(new BindLastViewEvent());
+      }
+    });
+
+    autoTallerView.getComponentsMenu().setOnMouseClicked(event -> {
+      Component component = ComponentFactory.createComponent(ComponentType.SEARCH_COMPONENTS_MAIN_VIEW);
+      if (component != null) {
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.SEARCH_COMPONENTS_MAIN_VIEW.getTitle()));
       }
     });
 

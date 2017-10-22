@@ -52,7 +52,7 @@ public class AutoTallerApplication extends Application {
   private JFXDialog activeDialog;
 
   @Override
-  public void init() throws Exception {
+  public void start(Stage primaryStage) throws Exception {
     viewStack = new Stack<>();
     defaultThemePath = StyleProvider.getDefaultTheme();
     loadingScreenPane = new BorderPane();
@@ -91,10 +91,7 @@ public class AutoTallerApplication extends Application {
     EventBus.addHandler(ShowAppViewEvent.TYPE, (ShowAppViewEventHandler) event -> initAndShowAppScreen(event.getAppView()));
 
     initStackViewHandlers();
-  }
 
-  @Override
-  public void start(Stage primaryStage) throws Exception {
     this.primaryStage = primaryStage;
     initAndShowLoadingScreen();
   }

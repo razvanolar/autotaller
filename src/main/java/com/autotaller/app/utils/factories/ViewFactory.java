@@ -21,6 +21,7 @@ import com.autotaller.app.components.app_view.cars_view.search_car_type_view.Sea
 import com.autotaller.app.components.app_view.cars_view.search_car_view.SearchCarView;
 import com.autotaller.app.components.app_view.cars_view.show_car_kits_view.ShowCarKitsView;
 import com.autotaller.app.components.app_view.notifications_view.NotificationsView;
+import com.autotaller.app.components.app_view.search_components_view.SearchComponentsMainView;
 import com.autotaller.app.components.login_view.login.LoginView;
 import com.autotaller.app.components.login_view.sign_up.SignUpView;
 import com.autotaller.app.utils.ComponentType;
@@ -73,6 +74,8 @@ public class ViewFactory {
         return new SearchCarView();
       case SHOW_CAR_KITS_VIEW:
         return new ShowCarKitsView();
+      case SEARCH_COMPONENTS_MAIN_VIEW:
+        return new SearchComponentsMainView();
       case SEARCH_CAR_COMPONENTS_VIEW:
         return new SearchCarComponentsView();
       case NOTIFICATIONS_VIEW:

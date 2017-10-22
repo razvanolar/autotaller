@@ -12,7 +12,6 @@ import com.autotaller.app.events.app_view.search_views.InjectCarEventHandler;
 import com.autotaller.app.events.view_stack.AddViewToStackEvent;
 import com.autotaller.app.model.CarKitModel;
 import com.autotaller.app.model.CarModel;
-import com.autotaller.app.model.utils.CarDefinedModelsDTO;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.utils.Component;
 import com.autotaller.app.utils.ComponentType;
@@ -47,7 +46,8 @@ public class ShowCarKitsController implements Controller<ShowCarKitsController.I
     if (component != null) {
       String title = ComponentType.SEARCH_CAR_COMPONENTS_VIEW.getTitle();
       EventBus.fireEvent(new AddViewToStackEvent(component.getView(), title + " (" + catKit.getName() + ")"));
-      EventBus.fireEvent(new InjectCarInformationEvent(selectedCar.getId()));
+      if (selectedCar != null)
+        EventBus.fireEvent(new InjectCarInformationEvent(selectedCar.getId()));
       EventBus.fireEvent(new InjectCarKitInformationEvent(catKit.getId()));
       EventBus.fireEvent(new BindLastViewEvent());
     }

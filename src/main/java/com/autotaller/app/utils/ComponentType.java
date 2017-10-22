@@ -24,6 +24,7 @@ public enum ComponentType {
   SEARCH_CAR_TYPE_VIEW("Cautare Model"),
   SEARCH_CAR_VIEW("Cautare Masina"),
   SHOW_CAR_KITS_VIEW("Prezentare Ansamble"),
+  SEARCH_COMPONENTS_MAIN_VIEW("Cautare Componente"),
   SEARCH_CAR_COMPONENTS_VIEW("Cautare Componente"),
   NOTIFICATIONS_VIEW("Notificari Vanzari"),
   CAR_STATISTICS_VIEW("Statistici Masina");

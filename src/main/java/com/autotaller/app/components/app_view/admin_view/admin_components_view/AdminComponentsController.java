@@ -104,13 +104,18 @@ public class AdminComponentsController implements Controller<AdminComponentsCont
     NodeDialog dialog = new NodeDialog("Editare Componenta", "Editeaza", editView.asNode());
     EventBus.fireEvent(new ShowDialogEvent(dialog));
     dialog.getConfirmationButton().setOnAction(event -> {
-      CarComponentModel component = editView.getCarComponent();
-      if (!ModelValidator.isValidCarComponent(component)) {
-        EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Unele campuri nu sunt completate corect")));
-        return;
-      }
-      EventBus.fireEvent(new EditCarComponentEvent(component));
-      dialog.close();
+      YesNoDialog yesNoDialog = new YesNoDialog("Confirmare", "Sigur doresti sa editezi aceasta componenta?");
+      EventBus.fireEvent(new ShowDialogEvent(yesNoDialog));
+      yesNoDialog.getYesButton().setOnAction(event1 -> {
+        CarComponentModel component = editView.getCarComponent();
+        if (!ModelValidator.isValidCarComponent(component)) {
+          EventBus.fireEvent(new ShowDialogEvent(new SimpleDialog("Atentie", "Ok", "Unele campuri nu sunt completate corect")));
+          return;
+        }
+        EventBus.fireEvent(new EditCarComponentEvent(component));
+        yesNoDialog.close();
+        dialog.close();
+      });
     });
   }
 
