@@ -248,6 +248,10 @@ public class Repository {
     return carComponentsService.getCarComponentById(componentId);
   }
 
+  public List<CarComponentModel> getCarComponentBySearchModel(SearchComponentModel searchModel) throws Exception {
+    return carComponentsService.getCarComponentBySearchModel(searchModel);
+  }
+
   public void addComponents(List<CarComponentModel> components) throws Exception {
     carComponentsService.addComponents(components);
   }

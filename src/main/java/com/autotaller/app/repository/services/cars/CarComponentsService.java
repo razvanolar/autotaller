@@ -1,6 +1,7 @@
 package com.autotaller.app.repository.services.cars;
 
 import com.autotaller.app.model.CarComponentModel;
+import com.autotaller.app.model.SearchComponentModel;
 import com.autotaller.app.model.notifications.SimpleSellModel;
 import com.autotaller.app.model.utils.PreSellComponentModel;
 import com.autotaller.app.repository.services.GenericService;
@@ -85,6 +86,23 @@ public class CarComponentsService extends GenericService {
       statement.setInt(1, componentId);
       List<CarComponentModel> result = getCarComponentsFromStatement(connection, statement);
       return result != null && !result.isEmpty() ? result.get(0) : null;
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);
+    }
+  }
+
+  public List<CarComponentModel> getCarComponentBySearchModel(SearchComponentModel searchModel) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      connection = jdbcUtil.getNewConnection();
+      String query = SELECT_ALL_COMPONENTS + " WHERE " + concatenateSearchConditions(computeSearchConditions(searchModel));
+      statement = connection.prepareStatement(query);
+      return getCarComponentsFromStatement(connection, statement);
     } catch (Exception e) {
       //TODO handle exception
       e.printStackTrace();
@@ -373,5 +391,60 @@ public class CarComponentsService extends GenericService {
     } finally {
       jdbcUtil.closeResultSet(rs);
     }
+  }
+
+  private String concatenateSearchConditions(List<String> conditions) {
+    if (conditions == null || conditions.isEmpty())
+      return "";
+    StringBuilder builder = new StringBuilder();
+    builder.append(conditions.get(0));
+    if (conditions.size() == 1)
+      return builder.toString();
+    builder.append(" AND ");
+    for (int i = 1; i < conditions.size(); i++) {
+      builder.append(conditions.get(i));
+      if (i < conditions.size() - 1)
+        builder.append(" AND ");
+    }
+    return builder.toString();
+  }
+
+  private List<String> computeSearchConditions(SearchComponentModel searchModel) {
+    if (searchModel == null)
+      return new ArrayList<>();
+    List<String> list = new ArrayList<>();
+    if (!StringValidator.isNullOrEmpty(searchModel.getName()))
+      list.add("cc.component_name LIKE '%" + searchModel.getName() + "%'");
+    if (!StringValidator.isNullOrEmpty(searchModel.getCode()))
+      list.add("cc.code LIKE '%" + searchModel.getCode() + "%'");
+    if (searchModel.getMinPrice() > 0)
+      list.add("cc.price > " + searchModel.getMinPrice());
+    if (searchModel.getMaxPrice() > 0)
+      list.add("cc.price < " + searchModel.getMaxPrice());
+
+    List<UsageStateType> usageList = searchModel.getUsageList();
+    if (usageList != null && !usageList.isEmpty() && usageList.size() != UsageStateType.values().length) {
+      StringBuilder ids = new StringBuilder("(");
+      for (int i = 0; i < usageList.size(); i++) {
+        ids.append(String.valueOf(usageList.get(i).getId()));
+        if (i < usageList.size() - 1)
+          ids.append(", ");
+      }
+      ids.append(")");
+      list.add("cc.usage_state IN " + ids.toString());
+    }
+
+    List<StockType> stockList = searchModel.getStockList();
+    if (stockList != null && !stockList.isEmpty() && stockList.size() != StockType.values().length) {
+      StringBuilder ids = new StringBuilder("(");
+      for (int i = 0; i < stockList.size(); i++) {
+        ids.append(String.valueOf(stockList.get(i).getId()));
+        if (i < stockList.size() - 1)
+          ids.append(", ");
+      }
+      ids.append(")");
+      list.add("cc.stock IN " + ids.toString());
+    }
+    return list;
   }
 }
