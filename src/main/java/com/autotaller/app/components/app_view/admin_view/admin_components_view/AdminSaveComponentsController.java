@@ -11,7 +11,7 @@ import com.autotaller.app.events.app_view.admin_view.GetAllSystemDefinedModelsEv
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.AddCarComponentsEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEvent;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarInformationEventHandler;
-import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectPreviewCarComponentsEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarComponentsEvent;
 import com.autotaller.app.model.CarComponentModel;
 import com.autotaller.app.model.CarKitModel;
 import com.autotaller.app.model.CarSubkitModel;
@@ -65,7 +65,7 @@ public class AdminSaveComponentsController implements Controller<AdminSaveCompon
         NodeDialog dialog = new NodeDialog("Validare selectie", "Ok", component.getView().asNode());
         EventBus.fireEvent(new ShowDialogEvent(dialog));
         List<CarComponentModel> carComponents = collectCarComponents();
-        EventBus.fireEvent(new InjectPreviewCarComponentsEvent(carComponents));
+        EventBus.fireEvent(new InjectCarComponentsEvent(carComponents));
         dialog.getConfirmationButton().setOnAction(event1 -> {
           dialog.close();
           saveComponents(filterValidComponents(carComponents));

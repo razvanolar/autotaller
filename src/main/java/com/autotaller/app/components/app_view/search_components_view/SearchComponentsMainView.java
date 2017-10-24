@@ -8,7 +8,6 @@ import com.autotaller.app.utils.UsageStateType;
 import com.autotaller.app.utils.resources.NodeProvider;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -100,6 +99,34 @@ public class SearchComponentsMainView extends IterableView implements SearchComp
 
   public Node getSubkitSearchNode() {
     return subkitSearchNode;
+  }
+
+  public TextField getComponentNameTextField() {
+    return componentNameTextField;
+  }
+
+  public TextField getComponentCodeTextField() {
+    return componentCodeTextField;
+  }
+
+  public TextField getComponentMinPriceTextField() {
+    return componentMinPriceTextField;
+  }
+
+  public TextField getComponentMaxPriceTextField() {
+    return componentMaxPriceTextField;
+  }
+
+  public Node getSearchComponentsButton() {
+    return searchComponentsButton;
+  }
+
+  public List<UsageTypeCheckBox> getUsageCheckBoxList() {
+    return usageCheckBoxList;
+  }
+
+  public List<StockTypeCheckBox> getStockCheckBoxList() {
+    return stockCheckBoxList;
   }
 
   @Override

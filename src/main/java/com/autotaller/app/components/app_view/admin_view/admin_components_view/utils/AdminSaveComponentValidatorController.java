@@ -1,8 +1,8 @@
 package com.autotaller.app.components.app_view.admin_view.admin_components_view.utils;
 
 import com.autotaller.app.EventBus;
-import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectPreviewCarComponentsEvent;
-import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectPreviewCarComponentsEventHandler;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarComponentsEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_components.InjectCarComponentsEventHandler;
 import com.autotaller.app.model.CarComponentModel;
 import com.autotaller.app.utils.Controller;
 import com.autotaller.app.utils.View;
@@ -24,7 +24,7 @@ public class AdminSaveComponentValidatorController implements Controller<AdminSa
   public void bind(IAdminSaveCarComponentValidatorView view) {
     this.view = view;
 
-    EventBus.addHandler(InjectPreviewCarComponentsEvent.TYPE, (InjectPreviewCarComponentsEventHandler) event -> {
+    EventBus.addHandler(InjectCarComponentsEvent.TYPE, (InjectCarComponentsEventHandler) event -> {
       ObservableList<CarComponentModel> items = view.getCarComponentTable().getItems();
       items.clear();
       if (event.getCarComponents() != null)

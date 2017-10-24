@@ -9,13 +9,13 @@ import java.util.List;
 /**
  * Created by razvanolar on 27.05.2017
  */
-public class InjectPreviewCarComponentsEvent extends Event<InjectPreviewCarComponentsEventHandler> {
+public class InjectCarComponentsEvent extends Event<InjectCarComponentsEventHandler> {
 
-  public static EventType<InjectPreviewCarComponentsEventHandler> TYPE = new EventType<>();
+  public static EventType<InjectCarComponentsEventHandler> TYPE = new EventType<>();
 
   private List<CarComponentModel> carComponents;
 
-  public InjectPreviewCarComponentsEvent(List<CarComponentModel> carComponents) {
+  public InjectCarComponentsEvent(List<CarComponentModel> carComponents) {
     this.carComponents = carComponents;
   }
 
@@ -29,7 +29,7 @@ public class InjectPreviewCarComponentsEvent extends Event<InjectPreviewCarCompo
   }
 
   @Override
-  public void dispatch(InjectPreviewCarComponentsEventHandler handler) {
+  public void dispatch(InjectCarComponentsEventHandler handler) {
     handler.onInjectPreviewCarComponentsEvent(this);
   }
 }

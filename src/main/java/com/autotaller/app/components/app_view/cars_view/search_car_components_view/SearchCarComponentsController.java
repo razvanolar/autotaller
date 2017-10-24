@@ -16,6 +16,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 
+import java.util.List;
+
 /**
  * Created by razvanolar on 02.06.2017
  */
@@ -29,6 +31,7 @@ public class SearchCarComponentsController implements Controller<SearchCarCompon
   private ISearchCarComponentsView view;
   private int carId;
   private int kitId;
+  private List<CarComponentModel> carComponents;
 
   @Override
   public void bind(ISearchCarComponentsView view) {
@@ -54,14 +57,24 @@ public class SearchCarComponentsController implements Controller<SearchCarCompon
 
     EventBus.addHandler(InjectCarKitInformationEvent.TYPE, (InjectCarKitInformationEventHandler) event -> this.kitId = event.getKitId(), true);
 
+    // if InjectCarComponentsEvent is fired, InjectCarInformationEvent and InjectCarKitInformationEvent will be ignored
+    // so we will load only the injected components
+    EventBus.addHandler(InjectCarComponentsEvent.TYPE, (InjectCarComponentsEventHandler) event -> this.carComponents = event.getCarComponents());
+
     EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> load(), true);
   }
 
   private void load() {
-    EventBus.fireEvent(new GetCarComponentsByCarAndKitIdEvent(carId, kitId, carComponents -> {
-      ObservableList<CarComponentModel> items = view.getCarComponentsTable().getItems();
-      items.clear();
-      items.addAll(carComponents);
-    }));
+    if (carComponents != null) {
+      load(carComponents);
+    } else {
+      EventBus.fireEvent(new GetCarComponentsByCarAndKitIdEvent(carId, kitId, this::load));
+    }
+  }
+
+  private void load(List<CarComponentModel> carComponentsList) {
+    ObservableList<CarComponentModel> items = view.getCarComponentsTable().getItems();
+    items.clear();
+    items.addAll(carComponentsList);
   }
 }

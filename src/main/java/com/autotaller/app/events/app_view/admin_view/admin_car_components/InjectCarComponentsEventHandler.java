@@ -5,6 +5,6 @@ import com.autotaller.app.utils.event.EventHandler;
 /**
  * Created by razvanolar on 27.05.2017
  */
-public interface InjectPreviewCarComponentsEventHandler extends EventHandler {
-  void onInjectPreviewCarComponentsEvent(InjectPreviewCarComponentsEvent event);
+public interface InjectCarComponentsEventHandler extends EventHandler {
+  void onInjectPreviewCarComponentsEvent(InjectCarComponentsEvent event);
 }

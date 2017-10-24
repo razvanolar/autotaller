@@ -572,6 +572,31 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         EventBus.fireEvent(new UnmaskViewEvent());
       }
     }, true);
+
+    EventBus.addHandler(SearchCarComponentsEvent.TYPE, (SearchCarComponentsEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Cautare componente..."));
+        Thread thread = new Thread(() -> {
+          try {
+            List<CarComponentModel> carComponents = repository.getCarComponentBySearchModel(event.getSearchModel());
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(carComponents);
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            NotificationsUtil.showErrorNotification("Atentie", "A aparut o eroare la operatiunea de cautare a componentelor!", -1);
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    });
   }
 
   private void initAutotallerUtilities() {
