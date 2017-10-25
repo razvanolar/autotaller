@@ -100,7 +100,9 @@ public class CarComponentsService extends GenericService {
     PreparedStatement statement = null;
     try {
       connection = jdbcUtil.getNewConnection();
-      String query = SELECT_ALL_COMPONENTS + " WHERE " + concatenateSearchConditions(computeSearchConditions(searchModel));
+      String conditions = concatenateSearchConditions(computeSearchConditions(searchModel));
+      String query = StringValidator.isNullOrEmpty(conditions) ? SELECT_ALL_COMPONENTS : SELECT_ALL_COMPONENTS + " WHERE " + conditions;
+      System.out.println(query);
       statement = connection.prepareStatement(query);
       return getCarComponentsFromStatement(connection, statement);
     } catch (Exception e) {

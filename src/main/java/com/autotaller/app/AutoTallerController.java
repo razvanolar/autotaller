@@ -586,8 +586,10 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           } catch (Exception e) {
             //TODO handle exception
             e.printStackTrace();
-            NotificationsUtil.showErrorNotification("Atentie", "A aparut o eroare la operatiunea de cautare a componentelor!", -1);
             Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+            Platform.runLater(() -> {
+              NotificationsUtil.showErrorNotification("Atentie", "A aparut o eroare la operatiunea de cautare a componentelor!", -1);
+            });
           }
         });
         thread.start();
