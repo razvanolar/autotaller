@@ -1,4 +1,4 @@
-package com.autotaller.app.components.app_view.cars_view.search_car_make_view;
+package com.autotaller.app.components.app_view.cars_view.show_car_make_view;
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.components.utils.FilterDialog;
@@ -28,20 +28,20 @@ import java.util.List;
 /**
  * Created by razvanolar on 02.06.2017
  */
-public class SearchCarMakeController implements Controller<SearchCarMakeController.ISearchCarMakeView> {
+public class ShowCarMakeController implements Controller<ShowCarMakeController.IShowCarMakeView> {
 
-  public interface ISearchCarMakeView extends View {
+  public interface IShowCarMakeView extends View {
     TableView<CarMakeModel> getCarMakeTable();
     Button getContinueButton();
     TextField getCarMakeNameField();
     Button getSearchCarMakeButton();
   }
 
-  private ISearchCarMakeView view;
+  private IShowCarMakeView view;
   private CarDefinedModelsDTO definedModels;
 
   @Override
-  public void bind(ISearchCarMakeView view) {
+  public void bind(IShowCarMakeView view) {
     this.view = view;
 
     view.getSearchCarMakeButton().setOnAction(event -> {
@@ -66,9 +66,9 @@ public class SearchCarMakeController implements Controller<SearchCarMakeControll
       }
       List<CarTypeModel> carTypes = definedModels.getCarTypesByMake(selectedMake);
       if (carTypes != null && !carTypes.isEmpty()) {
-        Component component = ComponentFactory.createComponent(ComponentType.SEARCH_CAR_TYPE_VIEW);
+        Component component = ComponentFactory.createComponent(ComponentType.SHOW_CAR_TYPE_VIEW);
         if (component != null) {
-          String title = ComponentType.SEARCH_CAR_TYPE_VIEW.getTitle();
+          String title = ComponentType.SHOW_CAR_TYPE_VIEW.getTitle();
           EventBus.fireEvent(new AddViewToStackEvent(component.getView(), title + " (Marca: " + selectedMake.getName() + ")"));
           EventBus.fireEvent(new InjectCarTypesEvent(carTypes));
           EventBus.fireEvent(new BindLastViewEvent());

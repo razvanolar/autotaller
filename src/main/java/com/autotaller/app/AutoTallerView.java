@@ -17,7 +17,8 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
   private Node adminMenu;
   private Node notificationsMenu;
   private Node exitMenu;
-  private Node componentsMenu;
+  private Node searchComponentsMenu;
+  private Node searchCarsMenu;
 
   public AutoTallerView() {
     super();
@@ -26,8 +27,8 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
 
   private void init() {
     carsMenu = NodeProvider.createAppMenu("Masini", ImageProvider.carMenuIcon());
-    componentsMenu = NodeProvider.createAppMenu("Componente", ImageProvider.componentMenuIcon());
-    Node searchMenu = NodeProvider.createAppMenu("Cautare", ImageProvider.searchMenuIcon());
+    searchComponentsMenu = NodeProvider.createAppMenu("Cautare Componente", ImageProvider.componentMenuIcon());
+    searchCarsMenu = NodeProvider.createAppMenu("Cautare Masini", ImageProvider.searchMenuIcon());
     Node clientsMenu = NodeProvider.createAppMenu("Clienti", ImageProvider.clientsMenuIcon());
     adminMenu = NodeProvider.createAppMenu("Administrare", ImageProvider.adminMenuIcon());
     notificationsMenu = NodeProvider.createAppMenu("Notificari", ImageProvider.notificationMenuIcon());
@@ -40,8 +41,8 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
     gridPane.setHgap(10);
 
     gridPane.add(carsMenu, 0, 0);
-    gridPane.add(componentsMenu, 1, 0);
-    gridPane.add(searchMenu, 2, 0);
+    gridPane.add(searchComponentsMenu, 1, 0);
+    gridPane.add(searchCarsMenu, 2, 0);
     gridPane.add(clientsMenu, 3, 0);
     gridPane.add(adminMenu, 0, 1);
     gridPane.add(notificationsMenu, 1, 1);
@@ -55,8 +56,12 @@ public class AutoTallerView implements AutoTallerController.IAutoTallerView {
     return carsMenu;
   }
 
-  public Node getComponentsMenu() {
-    return componentsMenu;
+  public Node getSearchComponentsMenu() {
+    return searchComponentsMenu;
+  }
+
+  public Node getSearchCarsMenu() {
+    return searchCarsMenu;
   }
 
   public Node getAdminMenu() {

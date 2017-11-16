@@ -1,4 +1,4 @@
-package com.autotaller.app.components.app_view.cars_view.search_car_components_view.utils;
+package com.autotaller.app.components.app_view.cars_view.show_car_components_view.utils;
 
 import com.autotaller.app.model.CarComponentModel;
 import com.autotaller.app.model.utils.PreSellComponentModel;

@@ -2,10 +2,12 @@ package com.autotaller.app.repository.services.cars;
 
 import com.autotaller.app.model.CarBodyTypeModel;
 import com.autotaller.app.model.CarModel;
+import com.autotaller.app.model.SearchCarModel;
 import com.autotaller.app.model.utils.SystemModelsDTO;
 import com.autotaller.app.repository.services.GenericService;
 import com.autotaller.app.repository.utils.JDBCUtil;
 import com.autotaller.app.utils.CarWheelSideType;
+import com.autotaller.app.utils.StringValidator;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -32,8 +34,11 @@ public class CarService extends GenericService {
 
   private String CAR_BY_ID_QUERY = ALL_CARS_QUERY + " WHERE c.id = ?";
 
-  public CarService(JDBCUtil jdbcUtil) {
+  private CarUtilsService carUtilsService;
+
+  public CarService(JDBCUtil jdbcUtil, CarUtilsService carUtilsService) {
     super(jdbcUtil);
+    this.carUtilsService = carUtilsService;
   }
 
   public List<CarModel> getCars(SystemModelsDTO systemModelsDTO) throws Exception {
@@ -103,6 +108,25 @@ public class CarService extends GenericService {
       throw e;
     } finally {
       jdbcUtil.close(connection, statement, null);
+    }
+  }
+
+  public List<CarModel> getCarsFromSearchModel(SearchCarModel searchModel, SystemModelsDTO systemModelsDTO) throws Exception {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try {
+      String conditions = carUtilsService.concatenateSearchConditions(carUtilsService.computeSearchConditions(searchModel));
+      String query = StringValidator.isNullOrEmpty(conditions) ? ALL_CARS_QUERY : ALL_CARS_QUERY + " WHERE " + conditions;
+      connection = jdbcUtil.getNewConnection();
+      statement = connection.prepareStatement(query);
+      List<CarModel> cars = getCarsFromStatement(connection, statement, systemModelsDTO);
+      return carUtilsService.filterCarsByCarMake(cars, searchModel);
+    } catch (Exception e) {
+      //TODO handle exception
+      e.printStackTrace();
+      throw e;
+    } finally {
+      jdbcUtil.close(connection, statement, null);;
     }
   }
 

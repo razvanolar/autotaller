@@ -1,6 +1,5 @@
-package com.autotaller.app.components.app_view.cars_view.search_car_make_view;
+package com.autotaller.app.components.app_view.cars_view.show_car_make_view;
 
-import com.autotaller.app.components.utils.ChipSet;
 import com.autotaller.app.components.utils.FillToolItem;
 import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.model.CarMakeModel;
@@ -18,7 +17,7 @@ import javafx.scene.layout.HBox;
 /**
  * Created by razvanolar on 02.06.2017
  */
-public class SearchCarMakeView extends IterableView implements SearchCarMakeController.ISearchCarMakeView {
+public class ShowCarMakeView extends IterableView implements ShowCarMakeController.IShowCarMakeView {
 
   private BorderPane container;
   private BorderPane filterHeader;
@@ -27,7 +26,7 @@ public class SearchCarMakeView extends IterableView implements SearchCarMakeCont
   private TableView<CarMakeModel> carMakeTable;
   private Button continueButton;
 
-  public SearchCarMakeView() {
+  public ShowCarMakeView() {
     init();
   }
 

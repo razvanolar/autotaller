@@ -6,8 +6,11 @@ import com.autotaller.app.components.utils.PasswordDialog;
 import com.autotaller.app.events.app_view.*;
 import com.autotaller.app.events.app_view.admin_view.*;
 import com.autotaller.app.events.app_view.admin_view.admin_car_components.*;
+import com.autotaller.app.events.app_view.admin_view.admin_car_view.SearchCarEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_view.SearchCarEventHandler;
 import com.autotaller.app.events.app_view.search_views.AddPreSellComponentEvent;
 import com.autotaller.app.events.app_view.search_views.AddPreSellComponentEventHandler;
+import com.autotaller.app.events.app_view.search_views.InjectSystemModelsEvent;
 import com.autotaller.app.events.login_view.*;
 import com.autotaller.app.events.mask_view.MaskViewEvent;
 import com.autotaller.app.events.mask_view.UnmaskViewEvent;
@@ -39,7 +42,8 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
 
   public interface IAutoTallerView extends View {
     Node getCarsMenu();
-    Node getComponentsMenu();
+    Node getSearchComponentsMenu();
+    Node getSearchCarsMenu();
     Node getAdminMenu();
     Node getNotificationsMenu();
     Node getExitMenu();
@@ -132,17 +136,45 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
 
   private void initAppViewHandlers() {
     autoTallerView.getCarsMenu().setOnMouseClicked(event -> {
-      Component component = ComponentFactory.createComponent(ComponentType.SEARCH_CAR_MAKE_VIEW);
+      Component component = ComponentFactory.createComponent(ComponentType.SHOW_CAR_MAKE_VIEW);
       if (component != null) {
-        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.SEARCH_CAR_MAKE_VIEW.getTitle()));
+        EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.SHOW_CAR_MAKE_VIEW.getTitle()));
         EventBus.fireEvent(new BindLastViewEvent());
       }
     });
 
-    autoTallerView.getComponentsMenu().setOnMouseClicked(event -> {
+    autoTallerView.getSearchComponentsMenu().setOnMouseClicked(event -> {
       Component component = ComponentFactory.createComponent(ComponentType.SEARCH_COMPONENTS_MAIN_VIEW);
       if (component != null) {
         EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.SEARCH_COMPONENTS_MAIN_VIEW.getTitle()));
+      }
+    });
+
+    autoTallerView.getSearchCarsMenu().setOnMouseClicked(event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Pregatire informatii"));
+        Thread thread = new Thread(() -> {
+          try {
+            SystemModelsDTO systemModels = repository.getAllDefinedModels();
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              Component component = ComponentFactory.createComponent(ComponentType.SEARCH_CARS_MAIN_VIEW);
+              if (component != null) {
+                EventBus.fireEvent(new AddViewToStackEvent(component.getView(), ComponentType.SEARCH_CARS_MAIN_VIEW.getTitle()));
+                EventBus.fireEvent(new InjectSystemModelsEvent(systemModels));
+              }
+            });
+          } catch (Exception e) {
+            //TODO show error dialog
+            e.printStackTrace();
+            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO show error dialog
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
       }
     });
 
@@ -586,9 +618,9 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
           } catch (Exception e) {
             //TODO handle exception
             e.printStackTrace();
-            Platform.runLater(() -> EventBus.fireEvent(new UnmaskViewEvent()));
             Platform.runLater(() -> {
               NotificationsUtil.showErrorNotification("Atentie", "A aparut o eroare la operatiunea de cautare a componentelor!", -1);
+              EventBus.fireEvent(new UnmaskViewEvent());
             });
           }
         });
@@ -598,7 +630,34 @@ public class AutoTallerController implements Controller<AutoTallerController.IAu
         e.printStackTrace();
         EventBus.fireEvent(new UnmaskViewEvent());
       }
-    });
+    }, true);
+
+    EventBus.addHandler(SearchCarEvent.TYPE, (SearchCarEventHandler) event -> {
+      try {
+        EventBus.fireEvent(new MaskViewEvent("Cautare masini..."));
+        Thread thread = new Thread(() -> {
+          try {
+            List<CarModel> cars = repository.getCarsFromSearchModel(event.getSearchCarModel());
+            Platform.runLater(() -> {
+              EventBus.fireEvent(new UnmaskViewEvent());
+              event.getCallback().call(cars);
+            });
+          } catch (Exception e) {
+            //TODO handle exception
+            e.printStackTrace();
+            Platform.runLater(() -> {
+              NotificationsUtil.showErrorNotification("Atentie", "A aparut o eroare la operatiunea de cautare a masinilor!", -1);
+              EventBus.fireEvent(new UnmaskViewEvent());
+            });
+          }
+        });
+        thread.start();
+      } catch (Exception e) {
+        //TODO handle exception
+        e.printStackTrace();
+        EventBus.fireEvent(new UnmaskViewEvent());
+      }
+    }, true);
   }
 
   private void initAutotallerUtilities() {

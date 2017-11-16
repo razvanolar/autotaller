@@ -1,7 +1,7 @@
-package com.autotaller.app.components.app_view.cars_view.search_car_components_view;
+package com.autotaller.app.components.app_view.cars_view.show_car_components_view;
 
 import com.autotaller.app.EventBus;
-import com.autotaller.app.components.app_view.cars_view.search_car_components_view.utils.PreSellComponentView;
+import com.autotaller.app.components.app_view.cars_view.show_car_components_view.utils.PreSellComponentView;
 import com.autotaller.app.components.utils.NodeDialog;
 import com.autotaller.app.events.app_view.BindLastViewEvent;
 import com.autotaller.app.events.app_view.BindLastViewEventHandler;
@@ -21,20 +21,20 @@ import java.util.List;
 /**
  * Created by razvanolar on 02.06.2017
  */
-public class SearchCarComponentsController implements Controller<SearchCarComponentsController.ISearchCarComponentsView> {
+public class ShowCarComponentsController implements Controller<ShowCarComponentsController.IShowCarComponentsView> {
 
-  public interface ISearchCarComponentsView extends View {
+  public interface IShowCarComponentsView extends View {
     TableView<CarComponentModel> getCarComponentsTable();
     Button getSellComponentButton();
   }
 
-  private ISearchCarComponentsView view;
+  private IShowCarComponentsView view;
   private int carId;
   private int kitId;
   private List<CarComponentModel> carComponents;
 
   @Override
-  public void bind(ISearchCarComponentsView view) {
+  public void bind(IShowCarComponentsView view) {
     this.view = view;
 
     view.getSellComponentButton().setOnAction(event -> {

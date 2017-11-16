@@ -1,4 +1,4 @@
-package com.autotaller.app.components.app_view.cars_view.search_car_components_view;
+package com.autotaller.app.components.app_view.cars_view.show_car_components_view;
 
 import com.autotaller.app.components.utils.IterableView;
 import com.autotaller.app.model.CarComponentModel;
@@ -11,12 +11,12 @@ import javafx.scene.control.TableView;
 /**
  * Created by razvanolar on 02.06.2017
  */
-public class SearchCarComponentsView extends IterableView implements SearchCarComponentsController.ISearchCarComponentsView {
+public class ShowCarComponentsView extends IterableView implements ShowCarComponentsController.IShowCarComponentsView {
 
   private TableView<CarComponentModel> carComponentsTable;
   private Button sellComponentButton;
 
-  public SearchCarComponentsView() {
+  public ShowCarComponentsView() {
     init();
   }
 

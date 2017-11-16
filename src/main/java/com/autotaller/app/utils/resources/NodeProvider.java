@@ -247,9 +247,7 @@ public class NodeProvider {
     }
     titleNode.getChildren().addAll(textLabel, bar);
 
-    FillToolItem footer = new FillToolItem();
-    footer.setPrefHeight(5);
-    footer.getStyleClass().add(StyleProvider.TITLE_FOOTER_PANE_CLASS);
+    Node footer = createHSeparatorPane(5);
     node.getChildren().addAll(titleNode, footer);
     node.setAlignment(Pos.CENTER_LEFT);
     node.setPadding(new Insets(5, 10, 5, 10));
@@ -258,6 +256,13 @@ public class NodeProvider {
       titleNode.getStyleClass().add(styleClass);
     }
     return node;
+  }
+
+  public static Node createHSeparatorPane(int height) {
+    FillToolItem item = new FillToolItem();
+    item.setPrefHeight(height);
+    item.getStyleClass().add(StyleProvider.TITLE_FOOTER_PANE_CLASS);
+    return item;
   }
 
   public static VBox createVBox(int spacing) {

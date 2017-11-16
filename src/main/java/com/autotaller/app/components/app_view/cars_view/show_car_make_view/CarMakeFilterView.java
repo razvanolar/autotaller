@@ -1,4 +1,4 @@
-package com.autotaller.app.components.app_view.cars_view.search_car_make_view;
+package com.autotaller.app.components.app_view.cars_view.show_car_make_view;
 
 import com.autotaller.app.utils.View;
 import com.autotaller.app.utils.resources.NodeProvider;

@@ -1,4 +1,4 @@
-package com.autotaller.app.components.app_view.cars_view.search_car_type_view;
+package com.autotaller.app.components.app_view.cars_view.show_car_type_view;
 
 import com.autotaller.app.components.app_view.admin_view.util.FilterPanelView;
 import com.autotaller.app.components.utils.FillToolItem;
@@ -20,7 +20,7 @@ import javafx.scene.layout.VBox;
 /**
  * Created by razvanolar on 02.06.2017
  */
-public class SearchCarTypeView extends IterableView implements SearchCarTypeController.ISearchCarTypeView {
+public class ShowCarTypeView extends IterableView implements ShowCarTypeController.IShowCarTypeView {
 
   private FilterPanelView<Integer> yearFilterPane;
   private TableView<CarTypeModel> carTypeTable;
@@ -30,7 +30,7 @@ public class SearchCarTypeView extends IterableView implements SearchCarTypeCont
   private Button searchFrameButton;
   private Button continueButton;
 
-  public SearchCarTypeView() {
+  public ShowCarTypeView() {
     init();
   }
 

@@ -198,6 +198,12 @@ public class Repository {
     return carService.getCarById(carId, getAllDefinedModels());
   }
 
+  public List<CarModel> getCarsFromSearchModel(SearchCarModel searchModel) throws Exception {
+    if (searchModel == null)
+      return null;
+    return carService.getCarsFromSearchModel(searchModel, getAllDefinedModels());
+  }
+
   public SaveCarResult addCar(CarModel car, List<File> images) throws Exception {
     int carId = carService.addCar(car);
     CarModel savedCar = getCarById(carId);
@@ -357,13 +363,13 @@ public class Repository {
 
   private void initServices() throws Exception {
     userService = new UserService(jdbcUtil);
-    carService = new CarService(jdbcUtil);
+    carUtilsService = new CarUtilsService(jdbcUtil);
+    carService = new CarService(jdbcUtil, carUtilsService);
     carModelService = new CarModelService(jdbcUtil, carService);
     carMakesService = new CarMakesService(jdbcUtil, carModelService);
     carKitsService = new CarKitsService(jdbcUtil);
-    carUtilsService = new CarUtilsService(jdbcUtil);
     carStatisticsService = new CarStatisticsService(jdbcUtil);
-    carComponentsService = new CarComponentsService(jdbcUtil);
+    carComponentsService = new CarComponentsService(jdbcUtil, carUtilsService);
 
     //init all the caches
     getAllDefinedModels();

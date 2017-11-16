@@ -15,12 +15,13 @@ import com.autotaller.app.components.app_view.admin_view.admin_register_car_view
 import com.autotaller.app.components.app_view.admin_view.admin_register_car_view.AdminSaveCarController;
 import com.autotaller.app.components.app_view.admin_view.admin_statistics_view.AdminStatisticsController;
 import com.autotaller.app.components.app_view.cars_view.car_statistics_view.CarStatisticsController;
-import com.autotaller.app.components.app_view.cars_view.search_car_components_view.SearchCarComponentsController;
-import com.autotaller.app.components.app_view.cars_view.search_car_make_view.SearchCarMakeController;
-import com.autotaller.app.components.app_view.cars_view.search_car_type_view.SearchCarTypeController;
-import com.autotaller.app.components.app_view.cars_view.search_car_view.SearchCarController;
+import com.autotaller.app.components.app_view.cars_view.show_car_components_view.ShowCarComponentsController;
+import com.autotaller.app.components.app_view.cars_view.show_car_make_view.ShowCarMakeController;
+import com.autotaller.app.components.app_view.cars_view.show_car_type_view.ShowCarTypeController;
+import com.autotaller.app.components.app_view.cars_view.show_car_view.ShowCarController;
 import com.autotaller.app.components.app_view.cars_view.show_car_kits_view.ShowCarKitsController;
 import com.autotaller.app.components.app_view.notifications_view.NotificationsController;
+import com.autotaller.app.components.app_view.search_cars_view.SearchCarsMainController;
 import com.autotaller.app.components.app_view.search_components_view.SearchComponentsMainController;
 import com.autotaller.app.components.login_view.login.LoginController;
 import com.autotaller.app.components.login_view.sign_up.SignUpController;
@@ -66,18 +67,20 @@ public class ControllerFactory {
         return new AdminSaveComponentValidatorController();
       case ADMIN_STATISTICS_VIEW:
         return new AdminStatisticsController();
-      case SEARCH_CAR_MAKE_VIEW:
-        return new SearchCarMakeController();
-      case SEARCH_CAR_TYPE_VIEW:
-        return new SearchCarTypeController();
-      case SEARCH_CAR_VIEW:
-        return new SearchCarController();
+      case SHOW_CAR_MAKE_VIEW:
+        return new ShowCarMakeController();
+      case SHOW_CAR_TYPE_VIEW:
+        return new ShowCarTypeController();
+      case SHOW_CAR_VIEW:
+        return new ShowCarController();
       case SHOW_CAR_KITS_VIEW:
         return new ShowCarKitsController();
       case SEARCH_COMPONENTS_MAIN_VIEW:
         return new SearchComponentsMainController();
+      case SEARCH_CARS_MAIN_VIEW:
+        return new SearchCarsMainController();
       case SEARCH_CAR_COMPONENTS_VIEW:
-        return new SearchCarComponentsController();
+        return new ShowCarComponentsController();
       case NOTIFICATIONS_VIEW:
         return new NotificationsController();
       case CAR_STATISTICS_VIEW:

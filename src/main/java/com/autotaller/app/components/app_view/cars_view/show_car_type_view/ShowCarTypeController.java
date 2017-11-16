@@ -1,4 +1,4 @@
-package com.autotaller.app.components.app_view.cars_view.search_car_type_view;
+package com.autotaller.app.components.app_view.cars_view.show_car_type_view;
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.components.app_view.admin_view.util.FilterPanelView;
@@ -29,9 +29,9 @@ import java.util.List;
 /**
  * Created by razvanolar on 02.06.2017
  */
-public class SearchCarTypeController implements Controller<SearchCarTypeController.ISearchCarTypeView> {
+public class ShowCarTypeController implements Controller<ShowCarTypeController.IShowCarTypeView> {
 
-  public interface ISearchCarTypeView extends View {
+  public interface IShowCarTypeView extends View {
     TableView<CarTypeModel> getCarTypeTable();
     Button getContinueButton();
     FilterPanelView<Integer> getYearFilterPane();
@@ -41,14 +41,14 @@ public class SearchCarTypeController implements Controller<SearchCarTypeControll
     Button getSearchFrameButton();
   }
 
-  private ISearchCarTypeView view;
+  private IShowCarTypeView view;
   private List<CarTypeModel> carTypes;
 
   private CarTypeModelYearsFilter carTypeModelYearsFilter;
   private CarTypeModelNameFilter carTypeModelNameFilter;
 
   @Override
-  public void bind(ISearchCarTypeView view) {
+  public void bind(IShowCarTypeView view) {
     this.view = view;
 
     carTypeModelYearsFilter = new CarTypeModelYearsFilter();
@@ -65,9 +65,9 @@ public class SearchCarTypeController implements Controller<SearchCarTypeControll
       if (selectedCarType == null) {
         return;
       }
-      Component component = ComponentFactory.createComponent(ComponentType.SEARCH_CAR_VIEW);
+      Component component = ComponentFactory.createComponent(ComponentType.SHOW_CAR_VIEW);
       if (component != null) {
-        String title = ComponentType.SEARCH_CAR_VIEW.getTitle();
+        String title = ComponentType.SHOW_CAR_VIEW.getTitle();
         EventBus.fireEvent(new AddViewToStackEvent(component.getView(), title + "(Model: " + selectedCarType.getName() + ")"));
         EventBus.fireEvent(new InjectCarTypeEvent(selectedCarType));
         EventBus.fireEvent(new BindLastViewEvent());

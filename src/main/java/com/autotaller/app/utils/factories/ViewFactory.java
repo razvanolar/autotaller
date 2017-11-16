@@ -15,12 +15,13 @@ import com.autotaller.app.components.app_view.admin_view.admin_register_car_view
 import com.autotaller.app.components.app_view.admin_view.admin_register_car_view.AdminSaveCarView;
 import com.autotaller.app.components.app_view.admin_view.admin_statistics_view.AdminStatisticsView;
 import com.autotaller.app.components.app_view.cars_view.car_statistics_view.CarStatisticsView;
-import com.autotaller.app.components.app_view.cars_view.search_car_components_view.SearchCarComponentsView;
-import com.autotaller.app.components.app_view.cars_view.search_car_make_view.SearchCarMakeView;
-import com.autotaller.app.components.app_view.cars_view.search_car_type_view.SearchCarTypeView;
-import com.autotaller.app.components.app_view.cars_view.search_car_view.SearchCarView;
+import com.autotaller.app.components.app_view.cars_view.show_car_components_view.ShowCarComponentsView;
+import com.autotaller.app.components.app_view.cars_view.show_car_make_view.ShowCarMakeView;
+import com.autotaller.app.components.app_view.cars_view.show_car_type_view.ShowCarTypeView;
+import com.autotaller.app.components.app_view.cars_view.show_car_view.ShowCarView;
 import com.autotaller.app.components.app_view.cars_view.show_car_kits_view.ShowCarKitsView;
 import com.autotaller.app.components.app_view.notifications_view.NotificationsView;
+import com.autotaller.app.components.app_view.search_cars_view.SearchCarsMainView;
 import com.autotaller.app.components.app_view.search_components_view.SearchComponentsMainView;
 import com.autotaller.app.components.login_view.login.LoginView;
 import com.autotaller.app.components.login_view.sign_up.SignUpView;
@@ -66,18 +67,20 @@ public class ViewFactory {
         return new AdminSaveComponentValidatorView();
       case ADMIN_STATISTICS_VIEW:
         return new AdminStatisticsView();
-      case SEARCH_CAR_MAKE_VIEW:
-        return new SearchCarMakeView();
-      case SEARCH_CAR_TYPE_VIEW:
-        return new SearchCarTypeView();
-      case SEARCH_CAR_VIEW:
-        return new SearchCarView();
+      case SHOW_CAR_MAKE_VIEW:
+        return new ShowCarMakeView();
+      case SHOW_CAR_TYPE_VIEW:
+        return new ShowCarTypeView();
+      case SHOW_CAR_VIEW:
+        return new ShowCarView();
       case SHOW_CAR_KITS_VIEW:
         return new ShowCarKitsView();
       case SEARCH_COMPONENTS_MAIN_VIEW:
         return new SearchComponentsMainView();
+      case SEARCH_CARS_MAIN_VIEW:
+        return new SearchCarsMainView();
       case SEARCH_CAR_COMPONENTS_VIEW:
-        return new SearchCarComponentsView();
+        return new ShowCarComponentsView();
       case NOTIFICATIONS_VIEW:
         return new NotificationsView();
       case CAR_STATISTICS_VIEW:

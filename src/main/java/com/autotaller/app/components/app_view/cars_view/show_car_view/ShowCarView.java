@@ -1,4 +1,4 @@
-package com.autotaller.app.components.app_view.cars_view.search_car_view;
+package com.autotaller.app.components.app_view.cars_view.show_car_view;
 
 import com.autotaller.app.components.app_view.utils.DefaultCarView;
 import com.autotaller.app.components.utils.FillToolItem;
@@ -13,14 +13,14 @@ import javafx.scene.control.ToggleButton;
 /**
  * Created by razvanolar on 02.06.2017
  */
-public class SearchCarView extends IterableView implements SearchCarController.ISearchCarView {
+public class ShowCarView extends IterableView implements ShowCarController.IShowCarView {
 
   private DefaultCarView defaultCarView;
   private ToggleButton showFilterButton;
   private Button detailsButton;
   private Button continueButton;
 
-  public SearchCarView() {
+  public ShowCarView() {
     init();
   }
 

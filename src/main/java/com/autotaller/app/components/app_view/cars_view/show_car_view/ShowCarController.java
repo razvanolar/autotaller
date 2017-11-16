@@ -1,4 +1,4 @@
-package com.autotaller.app.components.app_view.cars_view.search_car_view;
+package com.autotaller.app.components.app_view.cars_view.show_car_view;
 
 import com.autotaller.app.EventBus;
 import com.autotaller.app.components.app_view.utils.DefaultCarController;
@@ -10,6 +10,8 @@ import com.autotaller.app.events.app_view.BindLastViewEventHandler;
 import com.autotaller.app.events.app_view.ShowDialogEvent;
 import com.autotaller.app.events.app_view.admin_view.GetAllSystemDefinedModelsEvent;
 import com.autotaller.app.events.app_view.admin_view.GetCarsByTypeIdEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_view.InjectCarsEvent;
+import com.autotaller.app.events.app_view.admin_view.admin_car_view.InjectCarsEventHandler;
 import com.autotaller.app.events.app_view.search_views.InjectCarEvent;
 import com.autotaller.app.events.app_view.search_views.InjectCarTypeEvent;
 import com.autotaller.app.events.app_view.search_views.InjectCarTypeEventHandler;
@@ -25,25 +27,28 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 
+import java.util.List;
+
 /**
  * Created by razvanolar on 02.06.2017
  */
-public class SearchCarController implements Controller<SearchCarController.ISearchCarView> {
+public class ShowCarController implements Controller<ShowCarController.IShowCarView> {
 
-  public interface ISearchCarView extends View {
+  public interface IShowCarView extends View {
     DefaultCarView getDefaultCarView();
     ToggleButton getShowFilterButton();
     Button getDetailsButton();
     Button getContinueButton();
   }
 
-  private ISearchCarView view;
-  private CarTypeModel carType;
+  private IShowCarView view;
+  private CarTypeModel injectedCarType;
+  private List<CarModel> injectedCars;
 
   private DefaultCarController defaultCarController;
 
   @Override
-  public void bind(ISearchCarView view) {
+  public void bind(IShowCarView view) {
     this.view = view;
 
     defaultCarController = new DefaultCarController();
@@ -79,18 +84,28 @@ public class SearchCarController implements Controller<SearchCarController.ISear
       }
     });
 
-    EventBus.addHandler(InjectCarTypeEvent.TYPE, (InjectCarTypeEventHandler) event -> this.carType = event.getCarType(), true);
+    // fired when want to load the cars for a specific car type
+    EventBus.addHandler(InjectCarTypeEvent.TYPE, (InjectCarTypeEventHandler) event -> this.injectedCarType = event.getCarType(), true);
+
+    // fired when want to load the specified cars
+    EventBus.addHandler(InjectCarsEvent.TYPE, (InjectCarsEventHandler) event -> this.injectedCars = event.getCars());
 
     EventBus.addHandler(BindLastViewEvent.TYPE, (BindLastViewEventHandler) event -> load(), true);
   }
 
   private void load() {
-    EventBus.fireEvent(new GetCarsByTypeIdEvent(carType.getId(), cars -> {
-      ObservableList<CarModel> items = view.getDefaultCarView().getCarsTable().getItems();
-      items.clear();
-      items.addAll(cars);
-      defaultCarController.setCars(cars);
-      EventBus.fireEvent(new GetAllSystemDefinedModelsEvent(models -> defaultCarController.setSystemModels(models, carType)));
-    }));
+    if (injectedCarType != null) {
+      EventBus.fireEvent(new GetCarsByTypeIdEvent(injectedCarType.getId(), this::load));
+    } else if (injectedCars != null) {
+      load(injectedCars);
+    }
+  }
+
+  private void load(List<CarModel> cars) {
+    ObservableList<CarModel> items = view.getDefaultCarView().getCarsTable().getItems();
+    items.clear();
+    items.addAll(cars);
+    defaultCarController.setCars(cars);
+    EventBus.fireEvent(new GetAllSystemDefinedModelsEvent(models -> defaultCarController.setSystemModels(models, injectedCarType)));
   }
 }
